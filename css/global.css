@@ -1,0 +1,29 @@
+/* global.css is used to store any globally used CSS attributes. */
+
+@font-face {
+    font-family: 'font1';
+    src: url(../assets/fonts/inter-variablefont_slntweight-webfont.woff) format("woff");
+    src: url(../assets/fonts/inter-variablefont_slntweight-webfont.woff2) format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    /* Main Colors */
+    --background-color: #9747FF;
+    --secondary-color: #2ecc71;
+    --text-color: #333333;
+
+    /* Navbar Colors */
+    --navbar-color: #5800B2;
+    --navbar-toplevel-button-color: #5800B2;
+    --selected-navbar-toplevel-button-color: #8123E1;
+    --navbar-list-button-color: #605DF8;
+}
+
+/* Used to disable selection of text (Used for buttons). */
+.prevent-select {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+}
