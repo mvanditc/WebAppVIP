@@ -1,5 +1,6 @@
 /* global.css is used to store any globally used CSS attributes. */
 
+/* Fonts */
 @font-face {
     font-family: 'font1';
     src: url(../assets/fonts/inter-variablefont_slntweight-webfont.woff) format("woff");
@@ -11,14 +12,27 @@
 :root {
     /* Main Colors */
     --background-color: #9747FF;
-    --secondary-color: #2ecc71;
-    --text-color: #333333;
+    --secondary-color: #FFFFFF;
+
+    --all-risk: #89B8FF;
+    --low-risk: #FFD600;
+    --moderate-risk: #FF6F1E;
+    --high-risk: #FF2626;
+
+    --black-text: #1E1E1E1E;
+    --white-text: #FFFFFF;
+    --purple-text: #6F2BA5;
+    --blue-text: #605DF8;
+
+    --dict-tool-close-button: #453A00;
+
+    --grey-color: #D9D9D9;
 
     /* Navbar Colors */
     --navbar-color: #5800B2;
-    --navbar-toplevel-button-color: #5800B2;
     --selected-navbar-toplevel-button-color: #8123E1;
     --navbar-list-button-color: #605DF8;
+    --selected-navbar-list-button-color: #89B8FF;
 }
 
 /* Used to disable selection of text (Used for buttons). */
