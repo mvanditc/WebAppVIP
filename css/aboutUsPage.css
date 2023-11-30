@@ -1,7 +1,7 @@
 /* aboutUsPage.css is used to style the aboutUsPage.html file */
 
-@import '/css/global.css';
-@import '/css/navbar.css';
+@import 'global.css';
+@import 'navbar.css';
 
 body {
     background-color: var(--background-color);
@@ -9,3 +9,19 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.mission-statement {
+    color: white;
+    margin-left: 4%;
+}
+    
+
+.mission-statement-content {
+    margin-left: 15%;
+    text-align: left;
+    color: black;
+    height: 200px;
+    width:75%;
+
+}
+

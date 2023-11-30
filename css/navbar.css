@@ -1,6 +1,6 @@
 /* navbar.css is used to style the Navbar that is found in all html pages. */
 
-@import '/css/global.css';
+@import 'global.css';
 
 .navbar{
     background-color: var(--navbar-color);
