@@ -21,3 +21,9 @@ body {
     width: 80%;
     font-family: 'Courier New', Courier, monospace;
 }
+
+.scanPage-risk-container {
+    display: flex;
+    flex-direction: row;
+    margin: -15px 0px;
+}
