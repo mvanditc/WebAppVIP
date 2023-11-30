@@ -68,12 +68,19 @@
         </div>
 
         <!--  HTML CODE FOR BODY  -->
-        <div id="scanPage-container">
+        <div id="scanPage-container" class="scanPage-contaner">
             <div>
-                <h2>Initiating Scan...</h2>
-                <h2 id="scanPage-scan-target">Scan target: www.example.com</h2>
+                <p>Initiating Scan...</p>
+                <p id="scanPage-scan-target">Scan target: www.example.com</p>
             </div>
             <div id="progressbar"></div>
+            <p id="scanPage-time-elapsed">Time Elapsed: 0:15</p>
+            <div>
+                <p>Vulnerabilities Found:</p>
+                <p>Low Risk: </p>
+                <p>Medium Risk: </p>
+                <p>High Risk: </p>
+            </div>
         </div>
 
         <script src="../assets/scanningBarCSSFiles/src/ascii-progress.js"></script>

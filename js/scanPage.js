@@ -21,5 +21,5 @@ for (let i = 0; i < 101; i = i + 5) {
   setTimeout(function() {
     progressBar.setValue(i);
     progressBar.setComment(i + "%");
-  }, i*100)
+  },  /* i* */ 100)
 }
