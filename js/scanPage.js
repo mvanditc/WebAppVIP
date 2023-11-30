@@ -5,7 +5,7 @@ var progressBar = new AsciiProgress("scanPage-progressBar",{
   loadedCharacter: "#",
   backgroundCharacter: "  ",
   closeCharacter: " ]",
-  length: 30,
+  length: 20,
   value: 0,
   completeAt: 100,
   showPercent: false,
@@ -20,5 +20,5 @@ for (let i = 0; i < 101; i++) {
   setTimeout(function() {
     progressBar.setValue(i);
     progressBar.setComment(i + "%");
-  }, i * 50)
+  }, 50)
 }
