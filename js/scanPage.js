@@ -2,7 +2,7 @@
 
 var progressBar = new AsciiProgress("scanPage-progressBar",{
   openCharacter: "[ ",
-  loadedCharacter: "#",
+  loadedCharacter: "█",
   backgroundCharacter: "  ",
   closeCharacter: " ]",
   length: 20,
