@@ -19,11 +19,52 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'font1';
+    padding: 0px 10px;
+}
+
+#scanPage-first-container {
+    margin-top: 5px;
+}
+
+#scanPage-initial-container p {
+    margin: 10px 0px;
+}
+
+#scanPage-scan-target-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#scanPage-scan-target {
+    color: var(--blue-text);
+}
+
+#scanPage-progressBar {
+    margin: 20px 0px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+#scanPage-time-elapsed {
+    margin-bottom: 30px;
 }
 
 .scanPage-risk-container {
     display: flex;
     flex-direction: row;
-    margin: -15px 0px;
+    margin: -20px 0px;
+}
+
+#scanPage-low-risk {
+    color: yellow;
+}
+
+#scanPage-medium-risk {
+    color: orange;
+}
+
+#scanPage-high-risk {
+    color: red;
 }

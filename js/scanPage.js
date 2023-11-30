@@ -1,6 +1,6 @@
 // JavaScript used for the Scanning Page's functionality.
 
-var progressBar = new AsciiProgress("progressbar",{
+var progressBar = new AsciiProgress("scanPage-progressBar",{
   openCharacter: "[ ",
   loadedCharacter: "#",
   backgroundCharacter: "-",

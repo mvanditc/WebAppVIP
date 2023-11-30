@@ -69,11 +69,14 @@
 
         <!--  HTML CODE FOR BODY  -->
         <div id="scanPage-container" class="scanPage-contaner">
-            <div>
+            <div id="scanPage-initial-container">
                 <p>Initiating Scan...</p>
-                <p id="scanPage-scan-target">Scan target: www.example.com</p>
+                <div id="scanPage-scan-target-container">
+                    <p>Scan target:&nbsp</p>
+                    <p id="scanPage-scan-target">www.example.com</p>
+                </div>
             </div>
-            <div id="progressbar"></div>
+            <div id="scanPage-progressBar"></div>
             <p id="scanPage-time-elapsed">Time Elapsed: 0:15</p>
             <div>
                 <p>Vulnerabilities Found:</p>
