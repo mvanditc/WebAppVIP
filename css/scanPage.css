@@ -12,32 +12,35 @@ body {
 
 #scanPage-container {
     position: absolute;
-    background-color: black;
-    border: 10px solid rgba(133, 42, 252, 0.861);
-    height: 500px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    background-color: black;
+    border: 10px solid rgba(133, 42, 252, 0.861);
+    height: 500px;
     width: 80%;
     font-family: 'font1';
     padding: 0px 10px;
 }
 
-#scanPage-first-container {
-    margin-top: 5px;
+#scanPage-initial-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 #scanPage-initial-container p {
-    margin: 10px 0px;
+    margin: 5px 0px;
 }
 
 #scanPage-scan-target-container {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 #scanPage-scan-target {
     color: var(--blue-text);
+    text-decoration: none;
 }
 
 #scanPage-progressBar {
@@ -48,6 +51,7 @@ body {
 }
 
 #scanPage-time-elapsed {
+    margin-top: -0px;
     margin-bottom: 30px;
 }
 
@@ -67,4 +71,16 @@ body {
 
 #scanPage-high-risk {
     color: red;
+}
+
+#scanPage-vulnerabilities-container {
+    margin-bottom: 40px;
+}
+
+#scanPage-view-details-container {
+    text-align: center;
+}
+
+#scanPage-view-details-container a {
+    color: white;
 }

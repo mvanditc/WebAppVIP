@@ -73,12 +73,12 @@
                 <p>Initiating Scan...</p>
                 <div id="scanPage-scan-target-container">
                     <p>Scan target:&nbsp</p>
-                    <p id="scanPage-scan-target">www.example.com</p>
+                    <a id="scanPage-scan-target" href="https://www.google.com/" target="_blank">www.google.com</a>
                 </div>
             </div>
-            <div id="scanPage-progressBar"></div>
+            <div id="scanPage-progressBar"></div>   
             <p id="scanPage-time-elapsed">Time Elapsed: 0:15</p>
-            <div>
+            <div id="scanPage-vulnerabilities-container">
                 <p>Vulnerabilities Found:</p>
                 <div id="scanPage-risks">
                     <div class="scanPage-risk-container">
@@ -94,6 +94,9 @@
                         <p id="scanPage-high-risk">3</p>
                     </div>
                 </div>
+            </div>
+            <div id="scanPage-view-details-container">
+                <a href="scanResultsPage.html">view details</a>
             </div>
         </div>
 
