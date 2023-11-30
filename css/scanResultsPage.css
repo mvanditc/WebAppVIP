@@ -4,8 +4,175 @@
 @import '/css/navbar.css';
 
 body {
-    background-color: var(--background-color);
-    color: white;
-    margin: 0;
-    padding: 0;
+  font-family: "font1", sans-serif;
+  background-color: var(--background-color);
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Scan Results Heading */
+.scan-results-heading h2 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+/* Black Box Summary */
+.black-box-summary {
+  background-color: #000;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.black-box-summary p {
+  font-size: 1.25rem;
+  margin: 0 0 20px;
+}
+
+.risk-levels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.risk-levels span {
+  padding: 5px 0;
+  margin: 0px 0;
+}
+
+.yellow {
+  color: #f1c40f;
+}
+
+.orange {
+  color: #e67e22;
+}
+
+.red {
+  color: #e74c3c;
+}
+
+/* Box shared for Findings Section and Scan Coverage*/
+.white-box {
+  background-color: white;
+  color: var(--text-color);
+  border-radius: 10px;
+  padding: 5px 20px 20px 20px;
+  margin-bottom: 20px; /* Spacing between multiple issue boxes */
+}
+
+/* Section Titles */
+.sub-heading {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+/* Inner Section Subheadings */
+.white-box h3 {
+  color: var(--text-color);
+  font-size: 1.25rem;
+  margin: 15px 0 10px 0;
+}
+
+.white-box h4 {
+  color: var(--background-color);
+  margin: 10px 0 0;
+  font-weight: bold;
+  padding-top: 15px;
+}
+
+.white-box h5 {
+  color: var(--background-color);
+  margin: 10px 0 0;
+  font-weight: bold;
+  padding-top: 0px;
+}
+
+p {
+  padding-top: 5px;
+  margin: 0;
+}
+
+/* Findings Section Drop Down Filter Menu */
+.filter-by-risk-level {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-by-risk-level label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.filter-by-risk-level select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Colored Circle */
+.issue-circle {
+  width: 1.15rem; /* Adjust the size of the circle */
+  height: 1.15rem; /* Adjust the size of the circle */
+  background-color: #ff5733;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+/* Scan Coverage Section */
+.scan-coverage {
+  display: flex; /* Use flexbox to create a row layout */
+  justify-content: space-between; /* Space items horizontally */
+  align-items: flex-start; /* Align items at the top */
+  flex-wrap: wrap; /* Allow items to wrap to the next row on smaller screens */
+}
+
+.scan-coverage div {
+  flex: 0 0 calc(50% - 10px); /* Make each item take up 50% of the width with some spacing */
+  margin-right: 10px; /* Add spacing between columns */
+}
+
+.scan-coverage p {
+  font-size: 1rem;
+  margin: 5px 0;
+  flex: 0 0 100%; /* Make sure each item takes up the full width on small screens */
+}
+
+/* Responsive adjustments */
+/* Adjust styles for screens with a minimum width of 280 pixels */
+@media (max-width: 280px) {
+  .scan-coverage div {
+    flex-basis: 100%; /* Make sure each div takes up 100% of the width */
+    margin-right: 0; /* Remove the margin between columns */
+  }
+
+  .scan-coverage p {
+    flex: 0 0 100%; /* Make sure each p element takes up the full width */
+  }
+}
+
+/* For screens larger than 768 pixels */
+@media (min-width: 769px) {
+  .scan-coverage div {
+    flex: 0 0 calc(50% - 10px); /* Reset the divs to occupy 50% of the width with spacing */
+    margin-right: 10px; /* Add spacing between columns */
+  }
+
+  /* Reset the p elements inside the divs to occupy 100% of the width */
+  .scan-coverage p {
+    flex: 0 0 100%; /* Make sure each p element takes up the full width */
+  }
 }

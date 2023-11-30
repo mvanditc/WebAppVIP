@@ -68,7 +68,106 @@
         </div>
 
         <!--  HTML CODE FOR BODY  -->
-        <h1>This is the Scan Results page</h1>
+        <!-- Scan Results Heading -->
+        <main>
+            <!-- Scan Results Heading -->
+            <section class="scan-results-heading">
+                <h2>Scan Results</h2>
+            </section>
+
+            <!-- Black Box Summary -->
+            <section class="black-box-summary">
+                <p>We found 12 security vulnerabilities</p>
+                <div class="risk-levels">
+                    <span class="yellow">7 Low Risk Issues</span>
+                    <span class="orange">2 Moderate Risk Issues</span>
+                    <span class="red">3 High Risk Issues</span>
+                </div>
+            </section>
+
+            <!-- Findings Section heading and filter menu-->
+            <h2 class="sub-heading">Findings</h2>
+            <label for="risk-level-dropdown">FILTER BY RISK LEVEL</label>
+            <div class="filter-by-risk-level">
+                <select id="risk-level-dropdown" name="risk-level">
+                    <option value="all">All (12)</option>
+                    <option value="low">Low Risk</option>
+                    <option value="moderate">Moderate Risk</option>
+                    <option value="high">High Risk</option>
+                </select>
+            </div>
+
+            <!-- Findings Section Issue Box -->
+            <section class="white-box">
+                <div>
+                    <h3><span class="issue-circle"></span> Issue Title</h3>
+                    <h4>URL</h4>
+                    <p>http://westerncybersociety.com</p>
+                    <h4>Risk Description</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                        bibendum urna quam. Quisque euismod purus sed turpis dictum
+                        volutpat. Proin nibh orci, aliquet ut pretium sed, condimentum eu
+                        nisl. Aliquam eu laoreet libero, nec auctor dolor. Nunc tellus
+                        magna, pretium ac sem ac, condimentum auctor erat.
+                    </p>
+                    <h4>Actionable Steps</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                        bibendum urna quam. Quisque euismod purus sed turpis dictum
+                        volutpat. Proin nibh orci, aliquet ut pretium sed, condimentum eu
+                        nisl. Aliquam eu laoreet libero, nec auctor dolor. Nunc tellus
+                        magna, pretium ac sem ac, condimentum auctor erat.
+                    </p>
+                </div>
+            </section>
+            <section class="white-box">
+                <div>
+                    <h3><span class="issue-circle"></span> Issue Title</h3>
+                    <h4>URL</h4>
+                    <p>http://westerncybersociety.com</p>
+                    <h4>Risk Description</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                        bibendum urna quam. Quisque euismod purus sed turpis dictum
+                        volutpat. Proin nibh orci, aliquet ut pretium sed, condimentum eu
+                        nisl. Aliquam eu laoreet libero, nec auctor dolor. Nunc tellus
+                        magna, pretium ac sem ac, condimentum auctor erat.
+                    </p>
+                    <h4>Actionable Steps</h4>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
+                        bibendum urna quam. Quisque euismod purus sed turpis dictum
+                        volutpat. Proin nibh orci, aliquet ut pretium sed, condimentum eu
+                        nisl. Aliquam eu laoreet libero, nec auctor dolor. Nunc tellus
+                        magna, pretium ac sem ac, condimentum auctor erat.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Scan Coverage Section -->
+            <h2 class="sub-heading">Scan Coverage Information</h2>
+            <section class="white-box scan-coverage">
+                <div>
+                    <h5>LISTS OF TESTS PERFORMED</h5>
+                    <p>
+                    ✓ Testing for example 1... Lorem ipsum dolor sit amet, consectetur
+                    </p>
+                    <p>✓ Testing for example 2...</p>
+                    <p>✓ Testing for example 3...</p>
+                    <p>✓ Testing for example 4...</p>
+                    <p>✓ Testing for example 5...</p>
+                    <p>✓ Testing for example 6...</p>
+                    <p>✓ Testing for example 7...</p>
+                    <p>✓ Testing for example 8...</p>
+                </div>
+                <div>
+                    <h5>SCAN PARAMETERS</h5>
+                    <h5>Target</h5>
+                    <p>http://www.example.com</p>
+                </div>
+            </section>
+        </main>
 
         <script src="../js/navbar.js"></script>
     </body>
