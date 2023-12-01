@@ -19,6 +19,13 @@ main {
   box-sizing: border-box;
 }
 
+/* URL */
+a {
+  overflow-wrap: break-word;
+  word-wrap: break-word; /* For older browser compatibility */
+  text-decoration:none
+}
+
 /* Scan Results Heading */
 .scan-results-heading h2 {
   font-size: 2.5rem;
