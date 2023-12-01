@@ -9,3 +9,74 @@ body {
     margin: 0;
     padding: 0;
 }
+
+/* Style for the button */
+.button-container {
+    width: 400px;
+    height: 400px;
+    background-color: white; 
+    position: relative;
+    margin: 50px 30px;
+    border-radius: 50%; 
+    cursor: pointer;
+}
+  
+.button-content {
+    font-family:'Arial';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    text-align: center;
+}
+
+#counter {
+    font-family:'Helvetica';
+    font-size: 6em; 
+    font-weight: bold;
+}
+
+/* Responsive for screens with a minimum width of 280 pixels */
+@media only screen and (max-width: 280px) {
+    .button-container {
+      width: 100%;
+      height: auto;
+      margin: 10px;
+      padding: 20px;
+    }
+    
+    .button-content {
+      width: 100%;
+    }
+}
+
+/* Style for the blurb */
+.blurb-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blurb-text {
+    margin-top: -600px;
+    margin-left: 300px;
+    text-align: justify; 
+    max-width: 800px; 
+    color: black;
+    font-size: 30px;
+}
+
+/* Responsive for screens with a minimum width of 280 pixels */
+@media only screen and (max-width: 280px) {
+    .blurb-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .blurb-text {
+      margin-top: 20px;
+      margin-left: 0;
+      font-size: 18px;
+    }
+}
