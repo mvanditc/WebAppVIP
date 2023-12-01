@@ -15,7 +15,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(90vh - 100px);
+    height: calc(100vh - 100px);
 }
 
 #scanPage-container {
@@ -96,8 +96,12 @@ body {
     color: white;
 }
 
-@media only screen and (max-width: 400px) {
+@media screen and (max-width: 400px) {
     #scanPage-container {
-        height: 70%;
+        font-size: 14px;
+    }
+
+    #scanPage-container {
+        height: 420px;
     }
 }
