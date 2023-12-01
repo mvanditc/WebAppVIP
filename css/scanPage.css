@@ -53,14 +53,6 @@ body {
     text-decoration: none;
 }
 
-#scanPage-progressBar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0px;
-}
-
 #scanPage-time-elapsed {
     margin-top: -0px;
     margin-bottom: 30px;

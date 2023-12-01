@@ -1,24 +1,12 @@
 // JavaScript used for the Scanning Page's functionality.
 
-var progressBar = new AsciiProgress("scanPage-progressBar",{
-  openCharacter: "[ ",
-  loadedCharacter: "█",
-  backgroundCharacter: "  ",
-  closeCharacter: " ]",
-  length: 10,
-  value: 0,
-  completeAt: 100,
-  showPercent: false,
-  percentDecimalPlaces: 2,
-  percentLocation: "top",
-  showComment: true,
-  startingComment: " ",
-  commentLocation: "bottom"
-});
+const progressBar = document.getElementById('scanPage-progress-bar');
+const finalPercentage = 100;
 
-for (let i = 0; i < 101; i++) {
-  setTimeout(function() {
-    progressBar.setValue(i);
-    progressBar.setComment(i + "%");
-  }, 50)
+const increaseProgress = () => {
+  for (let i = 0; i < finalPercentage + 1; i++) {
+    setTimeout(() => {
+      progressBar.innerHTML = "#";
+    }, i * 50);
+  }
 }
