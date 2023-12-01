@@ -10,6 +10,10 @@ body {
     padding: 0;
 }
 
+.homepage-top-container{
+  display: flex;
+}
+
 /* Style for the button */
 .button-container {
     width: 400px;
