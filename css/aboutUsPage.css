@@ -26,24 +26,35 @@ body {
 
 }
 
-/* For screens smaller than 389 pixels */
-@media (max-width: 280px) {
+/* For screens smaller than 280 pixels */
+@media (max-width: 291px) {
     .mission-statement-content{
-        font-size: 1em;
+        font-size: 0.5em;
+    }
+    .mission-statement{
+        font-size: 0.9em;
     }
 }
 
-/* For screens larger than 389 pixels */
-@media (min-width: 390px) {
+/* For screens smaller than 388 pixels */
+@media (max-width: 388px){
     .mission-statement-content{
-        font-size: 1.5em;
+        font-size: 0.6em;
+    }
+}
+
+
+/* For screens larger than 389 pixels */
+@media (min-width: 389px) {
+    .mission-statement-content{
+        font-size: 0.8em;
     }
 }
 
 /* For screens larger than 768 pixels */
 @media (min-width: 769px) {
     .mission-statement-content{
-        font-size: 2em;
+        font-size: 1em;
     }
 }
 
