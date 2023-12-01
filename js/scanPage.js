@@ -22,3 +22,22 @@ for (let i = 0; i < 101; i++) {
     progressBar.setComment(i + "%");
   }, i * 50)
 }
+
+
+let minvalue = 0
+let maxvalue = 10
+
+
+
+function counter(){
+  currentValue = minvalue
+
+  while(currentValue<maxvalue){
+    //time wait here
+    currentvalue += 1
+    // display bars
+  }
+
+}
+
+counter();
