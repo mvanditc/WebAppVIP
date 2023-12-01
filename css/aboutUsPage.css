@@ -8,6 +8,7 @@ body {
     color: white;
     margin: 0;
     padding: 0;
+    font-family: "font1";
 }
 
 .mission-statement {
@@ -23,5 +24,26 @@ body {
     height: 200px;
     width:75%;
 
+}
+
+/* For screens smaller than 389 pixels */
+@media (max-width: 280px) {
+    .mission-statement-content{
+        font-size: 1em;
+    }
+}
+
+/* For screens larger than 389 pixels */
+@media (min-width: 390px) {
+    .mission-statement-content{
+        font-size: 1.5em;
+    }
+}
+
+/* For screens larger than 768 pixels */
+@media (min-width: 769px) {
+    .mission-statement-content{
+        font-size: 2em;
+    }
 }
 
