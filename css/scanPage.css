@@ -15,25 +15,24 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - 100px);
+    /*height: calc(100vh - 100px);*/
+    margin: 15px 0px;
 }
 
 #scanPage-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: black;
     border: 10px solid rgba(133, 42, 252, 0.861);
-    height: 50vh;
     max-height: 480px;
     width: 70vw;
     max-width: 800px;
     font-family: 'font1';
-    padding: 0px 20px;
+    padding: 0px 0px 25px 5px;
     font-size: 18px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 #scanPage-initial-container {
@@ -79,7 +78,7 @@ body {
 }
 
 #scanPage-vulnerabilities-container {
-    margin-bottom: 100px;
+    margin-bottom: 75px;
 }
 
 #scanPage-view-details-container {
@@ -93,9 +92,5 @@ body {
 @media screen and (max-width: 400px), (max-height: 850px) {
     #scanPage-container {
         font-size: 14px;
-    }
-
-    #scanPage-container {
-        height: 420px;
     }
 }
