@@ -60,7 +60,10 @@ body {
     align-items: center;
 }
 
-#scanPage-time-elapsed {
+#scanPage-time-elapsed-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-top: -0px;
     margin-bottom: 30px;
 }
