@@ -13,6 +13,12 @@ Assigned JS File: **index.js**<br>
 - Put this text in the Blurb: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor”
 
 ### **Week 2: Create Scan Input (Due Dec 7th at 11:59 PM)**
+`Week 2 Additional Tasks:`
+- The button doesn't scale properly:
+    - It still gets squished when the screen is too small. (Please make sure the circle remains a circle and doesn't become squished.)
+
+    - When the website has vw and vh as big as a computer screen, the button is not beside the blurb, instead, it stays above. It should follow the Figma picture.
+
 `Week 2 Functional Requirements:`
 - Scan input must be fully responsive to accommodate screens that are a minimum of 280 pixels wide.
 - Scan input must be usable on mobile devices.
