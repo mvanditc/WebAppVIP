@@ -6,8 +6,9 @@ const finalPercentage = 100;
 let loadingSymbol = "--".repeat(100/5) + 1;
 
 const timeElapsed = document.getElementById('scanPage-time-elapsed');
-let seconds = 55;
+let seconds = -1;
 let minutes = 0;
+let screenSeconds = seconds;
 
 for (let i = 0; i < finalPercentage + 1; i = i + 5) {
   setTimeout(() => {
@@ -15,9 +16,15 @@ for (let i = 0; i < finalPercentage + 1; i = i + 5) {
     loadingSymbol = loadingSymbol.slice(0, -2);
     progressBar.textContent = `[ ${loadingSymbol} ]`;
     progressBarPercentage.textContent = `${i}%`;
-
+    
     seconds += 1;
+    screenSeconds += 1;
+    
+    if (seconds % 60 === 0) {
+      screenSeconds = 0;
+    }
+
     minutes = Math.floor(seconds/60);
-    timeElapsed.textContent = `${minutes}:${seconds}`
-  }, i * 200);
+    timeElapsed.textContent = `${minutes}:${screenSeconds}`
+  }, i * 100);
 }
