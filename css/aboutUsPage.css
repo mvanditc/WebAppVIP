@@ -11,9 +11,11 @@ body {
     font-family: "font1";
 }
 
-.mission-statement {
+.title {
     color: white;
     margin-left: 4%;
+    white-space: normal;
+    display: inline-block;
 }
     
 
@@ -23,7 +25,9 @@ body {
     color: black;
     height: 200px;
     width:75%;
-
+    white-space: normal;
+    display: inline-block;
+    margin-bottom: auto;
 }
 
 /* For screens smaller than 280 pixels */
@@ -31,15 +35,26 @@ body {
     .mission-statement-content{
         font-size: 0.5em;
     }
-    .mission-statement{
+    .title{
         font-size: 0.9em;
     }
+    .flex-container{
+        flex-direction: column;
+    }
+
 }
 
 /* For screens smaller than 388 pixels */
 @media (max-width: 388px){
     .mission-statement-content{
         font-size: 0.6em;
+    }
+    .flex-container{
+        flex-direction: column;
+    }
+    .box {
+        height: 90vw;
+        width: 90vw;
     }
 }
 
@@ -49,6 +64,11 @@ body {
     .mission-statement-content{
         font-size: 0.8em;
     }
+    .box {
+        height: 40vw;
+        width: 40vw;
+        padding: 2px;
+    }
 }
 
 /* For screens larger than 768 pixels */
@@ -56,5 +76,27 @@ body {
     .mission-statement-content{
         font-size: 1em;
     }
+    .box {
+        height: 27vw;
+        width: 27vw;
+    }
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.center {
+    margin:auto;
+    width:90%;
+}
+
+.box {
+    margin-top: 2%;
+    background: lightgray;
+    border-radius: 20px;
 }
 
