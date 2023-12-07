@@ -133,7 +133,7 @@ p {
 .issue-circle {
   width: 1.15rem; /* Adjust the size of the circle */
   height: 1.15rem; /* Adjust the size of the circle */
-  background-color: #ff5733;
+  /* background-color: #ff5733; */
   border-radius: 50%;
   display: inline-block;
   margin-right: 5px;
