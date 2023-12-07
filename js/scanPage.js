@@ -2,6 +2,7 @@
 
 const progressBar = document.getElementById('scanPage-progressBar');
 const progressBarPercentage = document.getElementById('scanPage-progressBar-percentage');
+const viewDetails = document.getElementById('scanPage-view-details-container');
 
 const finalPercentage = 100;
 const percentageJump = 10;
@@ -20,6 +21,8 @@ let screenSeconds = seconds;
 lowRisk.textContent = "-";
 mediumRisk.textContent = "-";
 highRisk.textContent = "-";
+
+viewDetails.style.display = 'none';
 
 const performScan = async () => {
   for (let i = 0; i < finalPercentage + 1; i = i + percentageJump) {
@@ -46,4 +49,5 @@ performScan().then(() => {
   lowRisk.textContent = String(1);
   mediumRisk.textContent = String(2);
   highRisk.textContent = String(3);
+  viewDetails.style.display = 'block'
 })
