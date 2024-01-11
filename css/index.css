@@ -18,11 +18,9 @@ body {
 
 /* Style for the button */
 .button-container {
-    width: 400px;
-    height: 400px;
     background-color: white; 
     position: relative;
-    transform: translate(15%,0%);
+    transform: translate(35%,5%);
     border-radius: 50%; 
     cursor: pointer;
     margin: 0 auto;
@@ -59,54 +57,22 @@ body {
     max-width: 800px; 
     color: black;
     font-size: 30px;
-}
-
-/* Responsive for screens with a minimum width of 280 pixels */
-@media only screen and (max-width: 280px) {
-  .homepage-top-container {
-      flex-direction: column;
-      align-items: center;
-  }
-
-  .button-container {
-      width: 100%;
-      height: auto;
-      margin: 10px;
-      padding: 20px;
-      margin-right: 0;
-  }
-
-  .blurb-container {
-      width: 100%;
-  }
-
-  .blurb-text {
-      margin-top: 20px;
-      margin-left: 0;
-      font-size: 18px;
-      text-align: justify;
-      max-width: 100%;
-  }
-  
-  .center-button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+    line-height: 1.4
 }
 
 /* Scan Input */
+.search-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transform: translate(30%,52%);
+    gap: 10px;
+}
+
 #clickableInput {
     width: 700px;
-    height: 70px;
+    height: 60px;
     background-color: #e0e0e0;
-    border: 2px solid #333;
-    position: fixed;
-    top: 80%;
-    left: 40%;
-    margin-top: -100px;
-    margin-left: -200px;
     cursor: pointer;
 }
 
@@ -120,8 +86,81 @@ body {
     padding: 0;
     margin: 0;
 }
-
-#label {
-    color: #fff;
-    margin-right: 100px;
+  
+#searchText {
+    font-size: 26px; 
+    color: white; 
+    font-family: Arial;
 }
+
+#scan-rectangle {
+    width: 125px;
+    height: 60px;
+    background-color: #7723d8; 
+    color: #fff; 
+    text-align: center;
+    line-height: 50px;
+    border-radius: 5px; 
+    font-family: Arial;
+    font-size: 26px; 
+}
+
+/* For screens smaller than 280 pixels */
+@media (max-width: 291px) {
+    .blurb-text{
+        font-size: 0.5em;
+    }
+    .flex-container{
+        flex-direction: column;
+    }
+
+}
+
+/* For screens smaller than 388 pixels */
+@media (max-width: 388px){
+    .blurb-text{
+        font-size: 0.6em;
+    }
+    .button-content{
+        font-size: 0.6em;
+    }
+    .flex-container{
+        flex-direction: column;
+    }
+    .button-container {
+        height: 100vw;
+        width: 100vw;
+    }
+}
+
+
+/* For screens larger than 389 pixels */
+@media (min-width: 389px) {
+    .blurb-text{
+        font-size: 0.8em;
+    }
+    .button-content{
+        font-size: 0.8em;
+    }
+    .button-container {
+        height: 50vw;
+        width: 50vw;
+        padding: 2px;
+    }
+}
+
+/* For screens larger than 768 pixels */
+@media (min-width: 769px) {
+    .blurb-text{
+        font-size: 1em;
+    }
+    .button-content{
+        font-size: 0.8em;
+    }
+    .button-container {
+        height: 23vw;
+        width: 23vw;
+    }
+}
+
+
