@@ -1,0 +1,467 @@
+[INFO] Logger started at 2024-01-05 11:47:37
+[INFO] Executable name: C:\Users\misha\Downloads\ZAP_2_14_0_windows.exe
+[INFO] install4j version: 10.0.6 (build 10097)
+[INFO] Properties: 
+-- listing properties --
+sun.desktop=windows
+awt.toolkit=sun.awt.windows.WToolkit
+java.specification.version=11
+sun.cpu.isalist=amd64
+sun.jnu.encoding=Cp1252
+java.class.path=C:\Users\misha\AppData\Local\Temp\e4j...
+sun.awt.enableExtraMouseButtons=true
+java.vm.vendor=Eclipse Adoptium
+sun.arch.data.model=64
+install4j.exeDir=C:\Users\misha\Downloads\
+user.variant=
+java.vendor.url=https://adoptium.net/
+user.timezone=America/New_York
+os.name=Windows 10
+java.vm.specification.version=11
+user.country=CA
+sun.boot.library.path=c:\program files\eclipse adoptium\jdk...
+sun.java.command=C:\Users\misha\Downloads\ZAP_2_14_0_w...
+jdk.debug=release
+sun.cpu.endian=little
+user.home=C:\Users\misha
+exe4j.unextractedPosition=4640284
+user.language=en
+jdk.http.auth.tunneling.disabledSchemes=
+java.specification.vendor=Oracle Corporation
+java.version.date=2022-08-12
+java.home=c:\program files\eclipse adoptium\jdk...
+file.separator=\
+java.vm.compressedOopsMode=Zero based
+line.separator=
+
+java.specification.name=Java Platform API Specification
+java.vm.specification.vendor=Oracle Corporation
+jdk.lang.Process.allowAmbiguousCommands=false
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+exe4j.moduleName=C:\Users\misha\Downloads\ZAP_2_14_0_w...
+exe4j.tempDir=C:\Users\misha\AppData\Local\Temp\e4j...
+user.script=
+exe4j.consoleCodepage=cp0
+sun.management.compiler=HotSpot 64-Bit Tiered Compilers
+exe4j.isInstall4j=true
+java.runtime.version=11.0.16.1+1
+user.name=misha
+path.separator=;
+os.version=10.0
+java.runtime.name=OpenJDK Runtime Environment
+file.encoding=Cp1252
+java.vm.name=OpenJDK 64-Bit Server VM
+java.vendor.version=Temurin-11.0.16.1+1
+exe4j.semaphoreName=Local\c:_users_misha_downloads_zap_2_...
+install4j.appDir=C:\Users\misha\AppData\Local\Temp\
+java.vendor.url.bug=https://github.com/adoptium/adoptium-...
+java.io.tmpdir=C:\Users\misha\AppData\Local\Temp\
+java.version=11.0.16.1
+user.dir=C:\Users\misha\AppData\Local\Temp\e4j...
+os.arch=amd64
+java.vm.specification.name=Java Virtual Machine Specification
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+sun.os.patch.level=
+java.library.path=c:\program files\eclipse adoptium\jdk...
+java.vm.info=mixed mode
+java.vendor=Eclipse Adoptium
+java.vm.version=11.0.16.1+1
+sun.io.unicode.encoding=UnicodeLittle
+java.class.version=55.0
+exe4j.launchName=C:\Users\misha\Downloads\ZAP_2_14_0_w...
+[INFO] Variable changed: sys.resolveUserSpecificInstallationDir=false[class java.lang.String]
+[INFO] System language 'en'
+[INFO] com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction [ID 13]: Execute action
+       Property linuxPrivilegeRequirement: Require root
+       Property failIfNotObtainedLinux: false
+       Property failIfNotObtainedMac: true
+       Property failIfNotObtainedWin: true
+       Property failIfNotRootUnix: true
+       Property obtainIfAdminMac: true
+       Property obtainIfAdminWin: true
+       Property obtainIfNormalMac: true
+       Property obtainIfNormalWin: true
+       Property rollbackSupported: false
+       Property updateInstallationDirectory: true
+       Starting elevated helper
+       Using communication backend com.install4j.runtime.installer.platform.win32.Win32CommunicationBackend
+       Execute action successful after 11113 ms
+[INFO] com.install4j.runtime.beans.actions.control.RunScriptAction [ID 248]: Execute action
+       Property rollbackScript: null
+       Property script: com.install4j.script.I4jScript_Internal_46
+       Property rollbackSupported: false
+       Variable changed: createDesktopLinkAction=true[class java.lang.Boolean]
+       Variable changed: sys.programGroupName=ZAP\Zed Attack Proxy[class java.lang.String]
+       Execute action successful after 27 ms
+[INFO] com.install4j.runtime.beans.actions.control.RunScriptAction [ID 821]: Execute action
+       Property rollbackScript: null
+       Property script: com.install4j.script.I4jScript_Internal_47
+       Property rollbackSupported: false
+       Execute action successful after 12 ms
+[INFO] com.install4j.runtime.beans.screens.StartupScreen [ID 1]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.WelcomeScreen [ID 2]: Show screen
+[INFO] com.install4j.runtime.beans.screens.WelcomeScreen [ID 2]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.LicenseScreen [ID 52]: Show screen
+[INFO] com.install4j.runtime.beans.screens.LicenseScreen [ID 52]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 98]: Show screen
+       Variable changed: installationType=1[class java.lang.Integer]
+       Variable changed: customInstall=true[class java.lang.Boolean]
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 98]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.InstallationDirectoryScreen [ID 4]: Show screen
+       Variable changed: sys.installationDir=C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy[class java.lang.String]
+       checking writable with maximum
+[INFO] com.install4j.runtime.beans.actions.misc.LoadResponseFileAction [ID 5]: Execute action
+       Property excludedVariables: [sys.installationDir]
+       Property file: null
+       Property overwriteStrategy: Do not overwrite command line
+       Property registerForResponseFile: true
+       Property rollbackSupported: false
+       Response file C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\response.varfile does not exist
+       Execute action successful after 9 ms
+[INFO] com.install4j.runtime.beans.screens.InstallationDirectoryScreen [ID 4]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.StandardProgramGroupScreen [ID 7]: Show screen
+       Variable changed: sys.programGroupName=ZAP\Zed Attack Proxy[class java.lang.String]
+       Variable changed: sys.programGroupDisabled=true[class java.lang.Boolean]
+       Variable changed: sys.programGroupAllUsers=true[class java.lang.Boolean]
+[INFO] com.install4j.runtime.beans.screens.StandardProgramGroupScreen [ID 7]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen [ID 236]: Show screen
+       Variable changed: createDesktopLinkAction=false[class java.lang.Boolean]
+       Variable changed: createQuicklaunchIconAction=false[class java.lang.Boolean]
+[INFO] com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen [ID 236]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 59]: Show screen
+       Variable changed: cfu.checkForUpdates=false[class java.lang.Boolean]
+       Variable changed: cfu.downloadNewRelease=false[class java.lang.Boolean]
+       Variable changed: cfu.checkAddOnUpdates=true[class java.lang.Boolean]
+       Variable changed: cfu.installAddonUpdates=true[class java.lang.Boolean]
+       Variable changed: cfu.installScannerRules=true[class java.lang.Boolean]
+       Variable changed: cfu.reportReleaseAddons=true[class java.lang.Boolean]
+       Variable changed: cfu.reportBetaAddons=true[class java.lang.Boolean]
+       Variable changed: cfu.reportAlphaAddons=true[class java.lang.Boolean]
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 59]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 242]: Show screen
+       Variable changed: installationSummary=Destination location:
+    ${installer:sys.contentDir}
+
+Check for Updates:
+  Check for updates on startup: No
+  Automatically download new ZAP releases: No
+  Check for updates to the add-ons you have installed: Yes
+  Automatically install updates to the add-ons you have installed: Yes
+  Automatically install updates to the scan rules you have installed: Yes
+  Report new Release status add-ons: Yes
+  Report new Beta status add-ons: Yes
+  Report new Alpha status add-ons: Yes
+[class java.lang.String]
+[INFO] com.install4j.runtime.beans.screens.FormScreen [ID 242]: command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.InstallationScreen [ID 8]: Show screen
+[INFO] com.install4j.runtime.beans.actions.UninstallPreviousAction [ID 820]: Execute action
+       Property installerVariables: {}
+       Property logFiles: []
+       Property onlyIfSameApplicationId: false
+       Property rollbackSupported: false
+       Property uninstallServices: true
+       checking running processes
+       checking running processes ok
+[ERROR] com.install4j.runtime.beans.actions.UninstallPreviousAction [ID 820]: com.install4j.api.beans.UndefinedVariableException: installer:uninstallOldDir
+com.install4j.api.beans.UndefinedVariableException: installer:uninstallOldDir
+	at com.install4j.runtime.installer.InstallerVariables.handleError(InstallerVariables.java:1301)
+	at com.install4j.runtime.installer.InstallerVariables$InstallerReplacementCallback.getReplacement(InstallerVariables.java:1234)
+	at com.install4j.runtime.util.StringUtil.replaceVariable(StringUtil.java:94)
+	at com.install4j.runtime.util.StringUtil.replaceVariable(StringUtil.java:64)
+	at com.install4j.runtime.installer.InstallerVariables.replaceVariables(InstallerVariables.java:417)
+	at com.install4j.runtime.installer.InstallerVariables.replaceVariables(InstallerVariables.java:406)
+	at com.install4j.runtime.installer.InstallerVariables.replaceVariables(InstallerVariables.java:402)
+	at com.install4j.runtime.installer.InstallerVariables.replaceVariables(InstallerVariables.java:442)
+	at com.install4j.api.beans.AbstractBean.replaceVariables(AbstractBean.java:91)
+	at com.install4j.runtime.beans.actions.UninstallPreviousAction.getInstallationDirectory(UninstallPreviousAction.java:61)
+	at com.install4j.runtime.beans.actions.UninstallPreviousAction.install(UninstallPreviousAction.java:104)
+	at com.install4j.runtime.installer.ContextImpl$7.executeAction(ContextImpl.java:1775)
+	at com.install4j.runtime.installer.ContextImpl$7.fetchValue(ContextImpl.java:1765)
+	at com.install4j.runtime.installer.ContextImpl$7.fetchValue(ContextImpl.java:1762)
+	at com.install4j.runtime.installer.helper.comm.actions.FetchObjectAction.execute(FetchObjectAction.java:14)
+	at com.install4j.runtime.installer.helper.comm.HelperCommunication.executeActionDirect(HelperCommunication.java:292)
+	at com.install4j.runtime.installer.helper.comm.HelperCommunication.executeActionInt(HelperCommunication.java:267)
+	at com.install4j.runtime.installer.helper.comm.HelperCommunication.executeActionChecked(HelperCommunication.java:205)
+	at com.install4j.runtime.installer.helper.comm.HelperCommunication.fetchObjectChecked(HelperCommunication.java:188)
+	at com.install4j.runtime.installer.ContextImpl.performActionIntStatic(ContextImpl.java:1762)
+	at com.install4j.runtime.installer.InstallerContextImpl.performActionInt(InstallerContextImpl.java:163)
+	at com.install4j.runtime.installer.ContextImpl.performAction(ContextImpl.java:1173)
+	at com.install4j.runtime.installer.controller.Controller.executeAction(Controller.java:413)
+	at com.install4j.runtime.installer.controller.Controller.executeActions(Controller.java:379)
+	at com.install4j.runtime.installer.controller.Controller.handleCommand(Controller.java:233)
+	at com.install4j.runtime.installer.controller.Controller.start(Controller.java:135)
+	at com.install4j.runtime.installer.Installer.runInProcess(Installer.java:74)
+	at com.install4j.runtime.installer.Installer.main(Installer.java:50)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.exe4j.runtime.LauncherEngine.launch(LauncherEngine.java:84)
+	at com.exe4j.runtime.WinLauncher.main(WinLauncher.java:94)
+	at com.install4j.runtime.launcher.WinLauncher.main(WinLauncher.java:25)
+        Execute action not successful after 95 ms
+[INFO] com.install4j.runtime.beans.actions.UninstallPreviousAction [ID 169]: Execute action
+       Property installationDirectory: null
+       Property installerVariables: {}
+       Property logFiles: []
+       Property onlyIfSameApplicationId: true
+       Property rollbackSupported: false
+       Property uninstallServices: true
+       checking running processes
+       checking running processes ok
+       previous installation id at C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy: null
+       no previous installation detected, uninstaller was not started
+       finished
+       Execute action successful after 6 ms
+[INFO] com.install4j.runtime.beans.actions.InstallFilesAction [ID 9]: Execute action
+       Property directoryResolverScript: null
+       Property fileFilterScript: null
+       Property sizeCalculatorScript: null
+       Property acceptAllCertificates: false
+       Property checkFreeSpace: true
+       Property delay: false
+       Property installRuntime: true
+       Property rollbackSupported: true
+       Property saveDownloadedFiles: false
+       Property showFileNames: true
+       Property triggerReboot: true
+       Property validateApplicationId: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\ZAP.exe; size: 188928 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 644, overwriteMode: Always ask except for update, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\alertFilters-release-18.zap; size: 552590 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\ascanrules-release-58.zap; size: 3271247 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\authhelper-beta-0.10.0.zap; size: 812274 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\automation-beta-0.33.0.zap; size: 1741692 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\bruteforce-beta-15.zap; size: 553691 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\callhome-release-0.8.0.zap; size: 322152 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\commonlib-release-1.18.0.zap; size: 10603667 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\database-alpha-0.3.0.zap; size: 20245848 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\diff-beta-14.zap; size: 289830 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\directorylistv1-release-7.zap; size: 961166 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\domxss-release-18.zap; size: 271733 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\encoder-release-1.4.0.zap; size: 470025 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\exim-beta-0.7.0.zap; size: 478582 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\formhandler-beta-6.5.0.zap; size: 2126661 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\fuzz-beta-13.12.0.zap; size: 2030800 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\gettingStarted-release-16.zap; size: 784111 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\graaljs-alpha-0.5.0.zap; size: 24535986 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\graphql-alpha-0.20.0.zap; size: 5385176 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\help-release-17.zap; size: 628064 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\hud-beta-0.18.0.zap; size: 1382584 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\invoke-beta-14.zap; size: 322621 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\network-beta-0.12.0.zap; size: 24814384 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\oast-beta-0.17.0.zap; size: 813582 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\onlineMenu-release-12.zap; size: 208613 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\openapi-beta-37.zap; size: 13361126 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\postman-alpha-0.2.0.zap; size: 238827 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\pscanrules-release-52.zap; size: 1861549 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\quickstart-release-43.zap; size: 732069 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\replacer-release-15.zap; size: 435783 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\reports-release-0.26.0.zap; size: 14143430 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\requester-beta-7.4.0.zap; size: 732769 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\retest-alpha-0.8.0.zap; size: 258962 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\retire-release-0.26.0.zap; size: 979155 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\reveal-release-7.zap; size: 238691 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\scripts-release-42.zap; size: 849844 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\selenium-release-15.15.0.zap; size: 31817496 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\soap-beta-20.zap; size: 12846384 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\spider-release-0.7.0.zap; size: 1149225 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\spiderAjax-release-23.17.0.zap; size: 7561877 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\tips-beta-12.zap; size: 572464 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\webdriverwindows-release-64.zap; size: 18003651 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\websocket-release-30.zap; size: 1398420 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\plugin\zest-beta-42.zap; size: 5601653 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4jdel.exe; size: 95936 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 644, overwriteMode: Always, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4jinst.dll; size: 232128 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\README; size: 2167 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 644, overwriteMode: Always ask except for update, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\db.properties; size: 737 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\hsqldb.properties; size: 11940 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\mysql.properties; size: 10289 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\mysql.schema; size: 9970 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\zapdb.properties; size: 89 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\db\zapdb.script; size: 4980 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages.properties; size: 223844 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ar_SA.properties; size: 274494 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_az_AZ.properties; size: 228019 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_bn_BD.properties; size: 244802 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_bs_BA.properties; size: 225286 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ceb_PH.properties; size: 236397 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_da_DK.properties; size: 221436 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_de_DE.properties; size: 226180 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_el_GR.properties; size: 276928 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_es_ES.properties; size: 261007 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_fa_IR.properties; size: 279187 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_fil_PH.properties; size: 236159 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_fr_FR.properties; size: 243566 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ha_HG.properties; size: 219703 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_he_IL.properties; size: 227329 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_hi_IN.properties; size: 220343 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_hr_HR.properties; size: 220002 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_hu_HU.properties; size: 229272 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_id_ID.properties; size: 224544 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_it_IT.properties; size: 234642 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ja_JP.properties; size: 259934 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ko_KR.properties; size: 222454 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_mk_MK.properties; size: 219703 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ms_MY.properties; size: 220750 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_nb_NO.properties; size: 219704 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_nl_NL.properties; size: 225770 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_pcm_NG.properties; size: 220287 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_pl_PL.properties; size: 228515 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_pt_BR.properties; size: 244319 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_pt_PT.properties; size: 224097 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ro_RO.properties; size: 225000 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ru_RU.properties; size: 610700 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_si_LK.properties; size: 220444 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_sk_SK.properties; size: 220198 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_sl_SI.properties; size: 220914 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_sq_AL.properties; size: 220168 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_sr_CS.properties; size: 220221 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_sr_SP.properties; size: 219930 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_tr_TR.properties; size: 251508 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_uk_UA.properties; size: 457996 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_ur_PK.properties; size: 239057 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_vi_VN.properties; size: 220245 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_yo_NG.properties; size: 219686 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_zh_CN.properties; size: 290299 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lang\Messages_zh_TW.properties; size: 224334 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-beanutils-1.9.4.jar; size: 246918 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-codec-1.16.0.jar; size: 360738 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-collections-3.2.2.jar; size: 588337 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-configuration-1.10.jar; size: 362679 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-csv-1.10.0.jar; size: 54749 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-httpclient-3.1.jar; size: 305001 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-io-2.13.0.jar; size: 483954 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-lang-2.6.jar; size: 284220 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-lang3-3.13.0.jar; size: 632267 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-logging-1.2.jar; size: 61829 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\commons-text-1.10.0.jar; size: 238400 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\ezmorph-1.0.6.jar; size: 86487 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\flatlaf-3.2.1.jar; size: 816320 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\harlib-1.1.3.jar; size: 123713 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\hsqldb-2.7.2.jar; size: 1644340 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\jackson-core-asl-1.9.13.jar; size: 232248 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\java-semver-0.9.0.jar; size: 46843 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\javahelp-2.0.05.jar; size: 562749 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\jericho-html-3.4.jar; size: 238398 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\jfreechart-1.5.4.jar; size: 1643790 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\jgrapht-core-0.9.0.jar; size: 333259 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\json-lib-2.4-jdk15.jar; size: 159123 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\log4j-1.2-api-2.20.0.jar; size: 344375 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\log4j-api-2.20.0.jar; size: 313296 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\log4j-core-2.20.0.jar; size: 1847550 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\log4j-jul-2.20.0.jar; size: 29968 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\rsyntaxtextarea-3.3.4.jar; size: 1297525 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\swingx-all-1.6.5-1.jar; size: 1495328 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\lib\xom-1.3.9.jar; size: 326351 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\ApacheLicense-2.0.txt; size: 11358 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\COPYING; size: 26992 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\OFL.txt; size: 4599 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\RSyntaxTextArea.License.txt; size: 1492 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\TheClarifiedArtisticLicense.htm; size: 7400 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\TheClarifiedArtisticLicense.rtf; size: 7228 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\gpl-2.0.txt; size: 18092 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\hsqldb_lic.txt; size: 1602 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\hypersonic_lic.txt; size: 3368 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\license\lgpl-3.0.txt; size: 7651 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\active\Active default template.js; size: 3206 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\authentication\Authentication default template.js; size: 4115 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\authentication\BodgeIt Store Authentication.js; size: 3439 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\authentication\Simple Form-Based Authentication.js; size: 4157 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\authentication\Wordpress Authentication.js; size: 5450 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\httpsender\AddZapHeader.js; size: 1181 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\httpsender\HttpSender default template.js; size: 1589 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\passive\Passive default template.js; size: 2262 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\proxy\Proxy default template.js; size: 1215 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\session\Juice Shop Session Management.js; size: 2000 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\session\Session Management default template.js; size: 2483 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\standalone\Loop through history table.js; size: 771 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\standalone\Standalone default template.js; size: 88 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\standalone\Traverse sites tree.js; size: 483 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\targeted\Find HTML comments.js; size: 545 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\targeted\Targeted default template.js; size: 449 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\variant\Input Vector default template.js; size: 4226 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\scripts\templates\variant\Site modifying JSON example.js; size: 5270 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\uninstall.exe; size: 472576 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 700, overwriteMode: If newer otherwise ask, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\xml\config.xml; size: 3077 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 644, overwriteMode: Always ask except for update, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\xml\drivers.dtd; size: 170 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\xml\reportCompare.xsl; size: 3054 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\zap-2.14.0.jar; size: 5420981 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\zap.bat; size: 188 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\zap.ico; size: 123778 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\zap.sh; size: 3973 bytes; exists: false
+       File options set to: [fileTime: Thu Oct 12 12:02:08 EDT 2023, mode: 755, overwriteMode: Always ask except for update, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\inst_jre.cfg; size: 59 bytes; exists: false
+       File options set to: [fileTime: Fri Jan 05 11:48:58 EST 2024, mode: 644, overwriteMode: Always, shared: false, uninstallMode: If created, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4jruntime.jar; size: 2101102 bytes; exists: false
+       File options set to: [fileTime: Fri Jan 05 11:48:58 EST 2024, mode: 644, overwriteMode: Always, shared: false, uninstallMode: Always, delayIfNecessary: false]
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\MessagesDefault; size: 34826 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4jparams.conf; size: 108261 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\stats.properties; size: 1334 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\user.jar; size: 21583 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\user\flatlaf.jar; size: 758100 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_0_7vk7gk.utf8; size: 34826 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_10_7vk7gk.utf8; size: 37661 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_11_7vk7gk.utf8; size: 35446 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_12_7vk7gk.utf8; size: 36311 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_13_7vk7gk.utf8; size: 37556 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_14_7vk7gk_dcvdhj.png; size: 816 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_15_7vk7gk_1pa6cgr.png; size: 1933 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_16_7vk7gk_16vgtkw.png; size: 3600 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_17_7vk7gk_6twyc5.png; size: 10790 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_18_7vk7gk.txt; size: 11358 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_19_7vk7gk_18mu4rr.ico; size: 123778 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_1_7vk7gk.properties; size: 3146 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_20_7vk7gk_1gk1b9c.png; size: 63628 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_21_7vk7gk_18gg8kx.png; size: 9202 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_21_7vk7gk_18gg8kx@2x.png; size: 15419 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_21_7vk7gk_18gg8kx@2x_dark.png; size: 15837 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_21_7vk7gk_18gg8kx_dark.png; size: 8891 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_2_7vk7gk.utf8; size: 33865 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_3_7vk7gk.utf8; size: 38929 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_4_7vk7gk.utf8; size: 37408 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_5_7vk7gk.utf8; size: 48914 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_6_7vk7gk.utf8; size: 36823 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_7_7vk7gk.utf8; size: 34861 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_8_7vk7gk.utf8; size: 44212 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\i4j_extf_9_7vk7gk.utf8; size: 34760 bytes; exists: false
+       Install file: C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\.install4j\installer.ico; size: 123778 bytes; exists: false
+       Execute action successful after 4496 ms
+[INFO] com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction [ID 11]: Execute action
+       Property icon: null
+       Property iconSource: Installer icon
+       Property itemName: Zed Attack Proxy 2.14.0
+       Property persistentProperties: {}
+       Property rollbackSupported: true
+       Execute action successful after 104 ms
+[INFO] com.install4j.runtime.beans.actions.xml.InsertXmlFragmentAction [ID 570]: Execute action
+       Property files: [xml\config.xml]
+       Property fragmentFile: null
+       Property fragmentInsertMode: Insert as first child
+       Property fragmentSource: Direct entry
+       Property fragmentText: <start>
+	<checkForUpdates>false</checkForUpdates>
+	<downloadNewRelease>false</downloadNewRelease>
+	<checkAddonUpdates>true</checkAddonUpdates>
+	<installAddonUpdates>true</installAddonUpdates>
+	<installScannerRules>true</installScannerRules>
+	<reportReleaseAddons>true</reportReleaseAddons>
+	<reportBetaAddons>true</reportBetaAddons>
+	<reportAlphaAddons>true</reportAlphaAddons>
+</start>
+       Property xpathExpression: /config
+       Property downloadExternalEntities: false
+       Property rollbackSupported: true
+       Property validating: false
+       Backing up C:\Users\misha\Desktop\WCS SIP Project\UnderstandingZAP\zedattackproxy\xml\config.xml
+       Execute action successful after 383 ms
+[INFO] com.install4j.runtime.beans.screens.InstallationScreen [ID 8]: Rollback barrier reached
+       command: move 1 screens, executing actions, checking condition
+[INFO] com.install4j.runtime.beans.screens.FinishedScreen [ID 12]: Show screen
+[INFO] com.install4j.runtime.beans.screens.FinishedScreen [ID 12]: command: finish
+       cleaning up
+       Finished at 2024-01-05 11:49:01

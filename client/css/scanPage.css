@@ -1,0 +1,11 @@
+/* scanPage.css is used to style the scanPage.html file */
+
+@import 'global.css';
+@import 'navbar.css';
+
+body {
+    background-color: var(--background-color);
+    color: white;
+    margin: 0;
+    padding: 0;
+}
