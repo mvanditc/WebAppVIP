@@ -68,8 +68,60 @@
         </div>
 
         <!--  HTML CODE FOR BODY  -->
-        <h1>This is the Scan Results page</h1>
+        <!-- Scan Results Heading -->
+        <main>
+            <!-- Scan Results Heading -->
+            <section class="scan-results-heading">
+                <h2>Scan Results</h2>
+            </section>
+
+            <!-- Black Box Summary -->
+            <section class="black-box-summary">
+                <p>We found 12 security vulnerabilities</p>
+                <div class="risk-levels">
+                    <span class="yellow"></span>
+                    <span class="orange"></span>
+                    <span class="red"></span>
+                </div>
+            </section>
+
+            <!-- Findings Section heading and filter menu-->
+            <h2 class="sub-heading">Findings</h2>
+            <label for="risk-level-dropdown">FILTER BY RISK LEVEL</label>
+            <div class="filter-by-risk-level">
+                <select id="risk-level-dropdown" name="risk-level">
+                    <option value="all"></option>
+                    <option value="low"></option>
+                    <option value="moderate"></option>
+                    <option value="high"></option>
+                </select>
+            </div>
+
+            <!-- Findings Section Issue Box -->
+            <div id="issues-list">
+                <!-- Issues rendered by JavaScript -->
+            </div>
+
+            <!-- Scan Coverage Section -->
+            <h2 class="sub-heading">Scan Coverage Information</h2>
+            <section class="white-box scan-coverage">
+                <div>
+                    <h5>LISTS OF TESTS PERFORMED</h5>
+                    <div id="test-performed">
+                        <!-- Tests rendered by JavaScript -->
+                    </div>
+                </div>
+                <div>
+                    <h5>SCAN PARAMETERS</h5>
+                    <h5>Target</h5>
+                    <div id="scan-parameter">
+                        <!-- Scan Parameter rendered by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </main>
 
         <script src="../js/navbar.js"></script>
+        <script src="../js/scanResultsPage.js"></script>
     </body>
 </html>

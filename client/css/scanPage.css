@@ -9,3 +9,99 @@ body {
     margin: 0;
     padding: 0;
 }
+
+#scanPage-main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*height: calc(100vh - 100px);*/
+    margin: 15px 0px;
+}
+
+#scanPage-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: black;
+    border: 10px solid rgba(133, 42, 252, 0.861);
+    max-height: 480px;
+    width: 70vw;
+    max-width: 800px;
+    font-family: 'font1';
+    padding: 0px 0px 25px 5px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+#scanPage-initial-container {
+    margin-bottom: 10px;
+}
+
+#scanPage-initial-container p {
+    margin: 5px 0px;
+}
+
+#scanPage-scan-target-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 5px;
+}
+
+#scanPage-scan-target {
+    color: var(--blue-text);
+    text-decoration: none;
+}
+
+#scanPage-progressBar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#scanPage-time-elapsed-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: -0px;
+    margin-bottom: 30px;
+}
+
+.scanPage-risk-container {
+    display: flex;
+    flex-direction: row;
+    margin: -20px 0px;
+}
+
+#scanPage-low-risk {
+    color: yellow;
+}
+
+#scanPage-medium-risk {
+    color: orange;
+}
+
+#scanPage-high-risk {
+    color: red;
+}
+
+#scanPage-vulnerabilities-container {
+    margin-bottom: 75px;
+}
+
+#scanPage-view-details-container {
+    text-align: center;
+}
+
+#scanPage-view-details-container a {
+    color: white;
+}
+
+@media screen and (max-width: 400px), (max-height: 850px) {
+    #scanPage-container {
+        font-size: 14px;
+    }
+}
