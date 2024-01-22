@@ -5,67 +5,67 @@
 
 body {
     background-color: var(--background-color);
+    font-family: "font1", sans-serif;
     color: white;
     margin: 0;
     padding: 0;
 }
 
-.homepage-top-container{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+/* container for top page */
+.top-container {
+display: flex;
+align-items: center;
+justify-content: space-around;
+padding-top: 50px;
+max-width: 1200px;
+margin: auto;
+flex-wrap: wrap;
 }
 
-/* Style for the button */
-.button-container {
+
+.button {
+    display: flex;
     background-color: white; 
     position: relative;
-    transform: translate(35%,5%);
+    height: 250px;
+    width: 250px;
     border-radius: 50%; 
     cursor: pointer;
-    margin: 0 auto;
-}
-  
-.button-content {
     font-family:'Arial';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     color: black;
     text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
 }
 
 #counter {
     font-family:'Helvetica';
-    font-size: 6em; 
+    font-size: 30px; 
     font-weight: bold;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* Style for the blurb */
-.blurb-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    margin-left: 10%;
-    margin-right: 5%;
-}
-
 .blurb-text {
-    text-align: justify; 
-    max-width: 800px; 
     color: black;
     font-size: 30px;
-    line-height: 1.4
+    line-height: 1.4;
+    flex: 1;
+    margin: 0 20px;
+    font-family: Arial;
 }
 
-/* Scan Input */
+/* Scanner */
 .search-container {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    transform: translate(30%,52%);
+    margin: 30px 0;
+    padding: 20px;
     gap: 10px;
 }
 
@@ -93,73 +93,60 @@ body {
     font-family: Arial;
 }
 
-#scan-rectangle {
-    width: 125px;
-    height: 60px;
+#search-button {
+    padding: 12px 20px;
     background-color: #7723d8; 
-    color: #fff; 
+    color: white; 
     text-align: center;
     line-height: 50px;
+    height: 45px;
+    width: 60px;
     border-radius: 5px; 
+    border: none;
     font-family: Arial;
     font-size: 26px; 
 }
 
-/* For screens smaller than 280 pixels */
-@media (max-width: 291px) {
-    .blurb-text{
-        font-size: 0.5em;
+/* Responsiveness  */
+@media (max-width: 769px) {
+    .top-container{
+        flex-direction: column;
+        align-items: center;
     }
-    .flex-container{
+}
+
+@media (max-width:600px){
+    .bottom-container{
         flex-direction: column;
     }
-
 }
 
-/* For screens smaller than 388 pixels */
-@media (max-width: 388px){
-    .blurb-text{
-        font-size: 0.6em;
-    }
-    .button-content{
-        font-size: 0.6em;
-    }
-    .flex-container{
-        flex-direction: column;
-    }
-    .button-container {
-        height: 100vw;
-        width: 100vw;
+@media (max-width: 320px) {
+    .button{
+        width: 200px;
+        height: 200px;
+        font-size: 20px;
     }
 }
 
-
-/* For screens larger than 389 pixels */
-@media (min-width: 389px) {
-    .blurb-text{
-        font-size: 0.8em;
-    }
-    .button-content{
-        font-size: 0.8em;
-    }
-    .button-container {
-        height: 50vw;
-        width: 50vw;
-        padding: 2px;
+@media (max-width: 280px) {
+    .button {
+        width: 150px;
+        height: 150px;
+        font-size: 15px;
+    }  
+    .counter {
+        bottom: 10px;
+        font-size: 10px;
     }
 }
 
-/* For screens larger than 768 pixels */
-@media (min-width: 769px) {
-    .blurb-text{
-        font-size: 1em;
-    }
-    .button-content{
-        font-size: 0.8em;
-    }
-    .button-container {
-        height: 23vw;
-        width: 23vw;
+@media (max-width: 770px) {
+    .button{
+        width: 500px;
+        height: 150px;
+        font-size: 25px;
+        border-radius: 5%;
     }
 }
 
