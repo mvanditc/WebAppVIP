@@ -18,7 +18,8 @@ align-items: center;
 justify-content: space-around;
 padding-top: 50px;
 max-width: 1200px;
-margin: auto;
+margin-right: 4%;
+margin-left: 4%;
 flex-wrap: wrap;
 }
 
@@ -93,6 +94,7 @@ flex-wrap: wrap;
     cursor: pointer;
     border-radius: 5px;
     width: 100px;
+    height: 55px;
 }
 
 /* Responsiveness  */
@@ -130,7 +132,8 @@ flex-wrap: wrap;
     }
     .search-label {
         text-align: center;
-        margin-right: 45%;
+        margin-right: 36%;
+        margin-bottom: -3%;
     }
     #search-button{
         height: 50px;
