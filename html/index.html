@@ -81,12 +81,10 @@
         </div>
         
         <!--HTML Code for Search Bar-->
-        <div class="search-container">
-            <div id="searchText">Url to Scan:</div>
-            <div id="clickableInput" onclick="enableInput()">
-                <input type="text" id="inputText" onblur="disableInput()">
-            </div>
-            <div id="search-button">Scan</div>
+        <div class="bottom-container">
+            <label for="search-input" class="search-label">URL to Scan:</label>
+            <input type="text" id="search-input" aria-label="URL to Scan">
+            <button type="submit" id="search-button">Scan</button>
         </div>
 
         <!--  HTML CODE FOR BODY  -->
