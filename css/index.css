@@ -18,8 +18,8 @@ align-items: center;
 justify-content: space-around;
 padding-top: 50px;
 max-width: 1200px;
-margin-right: 4%;
-margin-left: 4%;
+margin-right: 10%;
+margin-left: 10%;
 flex-wrap: wrap;
 }
 
@@ -102,6 +102,8 @@ flex-wrap: wrap;
     .top-container{
         flex-direction: column;
         align-items: center;
+        margin-right: 4%;
+        margin-left: 4%;
     }
     .button{
         margin-top: -2%;
@@ -116,7 +118,7 @@ flex-wrap: wrap;
     }
 }
 
-@media (max-width:600px){
+@media (max-width:640px){
     .top-container{
         margin-top: -5%;
     }
@@ -132,7 +134,7 @@ flex-wrap: wrap;
     }
     .search-label {
         text-align: center;
-        margin-right: 36%;
+        margin-right: 40%;
         margin-bottom: -3%;
     }
     #search-button{
