@@ -18,20 +18,20 @@
     --moderate-risk: #FF6F1E;
     --high-risk: #FF2626;
 
-    --black-text: #1E1E1E1E;
+    --black-text: #1E1E1E;
     --white-text: #FFFFFF;
     --purple-text: #6F2BA5;
     --blue-text: #605DF8;
 
-    --dict-tool-close-button: #453A00;
+    --tool-close-button: #453A00; /* Close Tool */
 
     --grey-color: #D9D9D9;
 
     /* Navbar Colors */
-    --navbar-color: #5800B2;
-    --selected-navbar-toplevel-button-color: #8123E1;
-    --navbar-list-button-color: #605DF8;
-    --selected-navbar-list-button-color: #89B8FF;
+    --navbar-color: #5800B2; /* Navbar Color 1 */
+    --selected-navbar-toplevel-button-color: #8123E1; /* Navbar Select 1 */
+    --navbar-list-button-color: #605DF8; /* Navbar Color 2 */
+    --selected-navbar-list-button-color: #89B8FF; /* Navbar Select 2 */
 }
 
 /* Used to disable selection of text (Used for buttons). */

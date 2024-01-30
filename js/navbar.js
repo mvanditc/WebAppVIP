@@ -83,14 +83,14 @@ aboutUsNavbarbutton.addEventListener("click", ()=>{
 // the sublist is open
 resourcesNavbarbutton.addEventListener("mouseenter", () => {
     if (navbarListOpen == 1){
-        resourcesNavbarbutton.style.backgroundColor = "#89B8FF"
+        resourcesNavbarbutton.style.backgroundColor = "var(--selected-navbar-list-button-color)"
     }else{
         resourcesNavbarbutton.style.backgroundColor = ""
     }
 });
 resourcesNavbarbutton.addEventListener("mouseleave", () => {
     if (navbarListOpen == 1){
-        resourcesNavbarbutton.style.backgroundColor = "#605DF8"
+        resourcesNavbarbutton.style.backgroundColor = "var(--navbar-list-button-color)"
     }else{
         resourcesNavbarbutton.style.backgroundColor = ""
     }
@@ -100,7 +100,7 @@ resourcesNavbarbutton.addEventListener("mouseleave", () => {
 resourcesNavbarbutton.addEventListener("click", ()=>{
     if (navbarListOpen == -1){
         navbarListContainer.style.display = "flex";
-        resourcesNavbarbutton.style.backgroundColor = "#605DF8"
+        resourcesNavbarbutton.style.backgroundColor = "var(--navbar-list-button-color)"
         navbarChevron.style.transform = "rotate(180deg)"
         navbarListOpen *= -1
     }
@@ -179,7 +179,7 @@ resourcesHamburgbutton.addEventListener("click", ()=>{
         hamburgSubListContainer.style.display = "flex";
         hamburgerTopLevelList.style.borderBottomLeftRadius = "0px"
         resourcesHamburgbutton.style.borderBottomLeftRadius = "0px"
-        resourcesHamburgbutton.style.backgroundColor = "#605DF8"
+        resourcesHamburgbutton.style.backgroundColor = "var(--navbar-list-button-color)"
         hamburgChevron.style.transform = "rotate(180deg)"
         hamburgSubListOpen *= -1
     }
@@ -197,14 +197,14 @@ resourcesHamburgbutton.addEventListener("click", ()=>{
 // the sublist is open for Resources button in Hamburger.
 resourcesHamburgbutton.addEventListener("mouseenter", () => {
     if (hamburgSubListOpen == 1){
-        resourcesHamburgbutton.style.backgroundColor = "#89B8FF"
+        resourcesHamburgbutton.style.backgroundColor = "var(--selected-navbar-list-button-color)"
     }else{
         resourcesHamburgbutton.style.backgroundColor = ""
     }
 });
 resourcesHamburgbutton.addEventListener("mouseleave", () => {
     if (hamburgSubListOpen == 1){
-        resourcesHamburgbutton.style.backgroundColor = "#605DF8"
+        resourcesHamburgbutton.style.backgroundColor = "var(--navbar-list-button-color)"
     }else{
         resourcesHamburgbutton.style.backgroundColor = ""
     }

@@ -33,7 +33,7 @@
     font-size: 20px;
 }
 .navbar-normal-toplevel-button:hover{
-    background-color: #605DF8;
+    background-color: var(--navbar-list-button-color);
     cursor: pointer;
 }
 
@@ -51,14 +51,14 @@
 }
 
 .current-navbar-link{
-    background-color: #8123E1;
+    background-color: var(--selected-navbar-toplevel-button-color);
 }
 
 .navbar-list{
     display: none;
     width: 249px;
     height: fit-content;
-    background-color: #605DF8;
+    background-color: var(--navbar-list-button-color);
     z-index: 999;
     position: absolute;
     top: 100px;
@@ -73,7 +73,7 @@
 }
 
 .navbar-list-item:hover{
-    background-color: #89B8FF;
+    background-color: var(--selected-navbar-list-button-color);
     cursor: pointer;
 }
 
@@ -85,12 +85,12 @@
     align-items: center;
     padding: 0.62em;
     margin: 5px 5px;
-    border: 2px solid white;
+    border: 2px solid var(--secondary-color);
     border-radius: 10px;
 }
 
 .hamburger-container:hover{
-    background-color: #605DF8;
+    background-color: var(--navbar-list-button-color);
     cursor: pointer;
 }
 
@@ -121,7 +121,7 @@
     z-index: inherit;
 }
 .hamburg-normal-toplevel-button:hover{
-    background-color: #605DF8;
+    background-color: var(--navbar-list-button-color);
     cursor: pointer;
 }
 
@@ -142,7 +142,7 @@
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    background-color: #605DF8;
+    background-color: var(--navbar-list-button-color);
     flex-direction: column;
     width: max-content;
     z-index: 998;
@@ -158,17 +158,57 @@
 
 .hamburg-sublist-item:hover{
     cursor: pointer;
-    background-color: #89B8FF;
+    background-color: var(--selected-navbar-list-button-color);
 }
 
 #techUsedHamburgbutton{
     border-top-left-radius: 10px;
 }
-#vulnerabilityDictHamburgbutton{
+
+.current-hamburg-link{
+    background-color: var(--selected-navbar-toplevel-button-color);
+}
+
+#siteThemePickerNavbarbutton{
+    background-image: url("../assets/buttons/LargeThemeSelectorButton.png");
+    background-size: cover;
+    border: 10px solid var(--navbar-list-button-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    padding: 0px;
+}
+#siteThemePickerNavbarbutton:hover{
+    cursor: pointer;
+    border: 10px solid var(--selected-navbar-list-button-color);
+}
+#siteThemePickerNavbarbutton div{
+    color: black;
+    background-color: white;
+    padding: 10px 10px;
+    font-size: 20px;
+}
+
+#siteThemePickerHamburgbutton{
+    background-image: url("../assets/buttons/LargeThemeSelectorButton.png");
+    background-size: cover;
+    border: 10px solid var(--navbar-list-button-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    padding: 0px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-
-.current-hamburg-link{
-    background-color: #8123E1;
+#siteThemePickerHamburgbutton:hover{
+    cursor: pointer;
+    border: 10px solid var(--selected-navbar-list-button-color);
+}
+#siteThemePickerHamburgbutton div{
+    color: black;
+    background-color: white;
+    padding: 6px 10px;
+    font-size: 3.3vw;
 }

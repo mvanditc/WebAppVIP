@@ -6,7 +6,7 @@
 body {
     background-color: var(--background-color);
     font-family: "font1", sans-serif;
-    color: white;
+    color: var(--white-text);
     margin: 0;
     padding: 0;
 }
@@ -26,14 +26,14 @@ flex-wrap: wrap;
 /* Total Scans Popup */
 .button {
     display: flex;
-    background-color: white; 
+    background-color: var(--secondary-color); 
     position: relative;
     height: 250px;
     width: 250px;
     border-radius: 50%; 
     cursor: pointer;
     font-family:'Arial';
-    color: black;
+    color: var(--black-text);
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -52,7 +52,7 @@ flex-wrap: wrap;
 
 /* Style for the blurb */
 .blurb-text {
-    color: black;
+    color: var(--black-text);
     font-size: 30px;
     line-height: 1.4;
     flex: 1;
@@ -72,7 +72,7 @@ flex-wrap: wrap;
   
 .search-label {
     font-size: 28px;
-    color: white;
+    color: var(--white-text);
     white-space: nowrap;
 }
   
@@ -87,8 +87,8 @@ flex-wrap: wrap;
   
 #search-button {
     padding: 12px 20px;
-    background-color: #5800b2;
-    color: white;
+    background-color: var(--navbar-color);
+    color: var(---white-text);
     font-size: 18px;
     border: none;
     cursor: pointer;
