@@ -274,19 +274,12 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   applyButton.addEventListener("click", function() {
+    saveCustomizations();
     closeModal();
   });
 
 
 });
-
-// Function to toggle visibility of color pickers based on selected custom button
-function toggleColorPickers(enable) {
-  var colorPickers = document.querySelectorAll("input[type='color']");
-  colorPickers.forEach(function(colorPicker) {
-      colorPicker.style.display = enable ? "block" : "none";
-  });
-}
 
 // Function to handle button click
 function handleButtonClick(button) {
@@ -301,22 +294,22 @@ function handleButtonClick(button) {
 
 // Add click event listeners to preset buttons
 document.getElementById("regularButton").addEventListener("click", function() {
-  toggleColorPickers(false); // Disable color pickers
+  toggleColorPickers(false); // Enable color pickers
   handleButtonClick(this); // Handle button click
 });
 
 document.getElementById("lightButton").addEventListener("click", function() {
-  toggleColorPickers(false); // Disable color pickers
+  toggleColorPickers(false); // Enable color pickers
   handleButtonClick(this); // Handle button click
 });
 
 document.getElementById("darkButton").addEventListener("click", function() {
-  toggleColorPickers(false); // Disable color pickers
+  toggleColorPickers(false); // Enable color pickers
   handleButtonClick(this); // Handle button click
 });
 
 document.getElementById("terminalButton").addEventListener("click", function() {
-  toggleColorPickers(false); // Disable color pickers
+  toggleColorPickers(false); // Enable color pickers
   handleButtonClick(this); // Handle button click
 });
 
@@ -329,3 +322,126 @@ document.getElementById("custom2Button").addEventListener("click", function() {
   toggleColorPickers(true); // Enable color pickers
   handleButtonClick(this); // Handle button click
 });
+
+// I am going insane trying to get this working
+
+// Function to open color picker
+function openColorPicker(event) {
+  const colorInput = event.target.parentElement.querySelector('input[type="color"]');
+  colorInput.click();
+}
+
+// Add event listener to color rectangles to open color picker
+document.querySelectorAll('.color-rectangle').forEach(rectangle => {
+  rectangle.addEventListener('click', openColorPicker);
+});
+
+// Function to update the color of rectangles and RGB texts
+function updateColors(color, index) {
+  // Update the color of rectangle
+  const colorRectangles = document.querySelectorAll('.color-rectangle');
+  colorRectangles[index].style.backgroundColor = color;
+
+  // Extract RGB values from the color string
+  var rgbValues = color.match(/\d+/g);
+
+  // Update the RGB text
+  const rgbTexts = document.querySelectorAll('.color-box p');
+  rgbTexts[index].textContent = `RGB(${rgbValues.join(", ")})`;
+
+   // Update the corresponding CSS variable
+   const cssVariables = [
+    "--background-color",
+    "--secondary-color",
+    "--all-risk",
+    "--low-risk",
+    "--moderate-risk",
+    "--high-risk",
+    "--black-text",
+    "--white-text",
+    "--purple-text",
+    "--blue-text",
+    "--tool-close-button",
+    "--grey-color",
+    "--navbar-color",
+    "--selected-navbar-toplevel-button-color",
+    "--navbar-list-button-color",
+    "--selected-navbar-list-button-color"
+  ];
+
+  document.documentElement.style.setProperty(cssVariables[index], color);
+}
+
+// Add event listener to color input elements
+document.querySelectorAll('input[type="color"]').forEach(function(input, index) {
+  input.addEventListener("input", function(event) {
+    var color = event.target.value;
+    updateColors(color, index);
+
+    // Save the customization to localStorage
+    saveCustomizations();
+  });
+});
+
+// Check if the user has localStorage variables for currentlySelectedPreset and savedCustomPresets
+if (!localStorage.getItem('currentlySelectedPreset') || !localStorage.getItem('savedCustomPresets')) {
+  // If not, assign the user with the initial values
+  const initialData = {
+      currentlySelectedPreset: "0",
+      savedCustomPresets: {
+          "4": {
+              "--background-color": "#9747FF",
+              "--secondary-color": "#FFFFFF",
+              "--all-risk": "#89B8FF",
+              "--low-risk": "#FFD600",
+              "--moderate-risk": "#FF6F1E",
+              "--high-risk": "#FF2626",
+              "--black-text": "#1e1e1e",
+              "--white-text": "#FFFFFF",
+              "--purple-text": "#6F2BA5",
+              "--blue-text": "#605DF8",
+              "--tool-close-button": "#453A00",
+              "--grey-color": "#D9D9D9",
+              "--navbar-color": "#5800B2",
+              "--selected-navbar-toplevel-button-color": "#8123E1",
+              "--navbar-list-button-color": "#605DF8",
+              "--selected-navbar-list-button-color": "#89B8FF"
+          },
+          "5": {
+              "--background-color": "#9747FF",
+              "--secondary-color": "#FFFFFF",
+              "--all-risk": "#89B8FF",
+              "--low-risk": "#FFD600",
+              "--moderate-risk": "#FF6F1E",
+              "--high-risk": "#FF2626",
+              "--black-text": "#1e1e1e",
+              "--white-text": "#FFFFFF",
+              "--purple-text": "#6F2BA5",
+              "--blue-text": "#605DF8",
+              "--tool-close-button": "#453A00",
+              "--grey-color": "#D9D9D9",
+              "--navbar-color": "#5800B2",
+              "--selected-navbar-toplevel-button-color": "#8123E1",
+              "--navbar-list-button-color": "#605DF8",
+              "--selected-navbar-list-button-color": "#89B8FF"
+          }
+      }
+  };
+
+  // Set the initial values to localStorage
+  localStorage.setItem('currentlySelectedPreset', initialData.currentlySelectedPreset);
+  localStorage.setItem('savedCustomPresets', JSON.stringify(initialData.savedCustomPresets));
+}
+
+// Function to apply saved customizations from localStorage
+function applySavedCustomizations() {
+  var savedCustomPresets = JSON.parse(localStorage.getItem('savedCustomPresets'));
+  var currentPreset = savedCustomPresets[currentlySelectedPreset];
+  for (const [key, value] of Object.entries(currentPreset)) {
+    document.documentElement.style.setProperty(key, value);
+  }
+}
+
+// Call the function to apply saved customizations when the page loads
+applySavedCustomizations();
+

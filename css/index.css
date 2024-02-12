@@ -303,7 +303,8 @@ flex-wrap: wrap;
 
 .color-box p {
     margin: 0;
-    color: black
+    color: black;
+    font-size: 0.8em;
 }
 
-
+/* Responsiveness For The Color Picker */ 
