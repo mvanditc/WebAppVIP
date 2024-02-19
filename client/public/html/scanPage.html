@@ -72,6 +72,36 @@
         </div>
     </div>
 
+    <div style="color: white; margin-left: 10px;">
+        <div>
+            <h3>Sample sites</h3>
+            <ul>
+                <li>https://www.westerncybersociety.com/</li>
+                <li>https://itssharl.ee/fr</li>
+                <li>https://www.zaproxy.org/docs/api/#introduction</li>
+            </ul>
+        </div>
+        <h2>Data List</h2>
+        <ul id="dataList"></ul>
+        <h3>Enter URL to be Scanned</h3>
+        <form id="dataForm">
+            <label for="data">Data</label><br />
+            <input type="text" id="dataInput" required /><br />
+            <input type="submit" value="Submit" />
+        </form>
+        <div style="color: red;" id="scanStatus"></div>
+        <br>
+        <div style="display: flex; flex-direction: row;">
+            <div id="scanProgress"></div>
+            &nbsp;
+            &nbsp;
+            <div id="timeLimit"></div>
+        </div>
+        <br>
+        <div style="font-weight: 600;" id="currentScan"></div>
+        <div id="scanQueue"></div>
+    </div>
+
     <!--  HTML CODE FOR BODY  -->
     <div id="scanPage-main-container">
         <div id="scanPage-container" class="scanPage-contaner">
@@ -113,7 +143,7 @@
         </div>
     </div>
 
-    <script src="../assets/scanningBarCSSFiles/src/ascii-progress.js"></script>
+    <script src="../../src/js/temporaryClient.js"></script>
     <script src="../../src/js/navbar.js"></script>
     <script src="../../src/js/scanPage.js"></script>
 </body>

@@ -71,7 +71,7 @@ window.addEventListener("resize", ()=>{
 
 // Scan button page redirect functionality for Navbar.
 scanNavbarButton.addEventListener("click", ()=>{
-    window.location.href = "../../public/html/index.html"; //redirect to index.html (Homepage)
+    window.location.href = "../../public/html/scanPage.html"; //redirect to scanPage.html (Scan page)
 })
 
 // About Us button page redirect functionality for Navbar.
@@ -165,7 +165,7 @@ hamburgerContainer.addEventListener("click", ()=>{
 
 // Scan button page redirect functionality for Hamburger.
 scanHamburgbutton.addEventListener("click", ()=>{
-    window.location.href = "../../public/html/index.html"; //redirect to index.html (Homepage)
+    window.location.href = "../../public/html/scanPage.html"; //redirect to scanPage.html (Scan Ppage)
 })
 
 // About Us button page redirect functionality for Hamburger.

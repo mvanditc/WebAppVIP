@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const form = document.getElementById('dataForm');
-  const dataInput = document.getElementById('dataInput');
-  const dataList = document.getElementById('dataList');
-  const scanProgressDiv = document.getElementById('scanProgress');
-  const scanStatusDiv = document.getElementById('scanStatus');
-  const scanQueueDiv = document.getElementById('scanQueue');
-  const currentScanDiv = document.getElementById('currentScan');
-  const timeLimitDiv = document.getElementById('timeLimit');
+  const $form = document.getElementById('dataForm');
+  const $dataInput = document.getElementById('dataInput');
+  const $dataList = document.getElementById('dataList');
+  const $scanProgress = document.getElementById('scanProgress');
+  const $scanStatus = document.getElementById('scanStatus');
+  const $scanQueue = document.getElementById('scanQueue');
+  const $currentScan = document.getElementById('currentScan');
+  const $timeLimit = document.getElementById('timeLimit');
 
   // variables to handle frontend changes
-  let inputUrl = dataInput.value.trim();
+  let inputUrl = $dataInput.value.trim();
   let scanQueue = [];
   let globalTerminationTime = 10;
   let terminationTime = globalTerminationTime;
@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   let scanTerminated = false;
   let globalScanId = null;
 
-  scanProgressDiv.innerHTML = 'Scan Progress: ---';
-  timeLimitDiv.innerHTML = 'Time Limit: ---';
+  $scanProgress.innerHTML = 'Scan Progress: ---';
+  $timeLimit.innerHTML = 'Time Limit: ---';
 
   // Get scan results stored in local file
   async function getScanResultsFromFile() {
@@ -52,12 +52,12 @@ document.addEventListener('DOMContentLoaded', async () => {
               scanQueue.push(url);
 
               const tempQueue = scanQueue.slice(1);
-              scanQueueDiv.innerHTML = `Queue: ${tempQueue}`;
+              $scanQueue.innerHTML = `Queue: ${tempQueue}`;
 
               sendUrlForScan();
           }
           else if (response.status === 403) {
-              scanStatusDiv.innerHTML = 'You have reached the limit of scans allowed in the past 24 hours.'
+              $scanStatus.innerHTML = 'You have reached the limit of scans allowed in the past 24 hours.'
           }
       } catch (error) {
           console.error('Error Submitting:', error);
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function sendUrlForScan() {
-      currentScanDiv.innerHTML = `Scanning: ${scanQueue[0]}`;
+      $currentScan.innerHTML = `Scanning: ${scanQueue[0]}`;
 
       try {
           const response = await fetch('http://localhost:8800/submit');
@@ -80,14 +80,14 @@ document.addEventListener('DOMContentLoaded', async () => {
               terminationTime = globalTerminationTime;
               scanTerminated = false;
 
-              timeLimitDiv.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+              $timeLimit.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
               const timerInterval = setInterval(() => {
                   terminationTime--;
-                  timeLimitDiv.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+                  $timeLimit.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
 
                   if (terminationTime <= 0) {
                       scanTerminated = true;
-                      timeLimitDiv.innerHTML = `Time Limit: Scan timed out, updating history...`;
+                      $timeLimit.innerHTML = `Time Limit: Scan timed out, updating history...`;
 
                       clearInterval(timerInterval); 
                       terminateScan(scanId);
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                   const scanUpdated = await updateScanProgress(progressData, scanId);
                   if (scanUpdated) {
                       clearInterval(timerInterval); 
-                      timeLimitDiv.innerHTML = 'Time Limit: Scan completed within time limit, updating history...';
+                      $timeLimit.innerHTML = 'Time Limit: Scan completed within time limit, updating history...';
                   }
               }
               else {
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Function to update scan progress that is seen on the page
   async function updateScanProgress(progressData, scanId) {
       if (!scanTerminated) {
-          scanProgressDiv.innerHTML = `Scan Progress: ${progressData.status}%`;
+          $scanProgress.innerHTML = `Scan Progress: ${progressData.status}%`;
           console.log(`Scan Progress: ${progressData.status}%`);
 
           // If scan has not yet reached 100%, then fetch scan progress which calls the zap API and gets the progress data
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function fetchScanResults(scanId) {
-      dataList.innerHTML += '<h4>Updating Data List...</h4>'
+      $dataList.innerHTML += '<h4>Updating Data List...</h4>'
 
       // Update the scan results list after scan is completed
       const params = new URLSearchParams({ scanId, inputUrl })
@@ -178,22 +178,22 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (scanData !== null) {
               updateScanResultsList(scanData);
               console.log("Scan results updated");
-              scanProgressDiv.innerHTML = 'Scan Progress: 0%';
+              $scanProgress.innerHTML = 'Scan Progress: 0%';
               
               scanQueue.shift();
 
               const tempQueue = scanQueue.slice(1);
-              scanQueueDiv.innerHTML = tempQueue.length !== 0 ? `Queue: ${tempQueue}` : 'Queue: Empty';
+              $scanQueue.innerHTML = tempQueue.length !== 0 ? `Queue: ${tempQueue}` : 'Queue: Empty';
 
-              timeLimitDiv.innerHTML = 'Time Limit: ---';
+              $timeLimit.innerHTML = 'Time Limit: ---';
               
               if (scanQueue.length > 0) {
                   console.log("Starting next scan...");
                   sendUrlForScan();
               }
               else {
-                  currentScanDiv.innerHTML = 'Scanning: Complete';
-                  scanProgressDiv.innerHTML = 'Scan Progress: ---';
+                  $currentScan.innerHTML = 'Scanning: Complete';
+                  $scanProgress.innerHTML = 'Scan Progress: ---';
               }
 
           }
@@ -206,12 +206,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Update the scan results list on the frontend
   function updateScanResultsList(scans) {
       // Clear previous data
-      dataList.innerHTML = '';
+      $dataList.innerHTML = '';
       
       // Process and display each scan
       scans.forEach(scan => {
           // Display only URL and total number of issues
-          dataList.innerHTML += `<li>${scan.url} - Total Issues: ${scan.results.length}</li>`;
+          $dataList.innerHTML += `<li>${scan.url} - Total Issues: ${scan.results.length}</li>`;
       });
   }
 
@@ -225,12 +225,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // When user clicks submit then save the url and send this url to be scanned to function
-  form.addEventListener('submit', async (event) => {
+  $form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      inputUrl = dataInput.value.trim();
+      inputUrl = $dataInput.value.trim();
       if (inputUrl !== '') {
-          dataInput.value = '';
+          $dataInput.value = '';
           await addScanRequestToQueue(inputUrl);
       }
   });
