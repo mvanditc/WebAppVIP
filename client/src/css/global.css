@@ -3,8 +3,8 @@
 /* Fonts */
 @font-face {
     font-family: 'font1';
-    src: url(../assets/fonts/inter-variablefont_slntweight-webfont.woff) format("woff");
-    src: url(../assets/fonts/inter-variablefont_slntweight-webfont.woff2) format("woff2");
+    src: url(../../public/assets/fonts/inter-variablefont_slntweight-webfont.woff) format("woff");
+    src: url(../../public/assets/fonts/inter-variablefont_slntweight-webfont.woff2) format("woff2");
     font-weight: normal;
     font-style: normal;
 }
@@ -37,7 +37,10 @@
 
 /* Used to disable selection of text (Used for buttons). */
 .prevent-select {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    -webkit-user-select: none;
+    /* Safari */
+    -ms-user-select: none;
+    /* IE 10 and IE 11 */
+    user-select: none;
+    /* Standard syntax */
 }

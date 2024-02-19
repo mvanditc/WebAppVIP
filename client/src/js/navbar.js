@@ -76,7 +76,7 @@ scanNavbarButton.addEventListener("click", ()=>{
 
 // About Us button page redirect functionality for Navbar.
 aboutUsNavbarbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/aboutUsPage.html"; //redirect to aboutUsPage.html (About Us page)
+    window.location.href = "../../public/html/aboutUsPage.html"; //redirect to aboutUsPage.html (About Us page)
 })
 
 //    Next two event listeners (mouseenter and mouseleave) controls the color of the button when
@@ -114,12 +114,12 @@ resourcesNavbarbutton.addEventListener("click", ()=>{
 
 // Technology Used button page redirect functionality for Navbar.
 techUsedNavbarbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/techUsedPage.html"; //redirect to techUsedPage.html (Technology Used page)
+    window.location.href = "../../public/html/techUsedPage.html"; //redirect to techUsedPage.html (Technology Used page)
 })
 
 // Vulnerability Dictionary button page redirect functionality for Navbar.
 vulnerabilityDictNavbarbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/vulnerabilityDictPage.html"; //redirect to vulnerabilityDictPage.html (Vulnerability Dictionary page)
+    window.location.href = "../../public/html/vulnerabilityDictPage.html"; //redirect to vulnerabilityDictPage.html (Vulnerability Dictionary page)
 })
 
 // Functionality that closes the Navbar/Hamburger lists when clicking outside of the lists.
@@ -165,12 +165,12 @@ hamburgerContainer.addEventListener("click", ()=>{
 
 // Scan button page redirect functionality for Hamburger.
 scanHamburgbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/index.html"; //redirect to index.html (Homepage)
+    window.location.href = "../../public/html/index.html"; //redirect to index.html (Homepage)
 })
 
 // About Us button page redirect functionality for Hamburger.
 aboutUsHamburgbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/aboutUsPage.html"; //redirect to aboutUsPage.html (About Us page)
+    window.location.href = "../../public/html/aboutUsPage.html"; //redirect to aboutUsPage.html (About Us page)
 })
 
 // Functionality used to manage the visibility of the Resources sublist for Hamburger.
@@ -212,10 +212,10 @@ resourcesHamburgbutton.addEventListener("mouseleave", () => {
 
 // Technology Used button page redirect functionality for Hamburger.
 techUsedHamburgbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/techUsedPage.html"; //redirect to techUsedPage.html (Technology Used page)
+    window.location.href = "../../public/html/techUsedPage.html"; //redirect to techUsedPage.html (Technology Used page)
 })
 
 // Vulnerability Dictionary button page redirect functionality for Hamburger.
 vulnerabilityDictHamburgbutton.addEventListener("click", ()=>{
-    window.location.href = "../public/html/vulnerabilityDictPage.html"; //redirect to vulnerabilityDictPage.html (Vulnerability Dictionary page)
+    window.location.href = "../../public/html/vulnerabilityDictPage.html"; //redirect to vulnerabilityDictPage.html (Vulnerability Dictionary page)
 })
