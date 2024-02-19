@@ -44,6 +44,10 @@ body {
 }
 
 #scanPage-scan-target-container {
+    margin-top: 20px;
+}
+
+#scanPage-scan-target-container div {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -51,6 +55,11 @@ body {
 }
 
 #scanPage-scan-target {
+    color: var(--blue-text);
+    text-decoration: none;
+}
+
+#scanPage-scan-queue {
     color: var(--blue-text);
     text-decoration: none;
 }

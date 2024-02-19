@@ -4,9 +4,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const $dataList = document.getElementById('dataList');
   const $scanProgress = document.getElementById('scanProgress');
   const $scanStatus = document.getElementById('scanStatus');
-  const $scanQueue = document.getElementById('scanQueue');
+  const $scanQueueOld = document.getElementById('scanQueue');
   const $currentScan = document.getElementById('currentScan');
   const $timeLimit = document.getElementById('timeLimit');
+
+  // html elements for styled frontend code
+  const $scanTarget = document.getElementById('scanPage-scan-target');
+  const $scanQueue = document.getElementById('scanPage-scan-queue');
 
   // variables to handle frontend changes
   let inputUrl = $dataInput.value.trim();
@@ -52,7 +56,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               scanQueue.push(url);
 
               const tempQueue = scanQueue.slice(1);
-              $scanQueue.innerHTML = `Queue: ${tempQueue}`;
+              $scanQueueOld.innerHTML = `Queue: ${tempQueue}`;
+              $scanQueue.innerHTML = tempQueue;
 
               sendUrlForScan();
           }
@@ -66,6 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function sendUrlForScan() {
       $currentScan.innerHTML = `Scanning: ${scanQueue[0]}`;
+      $scanTarget.innerHTML = scanQueue[0];
 
       try {
           const response = await fetch('http://localhost:8800/submit');
@@ -183,7 +189,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               scanQueue.shift();
 
               const tempQueue = scanQueue.slice(1);
-              $scanQueue.innerHTML = tempQueue.length !== 0 ? `Queue: ${tempQueue}` : 'Queue: Empty';
+              $scanQueueOld.innerHTML = tempQueue.length !== 0 ? `Queue: ${tempQueue}` : 'Queue: Empty';
+              $scanQueue.innerHTML = tempQueue.length !== 0 ? `${tempQueue}` : 'Empty';
 
               $timeLimit.innerHTML = 'Time Limit: ---';
               
@@ -194,6 +201,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               else {
                   $currentScan.innerHTML = 'Scanning: Complete';
                   $scanProgress.innerHTML = 'Scan Progress: ---';
+
+                  $scanTarget.innerHTML = 'Complete';
               }
 
           }
