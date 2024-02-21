@@ -74,7 +74,35 @@
 
     <!--  HTML CODE FOR BODY  -->
 
-    <h2>This is the home page</h2>
+    <div style="background-color: white; color: black;">
+        <div>
+            <h3>Sample sites</h3>
+            <ul>
+                <li>https://www.westerncybersociety.com/</li>
+                <li>https://itssharl.ee/fr</li>
+                <li>https://www.zaproxy.org/docs/api/#introduction</li>
+            </ul>
+        </div>
+        <h2>Data List</h2>
+        <ul id="dataList"></ul>
+        <h3>Enter URL to be Scanned</h3>
+        <form id="dataForm">
+            <label for="data">Data</label><br />
+            <input type="text" id="dataInput" required /><br />
+            <input type="submit" value="Submit" />
+        </form>
+        <div style="color: red;" id="scanStatus"></div>
+        <br>
+        <div style="display: flex; flex-direction: row;">
+            <div id="scanProgress"></div>
+            &nbsp;
+            &nbsp;
+            <div id="timeLimit"></div>
+        </div>
+        <br>
+        <div style="font-weight: 600;" id="currentScan"></div>
+        <div id="scanQueue"></div>
+    </div>
 
     <script src="../../src/js/index.js"></script>
     <script src="../../src/js/navbar.js"></script>
