@@ -1,26 +1,32 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  // page 1
   const $form = document.getElementById('dataForm');
   const $dataInput = document.getElementById('dataInput');
   const $dataList = document.getElementById('dataList');
-  const $scanProgress = document.getElementById('scanProgress');
   const $scanStatus = document.getElementById('scanStatus');
+  const $scanQueue = document.getElementById('scanPage-scan-queue');
+
+  // page 2
+  const $scanProgress = document.getElementById('scanProgress');
   const $scanQueueOld = document.getElementById('scanQueue');
   const $currentScan = document.getElementById('currentScan');
   const $timeLimit = document.getElementById('timeLimit');
-
-  // html elements for styled frontend code
   const $scanTarget = document.getElementById('scanPage-scan-target');
-  const $scanQueue = document.getElementById('scanPage-scan-queue');
 
   // variables to handle frontend changes
+
+  // page 1
   let inputUrl = $dataInput.value.trim();
   let scanQueue = [];
+
+  // page 2
   let globalTerminationTime = 10;
   let terminationTime = globalTerminationTime;
   let statusCheckTimer = 1;
   let scanTerminated = false;
   let globalScanId = null;
 
+  // page 2
   $scanProgress.innerHTML = 'Scan Progress: ---';
   $timeLimit.innerHTML = 'Time Limit: ---';
 

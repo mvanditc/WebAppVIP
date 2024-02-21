@@ -36,6 +36,7 @@ app.get("/data", (req, res) => {
 app.post("/addScanToQueue", async (req, res) => {
     const url = req.body.url;
     const userIP = req.ip;
+    console.log('function was called');
 
     try {
         // make sure user is allowed to perform scan before adding request to the queue
