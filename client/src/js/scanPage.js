@@ -1,5 +1,11 @@
 // JavaScript used for the Scanning Page's functionality.
 
+document.addEventListener('DOMContentLoaded', async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const $inputUrl = urlParams.get('url');
+
+  
+})
 const progressBar = document.getElementById('scanPage-progressBar');
 const progressBarPercentage = document.getElementById('scanPage-progressBar-percentage');
 const viewDetails = document.getElementById('scanPage-view-details-container');
