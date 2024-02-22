@@ -328,7 +328,9 @@ const validateUser = async (ip) => {
             userData.push({ ip: ip, timestamps: [timestamp] });
         }
         // Write updated user data to file
-        await fs.promises.writeFile(userDataPath, JSON.stringify(userData, null, 2));
+
+        // COMMENTED FOR NOW!
+        // await fs.promises.writeFile(userDataPath, JSON.stringify(userData, null, 2));
         return true;
     } catch (error) {
         console.error('Error with logging data:', error);

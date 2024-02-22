@@ -42,8 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const finalPercentage = 100;
   const percentageJump = 10;
 
-  let loadingSymbol = "--".repeat(Math.floor(100/percentageJump)) + 1;
-
   let seconds = -1;
   let minutes = 0;
   let screenSeconds = seconds;
@@ -146,6 +144,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Function to update scan progress that is seen on the page
   async function updateScanProgress(progressData, scanId) {
     if (!scanTerminated) {
+        const maxChars = 15;
+        const filledCharsCount = Math.round((progressData.status / 100) * maxChars);
+        const filledChars = '█'.repeat(filledCharsCount);
+        const dashChars = '--'.repeat(maxChars - filledCharsCount);
+
+        $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
+
         $scanProgress.textContent = `${progressData.status}%`;
         console.log(`Scan Progress: ${progressData.status}%`);
 
