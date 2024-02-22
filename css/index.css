@@ -169,10 +169,10 @@ flex-wrap: wrap;
     top: 0; 
     left: 3; 
     font-size: 1.8vw;
-  }
+}
 
-  /*Modal Subheadings */
-.modal-subheadings{
+/*Modal Subheadings */
+.modal-subheadings {
     color: #333333;
     font-size: 1vw;
     position: absolute; 
@@ -190,13 +190,13 @@ flex-wrap: wrap;
     height: 65%;
     position: relative;
     animation-name: animatetop;
-    animation-duration: 0.4s
+    animation-duration: 0.4s;
 }
 
 @keyframes animatetop {
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
-  }
+}
 
 /* Styling for Preset Buttons */
 .preset-button {
@@ -219,10 +219,6 @@ flex-wrap: wrap;
 
 .preset-button:hover {
     background-color: #ddd; /* Hover background color */
-}
-
-.preset-button:active {
-    background-color: #999; /* Active background color */
 }
 
 /* Styling for Color Commit Buttons */
@@ -298,7 +294,7 @@ flex-wrap: wrap;
 .color-box h3 {
     margin-bottom: 1px;
     color: black;
-    font-size: 1vw
+    font-size: 1vw;
 }
 
 .color-box p {
@@ -307,4 +303,80 @@ flex-wrap: wrap;
     font-size: 0.8em;
 }
 
-/* Responsiveness For The Color Picker */ 
+/* Responsiveness For The Color Picker */
+@media (max-width: 1150px) {
+    .modal-header {
+        font-size: 3.5vw;
+        transform: translateY(-15%);
+    }
+
+    .modal-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .preset-scroll-box,
+    .color-scroll-box {
+        overflow-y: auto;
+        overflow-x: hidden; /* Disable horizontal scrolling */
+        border: 1px solid #000000; /* Add border for visual separation */
+        width: 90%; /* Adjusted width */
+        margin: 0 auto 20px; /* Center the scroll boxes horizontally with reduced bottom margin */
+        max-height: 100px; /* Adjust as needed */
+        display: flex; /* Change to flex display */
+        flex-direction: column; /* Align items vertically */
+        align-items: stretch; /* Stretch items to fill container */
+        font-size: 2.5vw;
+    }
+
+    .color-boxes {
+        transform: translate(-22%, 15px);
+        display: flex;
+        flex-direction: column; /* Align items vertically */
+        align-items: stretch; /* Stretch items to fill container */
+        margin-top: -10px; /* Adjust margin */
+        width: 100%; /* Adjusted width */
+    }
+
+    .color-box,
+    .preset-button {
+        width: 100%; /* Set equal width for both color boxes and preset buttons */
+        margin-bottom: 10px; /* Adjust margin bottom */
+        display: flex; /* Ensure contents align properly */
+        align-items: center; /* Center content vertically */
+        font-size: 2.5vw;
+    }
+
+    .modal-subheadings {
+        width: 90%;
+        height: 140%;
+        display: flex;
+        flex-direction: column; /* Align items vertically */
+        align-items: center; /* Center align items */
+        margin-top: -15px; /* Adjust margin */
+        translate: (53%, 25px);
+        font-size: 2vw;
+    }
+
+    .color-box h3,
+    .color-box p {
+        margin-bottom: 1px;
+        color: black;
+        font-size: 2.5vw; /* Adjust font size for smaller screens */
+    }
+
+    .preset-button {
+        margin-top: 0px;
+    }
+
+    /* Adjust the positioning of bottom buttons */
+    .bottom-buttons {
+        position: absolute;
+        bottom: 20px; /* Adjusted bottom margin */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+    }
+}
