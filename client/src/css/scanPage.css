@@ -59,11 +59,6 @@ body {
     text-decoration: none;
 }
 
-#scanPage-scan-queue {
-    color: var(--blue-text);
-    text-decoration: none;
-}
-
 #scanPage-progressBar-container {
     display: flex;
     flex-direction: column;
@@ -71,11 +66,17 @@ body {
     margin-top: 10px;
 }
 
+#scanPage-progressBar-percentage-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 #scanPage-time-elapsed-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: -0px;
+    margin-top: 10px;
     margin-bottom: 30px;
 }
 

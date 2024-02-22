@@ -1,18 +1,21 @@
 // JavaScript used for the Scanning Page's functionality.
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const $scanProgress = document.getElementById('scanProgress');
-  const $scanTarget = document.getElementById('scanPage-scan-target');
-  const $timeLimit = document.getElementById('timeLimit');
+  let $scanTarget = document.getElementById('scanPage-scan-target');
+  let $progressBar = document.getElementById('scanPage-progressBar');
+  let $scanProgress = document.getElementById('scanPage-progressBar-percentage');
+  let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
+  let $lowRisk = document.getElementById('scanPage-low-risk');
+  let $mediumRisk = document.getElementById('scanPage-medium-risk');
+  let $highRisk = document.getElementById('scanPage-high-risk');
+  let $timeElapsed = document.getElementById('scanPage-time-elapsed');
 
-  let globalTerminationTime = 10;
+  let globalTerminationTime = 20;
   let terminationTime = globalTerminationTime;
   let statusCheckTimer = 1;
   let scanTerminated = false;
   let globalScanId = null;
-
-  $scanProgress.innerHTML = 'Scan Progress: ---';
-  $timeLimit.innerHTML = 'Time Limit: ---';
+  let scanQueue = [];
   
   window.addEventListener('beforeunload', function (e) {
     var confirmationMessage = 'Are you sure you want to leave?';
@@ -22,62 +25,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   window.addEventListener('unload', function () {
-    terminateScan(globalScanId);
+    terminateScan({scanId: globalScanId, reason: 'reload'});
   });
 
   const urlParams = new URLSearchParams(window.location.search);
   const inputUrl = urlParams.get('url');
-  await addScanRequestToQueue(inputUrl);
-  
 
-  // Get scan results stored in local file
-  async function getScanResultsFromFile() {
-    try {
-        const response = await fetch('http://localhost:8800/data');
-        const scans = await response.json();
+  // first function that begins the scan process
+  sendUrlForScan();
+  scanQueue.push(inputUrl);
 
-        return scans;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return null;
-    }
-  }
+  const finalPercentage = 100;
+  const percentageJump = 10;
 
-  // Send the url to be scanned to the backend and get the scan id if successful
-  async function addScanRequestToQueue(data) {
-    try {
-        // post request format
-        const response = await fetch('http://localhost:8800/addScanToQueue', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ url: data }),
-        });
+  let loadingSymbol = "--".repeat(Math.floor(100/percentageJump)) + 1;
 
-        const result = await response.json();
-        
-        if (response.status === 200) {
-            const url = result.url;
-            scanQueue.push(url);
+  let seconds = -1;
+  let minutes = 0;
+  let screenSeconds = seconds;
 
-            const tempQueue = scanQueue.slice(1);
-            $scanQueueOld.innerHTML = `Queue: ${tempQueue}`;
-            $scanQueue.innerHTML = tempQueue;
+  $lowRisk.textContent = "-";
+  $mediumRisk.textContent = "-";
+  $highRisk.textContent = "-";
 
-            sendUrlForScan();
-        }
-        else if (response.status === 403) {
-            $scanStatus.innerHTML = 'You have reached the limit of scans allowed in the past 24 hours.'
-        }
-    } catch (error) {
-        console.error('Error Submitting:', error);
-    }
-  }
+  $viewDetailsButton.style.display = 'none';
 
   async function sendUrlForScan() {
-    $currentScan.innerHTML = `Scanning: ${scanQueue[0]}`;
-    $scanTarget.innerHTML = scanQueue[0];
+    $scanTarget.textContent = inputUrl;
 
     try {
         const response = await fetch('http://localhost:8800/submit');
@@ -92,17 +66,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             terminationTime = globalTerminationTime;
             scanTerminated = false;
 
-            $timeLimit.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+            $timeElapsed.textContent = `${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+            
             const timerInterval = setInterval(() => {
                 terminationTime--;
-                $timeLimit.innerHTML = `Time Limit: ${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+                $timeElapsed.textContent = `${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
 
                 if (terminationTime <= 0) {
                     scanTerminated = true;
-                    $timeLimit.innerHTML = `Time Limit: Scan timed out, updating history...`;
+                    $timeElapsed.textContent = `Exceeded scan time limit. Fetching results...`;
 
                     clearInterval(timerInterval); 
-                    terminateScan(scanId);
+                    terminateScan({scanId: scanId, reason: 'timeout'});
                 }
             }, 1000)
 
@@ -114,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const scanUpdated = await updateScanProgress(progressData, scanId);
                 if (scanUpdated) {
                     clearInterval(timerInterval); 
-                    $timeLimit.innerHTML = 'Time Limit: Scan completed within time limit, updating history...';
+                    $timeElapsed.textContent = 'Successfully completed scan within time limit. Fetching results...';
                 }
             }
             else {
@@ -126,13 +101,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  async function terminateScan(scanId) {
+   // Get scan results stored in local file
+   async function getScanResultsFromFile() {
+    try {
+        const response = await fetch('http://localhost:8800/data');
+        const scans = await response.json();
+
+        return scans;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        return null;
+    }
+  }
+
+  async function terminateScan({ scanId, reason }) {
     try {
         const params = new URLSearchParams({ scanId });
         const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
 
         if (response.status === 200) {
-            fetchScanResults(scanId);
+            reason === 'timeout' && fetchScanResults(scanId);
+
+            const savedScanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+            if (savedScanQueue.length > 0) {
+              savedScanQueue.shift();
+              localStorage.setItem('SCAN_QUEUE', JSON.stringify(savedScanQueue));
+            }
         }
     } catch (error) {
         console.log("Error terminating scan: ", error);
@@ -142,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Function to update scan progress that is seen on the page
   async function updateScanProgress(progressData, scanId) {
     if (!scanTerminated) {
-        $scanProgress.innerHTML = `Scan Progress: ${progressData.status}%`;
+        $scanProgress.textContent = `${progressData.status}%`;
         console.log(`Scan Progress: ${progressData.status}%`);
 
         // If scan has not yet reached 100%, then fetch scan progress which calls the zap API and gets the progress data
@@ -179,8 +173,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function fetchScanResults(scanId) {
-    $dataList.innerHTML += '<h4>Updating Data List...</h4>'
-
     // Update the scan results list after scan is completed
     const params = new URLSearchParams({ scanId, inputUrl })
     const response = await fetch(`http://localhost:8800/updateScanResults/?${params}`);
@@ -188,29 +180,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (response.status === 200) {
         const scanData = await getScanResultsFromFile();
         if (scanData !== null) {
-            updateScanResultsList(scanData);
-            console.log("Scan results updated");
-            $scanProgress.innerHTML = 'Scan Progress: 0%';
+            // updateScanResultsList(scanData);
             
-            scanQueue.shift();
+            $scanProgress.textContent = '-';
+            $timeElapsed.textContent = '-';
 
-            const tempQueue = scanQueue.slice(1);
-            $scanQueueOld.innerHTML = tempQueue.length !== 0 ? `Queue: ${tempQueue}` : 'Queue: Empty';
-            $scanQueue.innerHTML = tempQueue.length !== 0 ? `${tempQueue}` : 'Empty';
+            $lowRisk.textContent = String(1);
+            $mediumRisk.textContent = String(2);
+            $highRisk.textContent = String(3);
+            $viewDetailsButton.style.display = 'block'
 
-            $timeLimit.innerHTML = 'Time Limit: ---';
-            
-            if (scanQueue.length > 0) {
-                console.log("Starting next scan...");
-                sendUrlForScan();
-            }
-            else {
-                $currentScan.innerHTML = 'Scanning: Complete';
-                $scanProgress.innerHTML = 'Scan Progress: ---';
-
-                $scanTarget.innerHTML = 'Complete';
-            }
-
+            const performNextScanInQueueEvent = new CustomEvent('performNextScanInQueue');
+            window.dispatchEvent(performNextScanInQueueEvent);
         }
         else {
             console.log("Error fetching scan data, fetch returned null");
@@ -218,15 +199,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  /*
+
+  Note: This code is used to update the history of scans the user has done. It saves the issues that were recorded
+  so the user can see them again if they want to see the results for a previous scan they did.
+  Currently commented, see if we want to save previous scans and proceed if we do.
+
   // Update the scan results list on the frontend
   function updateScanResultsList(scans) {
     // Clear previous data
-    $dataList.innerHTML = '';
+    $dataList.textContent = '';
     
     // Process and display each scan
     scans.forEach(scan => {
         // Display only URL and total number of issues
-        $dataList.innerHTML += `<li>${scan.url} - Total Issues: ${scan.results.length}</li>`;
+        $dataList.textContent += `<li>${scan.url} - Total Issues: ${scan.results.length}</li>`;
     });
   }
 
@@ -238,61 +225,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   else {
       console.log("Error fetching scan data, fetch returned null");
   }
-
-
-
-
-
-
-})
-const progressBar = document.getElementById('scanPage-progressBar');
-const progressBarPercentage = document.getElementById('scanPage-progressBar-percentage');
-const viewDetails = document.getElementById('scanPage-view-details-container');
-
-const finalPercentage = 100;
-const percentageJump = 10;
-
-let loadingSymbol = "--".repeat(Math.floor(100/percentageJump)) + 1;
-
-const lowRisk = document.getElementById('scanPage-low-risk');
-const mediumRisk = document.getElementById('scanPage-medium-risk');
-const highRisk = document.getElementById('scanPage-high-risk');
-
-const timeElapsed = document.getElementById('scanPage-time-elapsed');
-let seconds = -1;
-let minutes = 0;
-let screenSeconds = seconds;
-
-lowRisk.textContent = "-";
-mediumRisk.textContent = "-";
-highRisk.textContent = "-";
-
-viewDetails.style.display = 'none';
-
-const performScan = async () => {
-  for (let i = 0; i < finalPercentage + 1; i = i + percentageJump) {
-    loadingSymbol = "█" + loadingSymbol;
-    loadingSymbol = loadingSymbol.slice(0, -2);
-    progressBar.textContent = `[ ${loadingSymbol} ]`;
-    progressBarPercentage.textContent = `${i}%`;
-    
-    seconds += 1;
-    screenSeconds += 1;
-    
-    if (seconds % 60 === 0) {
-      screenSeconds = 0;
-    }
-
-    minutes = Math.floor(seconds/60);
-    timeElapsed.textContent = `${minutes}:${screenSeconds}`
-
-    await new Promise((resolve) => setTimeout(resolve, percentageJump*20));
-  }
-}
-
-performScan().then(() => {
-  lowRisk.textContent = String(1);
-  mediumRisk.textContent = String(2);
-  highRisk.textContent = String(3);
-  viewDetails.style.display = 'block'
+  */
 })

@@ -2,6 +2,10 @@
 
 const $form = document.getElementById('dataForm');
 const $scanStatus = document.getElementById('scanStatus');
+const $scanQueue = document.getElementById('scanQueue');
+
+const scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+displayQueue();
 
 $form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -13,6 +17,8 @@ $form.addEventListener('submit', async (event) => {
   if (isValid) {
     const withinLimit = await userWithinScanLimit(url);
     if (withinLimit) {
+      addUrlToQueue(url);
+      displayQueue();
       window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`
     }
     else {
@@ -23,6 +29,18 @@ $form.addEventListener('submit', async (event) => {
     alert('Please enter a valid url.');
   }
 })
+
+function addUrlToQueue(inputUrl) {
+  scanQueue.push(inputUrl);
+  localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
+}
+
+function displayQueue() {
+  if (scanQueue.length > 0) {
+    const tempQueue = scanQueue.slice(1);
+    $scanQueue.innerHTML = `Queue: ${tempQueue}`;
+  }
+}
 
 async function userWithinScanLimit(inputUrl) {
   try {
@@ -36,7 +54,7 @@ async function userWithinScanLimit(inputUrl) {
     });
     
     if (response.status === 200) {
-        return true;
+      return true;
     }
     else if (response.status === 403) {
         return false;
@@ -45,3 +63,8 @@ async function userWithinScanLimit(inputUrl) {
       console.error('Error Submitting:', error);
   }
 }
+
+// custom event listener
+window.addEventListener('performNextScanInQueue' , (event) => {
+  console.log('hi there');
+})

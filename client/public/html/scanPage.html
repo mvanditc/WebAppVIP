@@ -82,15 +82,14 @@
                         <p>Scan target:&nbsp</p>
                         <a id="scanPage-scan-target" href="https://www.google.com/" target="_blank">---</a>
                     </div>
-                    <div>
-                        <p>Scan queue:&nbsp</p>
-                        <a id="scanPage-scan-queue">Empty</a>
-                    </div>
                 </div>
             </div>
             <div id="scanPage-progressBar-container">
                 <div id="scanPage-progressBar"></div>
-                <div id="scanPage-progressBar-percentage"></div>
+                <div id="scanPage-progressBar-percentage-container">
+                    <p>Scan Progress:&nbsp</p>
+                    <p id="scanPage-progressBar-percentage"></p>
+                </div>
             </div>
             <div id="scanPage-time-elapsed-container">
                 <p>Time Elapsed:&nbsp</p>
@@ -119,9 +118,8 @@
         </div>
     </div>
 
-    <script src="../../src/js/temporaryClient.js"></script>
-    <script src="../../src/js/navbar.js"></script>
     <script src="../../src/js/scanPage.js"></script>
+    <script src="../../src/js/navbar.js"></script>
 </body>
 
 </html>
