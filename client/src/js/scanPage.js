@@ -10,23 +10,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   let $highRisk = document.getElementById('scanPage-high-risk');
   let $timeElapsed = document.getElementById('scanPage-time-elapsed');
 
-  let globalTerminationTime = 20;
+  let globalTerminationTime = 15;
   let terminationTime = globalTerminationTime;
   let statusCheckTimer = 1;
   let scanTerminated = false;
   let globalScanId = null;
   let scanQueue = [];
   
-  window.addEventListener('beforeunload', function (e) {
-    var confirmationMessage = 'Are you sure you want to leave?';
-    e.returnValue = confirmationMessage;
+//   window.addEventListener('beforeunload', function (e) {
+//     var confirmationMessage = 'Are you sure you want to leave?';
+//     e.returnValue = confirmationMessage;
 
-    return confirmationMessage;
-  });
+//     return confirmationMessage;
+//   });
 
   window.addEventListener('unload', function () {
-    terminateScan({scanId: globalScanId, reason: 'reload'});
+    terminateScan({scanId: globalScanId, reason: 'userAction'});
   });
+
+  $scanTarget.addEventListener('click', () => {
+    window.open(inputUrl, '_blank');
+  })
 
   const urlParams = new URLSearchParams(window.location.search);
   const inputUrl = urlParams.get('url');
@@ -115,21 +119,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function terminateScan({ scanId, reason }) {
-    try {
-        const params = new URLSearchParams({ scanId });
-        const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
-
-        if (response.status === 200) {
-            reason === 'timeout' && fetchScanResults(scanId);
-
-            const savedScanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
-            if (savedScanQueue.length > 0) {
-              savedScanQueue.shift();
-              localStorage.setItem('SCAN_QUEUE', JSON.stringify(savedScanQueue));
+    if (globalScanId !== null && !scanTerminated) {
+        try {
+            const params = new URLSearchParams({ scanId });
+            const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
+    
+            if (response.status === 200) {
+                reason === 'timeout' && fetchScanResults(scanId);
+    
+                updateScanQueue();
             }
+        } catch (error) {
+            console.log("Error terminating scan: ", error);
         }
-    } catch (error) {
-        console.log("Error terminating scan: ", error);
+    }
+  }
+
+  function updateScanQueue() {
+    const savedQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+    if (savedQueue.length > 0) {
+        savedQueue.shift();
+        localStorage.setItem('SCAN_QUEUE', JSON.stringify(savedQueue));
     }
   }
 
@@ -190,8 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             $highRisk.textContent = String(3);
             $viewDetailsButton.style.display = 'block'
 
-            const performNextScanInQueueEvent = new CustomEvent('performNextScanInQueue');
-            window.dispatchEvent(performNextScanInQueueEvent);
+            updateScanQueue();
         }
         else {
             console.log("Error fetching scan data, fetch returned null");

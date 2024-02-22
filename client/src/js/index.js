@@ -5,11 +5,16 @@ const $scanStatus = document.getElementById('scanStatus');
 const $scanQueue = document.getElementById('scanQueue');
 
 const scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
-displayQueue();
+if (scanQueue.length > 1) {
+  displayQueue();
+}
 
 $form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const url = document.getElementById('dataInput').value.trim();
+
+  const $urlInput = document.getElementById('dataInput');
+  const url = $urlInput.value.trim();
+  $urlInput.value = '';
 
   const regex = /^(ftp|http|https):\/\/[^ "]+$/;
   const isValid = regex.test(url);
@@ -17,12 +22,18 @@ $form.addEventListener('submit', async (event) => {
   if (isValid) {
     const withinLimit = await userWithinScanLimit(url);
     if (withinLimit) {
-      addUrlToQueue(url);
-      displayQueue();
-      window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`
+      scanQueue.push(url);
+      localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
+
+      if (scanQueue.length > 1) {
+        displayQueue();
+      }
+      else {
+        window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`;
+      }
     }
     else {
-      $scanStatus.innerHTML = 'You have reached the limit of scans allowed in the past 24 hours.'
+      $scanStatus.textContent = 'You have reached the limit of scans allowed in the past 24 hours.'
     }
   }
   else {
@@ -30,16 +41,9 @@ $form.addEventListener('submit', async (event) => {
   }
 })
 
-function addUrlToQueue(inputUrl) {
-  scanQueue.push(inputUrl);
-  localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
-}
-
 function displayQueue() {
-  if (scanQueue.length > 0) {
-    const tempQueue = scanQueue.slice(1);
-    $scanQueue.innerHTML = `Queue: ${tempQueue}`;
-  }
+  const tempQueue = scanQueue.slice(1);
+  $scanQueue.textContent = `Scans in queue: ${tempQueue}`;
 }
 
 async function userWithinScanLimit(inputUrl) {
@@ -63,8 +67,3 @@ async function userWithinScanLimit(inputUrl) {
       console.error('Error Submitting:', error);
   }
 }
-
-// custom event listener
-window.addEventListener('performNextScanInQueue' , (event) => {
-  console.log('hi there');
-})
