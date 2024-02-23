@@ -12,6 +12,7 @@ const port = 8800;
 const config = require('./config.json');
 const scanDataPath = path.join(__dirname, "../database/data.json");
 const userDataPath = path.join(__dirname, "../database/user.json");
+const vulnerabilityResultsPath = require('../database/webScraperResults1.json');
 const apiKey = config.apiKey;
 
 app.use(cors());
@@ -184,15 +185,36 @@ app.get('/updateScanResults', async (req, res) => {
     // fetchScanResults will update the file for scanned results and return boolean
     console.log(`Fetching scan results now`);
     const result = await fetchScanResults(scanRequest, scanId);
-    if (result === true) {
+    if (result.success === true) {
         scanQueue.shift();
-        res.status(200).json({ success: true })
+        res.status(200).json({ success: true, riskLevelsArray: result.riskLevelsArray });
     }
     else {
         res.status(500).json({ success: false, error: 'Error updating scan results' });
         console.log("Error updating scan results");
     }
 })
+
+app.get('/returnScanIDs', (req,res) => {
+    try {
+        res.json(getVulnerability([32,0,5,8])) // this is where the return id's need to be taken in from
+    } catch(error) {
+        console.error(error)
+    }
+})
+
+function getVulnerability(idArray) {
+    const vulnerabilityNames = [];
+    idArray.forEach(id => {
+        for (let i = 0; i <= 161; i++) {
+            if (vulnerabilityResultsPath[i].alertID == id){
+                vulnerabilityNames.push([id,vulnerabilityResultsPath[i].alertName,vulnerabilityResultsPath[i].alertReferences,vulnerabilityResultsPath[i].alertRisk,vulnerabilityResultsPath[i].alertSummary,vulnerabilityResultsPath[i].alertSolution, new Date()])
+                break;
+            }
+        }
+    })
+    return vulnerabilityNames;
+}
 
 // Get the scan results from zap for given scan id
 const fetchScanResults = async (scanRequest, scanId) => {
@@ -225,13 +247,39 @@ const fetchScanResults = async (scanRequest, scanId) => {
         currentData.push({ userIP, url, scanId, results });
         await fs.promises.writeFile(scanDataPath, JSON.stringify(currentData, null, 2));
 
+        const pluginIdsArray = results.map((idObject) => {
+            return idObject.pluginId;
+        })
+        const vulnerabilities = getVulnerability(pluginIdsArray);
+        const riskLevelsArray = {
+            'Informational': 0,
+            'Low': 0,
+            'Medium': 0,
+            'High': 0,
+            'Undefined': 0
+        };
+        vulnerabilities.forEach((vulnerability) => {
+            const type = vulnerability[3];
+            switch (type) {
+                case 'Informational':
+                case 'Low':
+                case 'Medium':
+                case 'High':
+                    riskLevelsArray[type]++;
+                    break;
+                default:
+                    riskLevelsArray['Undefined']++;
+                    break;
+            }
+        })
+
         // function returns true
-        return true;
+        return {success: true, riskLevelsArray: riskLevelsArray};
     } catch (error) {
         console.error('Error fetching scan results:', error);
 
         // function returns false
-        return false;
+        return {success: false};
     }
 };
 

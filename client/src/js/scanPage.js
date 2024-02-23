@@ -5,12 +5,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   let $progressBar = document.getElementById('scanPage-progressBar');
   let $scanProgress = document.getElementById('scanPage-progressBar-percentage');
   let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
+
+  let $informationalRisk = document.getElementById('scanPage-informational-risk');
   let $lowRisk = document.getElementById('scanPage-low-risk');
   let $mediumRisk = document.getElementById('scanPage-medium-risk');
   let $highRisk = document.getElementById('scanPage-high-risk');
+  let $undefinedRisk = document.getElementById('scanPage-undefined-risk');
+
   let $timeElapsed = document.getElementById('scanPage-time-elapsed');
 
-  let globalTerminationTime = 15;
+  // scan time limit in seconds
+  let globalTerminationTime = 20;
   let terminationTime = globalTerminationTime;
   let statusCheckTimer = 1;
   let scanTerminated = false;
@@ -46,9 +51,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   let minutes = 0;
   let screenSeconds = seconds;
 
-  $lowRisk.textContent = "-";
-  $mediumRisk.textContent = "-";
-  $highRisk.textContent = "-";
+  $informationalRisk.textContent = '-'
+  $lowRisk.textContent = '-';
+  $mediumRisk.textContent = '-';
+  $highRisk.textContent = '-';
+  $undefinedRisk.textContent = '-';
 
   $viewDetailsButton.style.display = 'none';
 
@@ -68,11 +75,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             terminationTime = globalTerminationTime;
             scanTerminated = false;
 
-            $timeElapsed.textContent = `${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+            $timeElapsed.textContent = getFormattedTimeElapsed(terminationTime);
             
             const timerInterval = setInterval(() => {
                 terminationTime--;
-                $timeElapsed.textContent = `${terminationTime} ${terminationTime > 1 ? 'seconds' : 'second'}`;
+                $timeElapsed.textContent = getFormattedTimeElapsed(terminationTime);
 
                 if (terminationTime <= 0) {
                     scanTerminated = true;
@@ -102,6 +109,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log("Error in sending url for scan: ", error);
     }
   }
+
+  // Convert seconds to minutes:seconds format
+    function getFormattedTimeElapsed(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        const formattedTime = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        return formattedTime;
+    }
 
    // Get scan results stored in local file
    async function getScanResultsFromFile() {
@@ -191,6 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Update the scan results list after scan is completed
     const params = new URLSearchParams({ scanId, inputUrl })
     const response = await fetch(`http://localhost:8800/updateScanResults/?${params}`);
+    const result = await response.json();
 
     if (response.status === 200) {
         const scanData = await getScanResultsFromFile();
@@ -200,9 +216,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             $scanProgress.textContent = '-';
             $timeElapsed.textContent = '-';
 
-            $lowRisk.textContent = String(1);
-            $mediumRisk.textContent = String(2);
-            $highRisk.textContent = String(3);
+            const riskLevelsArray = result['riskLevelsArray'];
+
+            $informationalRisk.textContent = riskLevelsArray['Informational']
+            $lowRisk.textContent = riskLevelsArray['Low'];
+            $mediumRisk.textContent = riskLevelsArray['Medium'];
+            $highRisk.textContent = riskLevelsArray['High'];
+            $undefinedRisk.textContent = riskLevelsArray['Undefined'];
             $viewDetailsButton.style.display = 'block'
 
             updateScanQueue();
