@@ -71,6 +71,7 @@ app.get('/submit', async (req, res) => {
         res.status(403).json({ error: 'Scan was terminated' });
     }
     else {
+        console.log('scan queue is: ', scanQueue);
         const scanCompleted = await processScanQueue();
         if (scanCompleted) {
             res.status(200).json({ scanId: savedScanId });
@@ -318,6 +319,9 @@ app.get('/stopScan', async (req, res) => {
         console.log('Scan stopped successfully:', stopResponse.data);
         isScanning = false;
         scanTerminated = true;
+        scanQueue.shift();
+
+        res.status(200).json({ message: 'Scan stopped successfully' });
     }
     catch (error) {
         console.error('Error stopping scan:', error);

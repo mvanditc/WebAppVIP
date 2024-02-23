@@ -4,10 +4,16 @@ const $form = document.getElementById('dataForm');
 const $scanStatus = document.getElementById('scanStatus');
 const $scanQueue = document.getElementById('scanQueue');
 
-const scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+let scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
 if (scanQueue.length > 1) {
   displayQueue();
 }
+
+window.addEventListener('storage', function (event) {
+  if (event.key === 'SCAN_QUEUE') {
+    scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+  }
+});
 
 $form.addEventListener('submit', async (event) => {
   event.preventDefault();
