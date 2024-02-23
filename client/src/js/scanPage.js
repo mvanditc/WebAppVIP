@@ -1,6 +1,17 @@
 // JavaScript used for the Scanning Page's functionality.
 
 document.addEventListener('DOMContentLoaded', async () => {
+  window.addEventListener('pageshow', function (event) {
+    if (!event.persisted) {
+        // Call the function when the page is shown or reloaded
+        sendUrlForScan();
+    }
+  });
+
+  window.addEventListener("popstate", function (e) {
+    location.reload();
+  });
+
   let $scanTarget = document.getElementById('scanPage-scan-target');
   let $progressBar = document.getElementById('scanPage-progressBar');
   let $scanProgress = document.getElementById('scanPage-progressBar-percentage');

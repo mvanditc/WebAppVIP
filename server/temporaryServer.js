@@ -63,11 +63,10 @@ app.post("/addScanToQueue", async (req, res) => {
 
 app.get('/setScanTerminatedValue', (req, res) => {
     scanTerminated = false;
+    res.status(200).send('Scan terminated value has been set');
 })
 
 app.get('/submit', async (req, res) => {
-    console.log('scan terminated: ', scanTerminated);
-
     if (scanTerminated) {
         res.status(403).json({ error: 'Scan was terminated' });
     }

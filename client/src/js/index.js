@@ -29,8 +29,13 @@ $form.addEventListener('submit', async (event) => {
         displayQueue();
       }
       else {
-        await fetch('http://localhost:8800/setScanTerminatedValue');
-        window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`;
+        const response = await fetch('http://localhost:8800/setScanTerminatedValue');
+        if (response.status === 200) {
+          window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`;
+        }
+        else {
+          console.log('Error fetching scan terminated value');
+        }
       }
     }
     else {
