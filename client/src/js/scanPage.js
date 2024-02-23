@@ -41,10 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputUrl = urlParams.get('url');
 
   // first function that begins the scan process
-  const scanTerminatedByUser = JSON.parse(localStorage.getItem('SCAN_TERMINATED')) || null;
-  if (!scanTerminatedByUser) {
-      sendUrlForScan();
-  }
+  sendUrlForScan();
 
   $informationalRisk.textContent = '-'
   $lowRisk.textContent = '-';
@@ -58,13 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   $viewDetailsButton.style.display = 'none';
 
   async function sendUrlForScan() {
-    $scanTarget.textContent = inputUrl;
-
     try {
         const response = await fetch('http://localhost:8800/submit');
         const result = await response.json();
 
         if (response.status === 200) {
+            $scanTarget.textContent = inputUrl;
             scanQueue.push(inputUrl);
             const scanId = result.scanId;
 
@@ -132,7 +128,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function terminateScan({ scanId, reason }) {
       if (globalScanId !== null && !scanTerminated) {
-        localStorage.setItem('SCAN_TERMINATED', JSON.stringify(true));
         try {
             const params = new URLSearchParams({ scanId });
             const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
@@ -144,6 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.log("Error terminating scan: ", error);
+            updateScanQueue();
         }
     }
   }

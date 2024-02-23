@@ -20,7 +20,8 @@ app.use(bodyParser.json());
 
 let scanQueue = [];
 let isScanning = false;
-let savedScanId = 0;
+let savedScanId = null;
+let scanTerminated = false;
 
 // Message to display on server
 app.get('/', (req, res) => {
@@ -60,10 +61,21 @@ app.post("/addScanToQueue", async (req, res) => {
     }
 });
 
+app.get('/setScanTerminatedValue', (req, res) => {
+    scanTerminated = false;
+})
+
 app.get('/submit', async (req, res) => {
-    const scanCompleted = await processScanQueue();
-    if (scanCompleted) {
-        res.status(200).json({ scanId: savedScanId });
+    console.log('scan terminated: ', scanTerminated);
+
+    if (scanTerminated) {
+        res.status(403).json({ error: 'Scan was terminated' });
+    }
+    else {
+        const scanCompleted = await processScanQueue();
+        if (scanCompleted) {
+            res.status(200).json({ scanId: savedScanId });
+        }
     }
 })
 
@@ -181,6 +193,7 @@ app.get('/updateScanResults', async (req, res) => {
     const url = req.query.url;
 
     const scanRequest = scanQueue[0];
+    scanTerminated = true;
 
     // fetchScanResults will update the file for scanned results and return boolean
     console.log(`Fetching scan results now`);
@@ -305,6 +318,7 @@ app.get('/stopScan', async (req, res) => {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
         console.log('Scan stopped successfully:', stopResponse.data);
         isScanning = false;
+        scanTerminated = true;
     }
     catch (error) {
         console.error('Error stopping scan:', error);
