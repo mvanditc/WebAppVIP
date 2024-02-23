@@ -14,8 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   let $timeElapsed = document.getElementById('scanPage-time-elapsed');
 
-  // scan time limit in seconds
-  let globalTerminationTime = 20;
+  let globalTerminationTime = 20; // scan time limit in seconds
   let terminationTime = globalTerminationTime;
   let statusCheckTimer = 1;
   let scanTerminated = false;
@@ -31,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.addEventListener('unload', function () {
     terminateScan({scanId: globalScanId, reason: 'userAction'});
+    scanTerminated = true;
   });
 
   $scanTarget.addEventListener('click', () => {
@@ -41,21 +41,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputUrl = urlParams.get('url');
 
   // first function that begins the scan process
-  sendUrlForScan();
-  scanQueue.push(inputUrl);
-
-  const finalPercentage = 100;
-  const percentageJump = 10;
-
-  let seconds = -1;
-  let minutes = 0;
-  let screenSeconds = seconds;
+  const scanTerminatedByUser = JSON.parse(localStorage.getItem('SCAN_TERMINATED')) || null;
+  if (!scanTerminatedByUser) {
+      sendUrlForScan();
+  }
 
   $informationalRisk.textContent = '-'
   $lowRisk.textContent = '-';
   $mediumRisk.textContent = '-';
   $highRisk.textContent = '-';
   $undefinedRisk.textContent = '-';
+  $scanProgress.textContent = '-';
+  $timeElapsed.textContent = '-';
+
 
   $viewDetailsButton.style.display = 'none';
 
@@ -67,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const result = await response.json();
 
         if (response.status === 200) {
+            scanQueue.push(inputUrl);
             const scanId = result.scanId;
 
             // Once the scan id is received, set the global variable to track this so we can use it in other function
@@ -132,7 +131,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function terminateScan({ scanId, reason }) {
-    if (globalScanId !== null && !scanTerminated) {
+      if (globalScanId !== null && !scanTerminated) {
+        localStorage.setItem('SCAN_TERMINATED', JSON.stringify(true));
         try {
             const params = new URLSearchParams({ scanId });
             const response = await fetch(`http://localhost:8800/stopScan/?${params}`);

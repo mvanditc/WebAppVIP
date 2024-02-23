@@ -29,6 +29,7 @@ $form.addEventListener('submit', async (event) => {
         displayQueue();
       }
       else {
+        localStorage.setItem('SCAN_TERMINATED', JSON.stringify(false));
         window.location.href = `scanPage.html?url=${encodeURIComponent(url)}`;
       }
     }
