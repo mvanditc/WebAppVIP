@@ -1,5 +1,3 @@
-/* scanPage.css is used to style the scanPage.html file */
-
 @import './global.css';
 @import './navbar.css';
 
@@ -10,7 +8,7 @@ body {
     padding: 0;
 }
 
-#scanPage-main-container {
+#index-scanComponent-main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,13 +17,13 @@ body {
     margin: 15px 0px;
 }
 
-#scanPage-container {
+#index-scanComponent-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     background-color: black;
     border: 10px solid rgba(133, 42, 252, 0.861);
-    max-height: 550px;
+    max-height: 75vh;
     width: 70vw;
     max-width: 800px;
     font-family: 'font1';
@@ -35,44 +33,48 @@ body {
     flex-direction: column;
 }
 
-#scanPage-initial-container {
+#index-scanComponent-initial-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 
-#scanPage-initial-container p {
-    margin: 5px 0px;
-}
-
-#scanPage-scan-target-container div {
+#index-scanComponent-initial-container div {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-right: 5px;
 }
 
-#scanPage-scan-target {
+#index-scanComponent-initial-container p {
+    margin: 5px 0px;
+}
+
+#index-scanComponent-scan-target {
     color: var(--blue-text);
     text-decoration: none;
 }
 
-#scanPage-scan-target:hover {
+#index-scanComponent-scan-target:hover {
     cursor: pointer;
 }
 
-#scanPage-progressBar-container {
+#index-scanComponent-progressBar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
 }
 
-#scanPage-progressBar-percentage-container {
+#index-scanComponent-progressBar-percentage-container {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-#scanPage-time-elapsed-container {
+#index-scanComponent-time-elapsed-container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -80,55 +82,55 @@ body {
     margin-bottom: 30px;
 }
 
-.scanPage-risk-container {
+.index-scanComponent-risk-container {
     display: flex;
     flex-direction: row;
     margin: -20px 0px;
 }
 
-#scanPage-informational-risk {
+#index-scanComponent-informational-risk {
     color: rgb(0, 116, 204);
 }
 
-#scanPage-low-risk {
+#index-scanComponent-low-risk {
     color: yellow;
 }
 
-#scanPage-medium-risk {
+#index-scanComponent-medium-risk {
     color: orange;
 }
 
-#scanPage-high-risk {
+#index-scanComponent-high-risk {
     color: red;
 }
 
-#scanPage-undefined-risk {
+#index-scanComponent-undefined-risk {
     color: rgb(170, 170, 170);
 }
 
-#scanPage-vulnerabilities-container {
+#index-scanComponent-vulnerabilities-container {
     margin-bottom: 45px;
 }
 
-#scanPage-vulnerabilities-found-title {
+#index-scanComponent-vulnerabilities-found-title {
     margin-bottom: 30px;
 }
 
-#scanPage-risks div {
+#index-scanComponent-risks div {
     margin-bottom: 5px;
 }
 
-#scanPage-view-details-container {
+#index-scanComponent-view-details-container {
     text-align: center;
 }
 
-#scanPage-view-details-container a {
+#index-scanComponent-view-details-container a {
     color: white;
 }
 
 @media screen and (max-width: 400px),
 (max-height: 850px) {
-    #scanPage-container {
+    #index-scanComponent-container {
         font-size: 14px;
     }
 }
