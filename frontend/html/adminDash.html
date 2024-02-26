@@ -6,9 +6,111 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="" />
     <link rel="stylesheet" href="../css/adminDash.css">
+    <link rel="stylesheet" href="../css/sortableTable.css">
   </head>
   <body>
     <h1>Welcome to the Admin Dashboard</h1>
+    <div id="adminDashContainer">
+      <div id="adminDashSettings">
+        <h2>Site Settings</h2>
+        <form id="siteSettingsForm" action="#" method="put">
+          <label for="maxDailyScanInput">Max Daily Scans Per User:</label>
+          <input id="maxDailyScanInput" type="number" name="maxDailyScanInput" required>
+
+          <label for="scanTimeoutInput">Scan Timeout (Seconds):</label>
+          <input id="scanTimeoutInput" type="number" name="scanTimeoutInput" required>
+
+          <button>Cancel</button>
+          <button type="submit">Apply Changes</button>
+        </form>
+      </div>
+      <div id="adminDashAnalytics">
+        <h2>Site Analytics</h2>
+        <h3>Scans in the Past Hour: xx</h3>
+        <h3>Scans in the Past Minute: xx</h3>
+        <div class="table-wrap">
+          <table class="sortable">
+            <caption>
+              Site Statistics Over Time
+              <span class="sr-only">, column headers with buttons are sortable.</span>
+            </caption>
+            <thead id="statsTableHeader">
+              <tr>
+                <th aria-sort="descending">
+                  <button>
+                    Date
+                    <span aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th class="num">
+                  <button>
+                    Scans/24hrs
+                    <span aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th class="num">
+                  <button>
+                    Scan Time (sec/24hrs)
+                    <span aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th class="num">
+                  <button>
+                    Site Visits
+                    <span aria-hidden="true"></span>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0000/01/01</td>
+                <td class="num">56</td>
+                <td class="num">2331</td>
+                <td class="num">89</td>
+              </tr>
+              <tr>
+                <td>0000/01/02</td>
+                <td class="num">22</td>
+                <td class="num">688</td>
+                <td class="num">31</td>
+              </tr>
+              <tr>
+                <td>0000/01/03</td>
+                <td class="num">38</td>
+                <td class="num">728</td>
+                <td class="num">27</td>
+              </tr>
+              <tr>
+                <td>0000/01/04</td>
+                <td class="num">101</td>
+                <td class="num">1273</td>
+                <td class="num">73</td>
+              </tr>
+              <tr>
+                <td>0000/01/05</td>
+                <td class="num">22</td>
+                <td class="num">688</td>
+                <td class="num">31</td>
+              </tr>
+              <tr>
+                <td>0000/01/06</td>
+                <td class="num">12</td>
+                <td class="num">352</td>
+                <td class="num">8</td>
+              </tr>
+              <tr>
+                <td>0000/01/07</td>
+                <td class="num">532</td>
+                <td class="num">6823</td>
+                <td class="num">402</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>        
+      </div>
+    </div>
     <script src="../js/adminDash.js"></script>
+    <script src="../js/sortableTable.js"></script>
   </body>
 </html>

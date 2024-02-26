@@ -32,6 +32,7 @@ loginForm.addEventListener("submit", (event)=>{
             localStorage.setItem('username', attemptedUsername);
             localStorage.setItem('loginToken', data["loginToken"]);
             alert("Login Succeed")
+            window.location.href = '../html/adminDash.html';
         }else{
             alert("Login Failure")
         }

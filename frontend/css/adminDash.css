@@ -5,4 +5,52 @@ body {
     color: white;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#adminDashContainer{
+    display: flex;
+    background-color: cadetblue;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+#adminDashSettings{
+    display: flex;
+    background-color: brown;
+    flex-direction: column;
+    align-items: center;
+}
+#adminDashAnalytics{
+    display: flex;
+    background-color: blue;
+    flex-direction: column;
+    align-items: center;
+}
+#siteSettingsForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#siteSettingsForm input{
+    margin: 15px 10px;
+}
+#siteSettingsForm button{
+    margin: 15px 10px;
+}
+
+@media (max-width: 742px) {
+    #adminDashSettings{
+        width: 100%;
+    }
+    #adminDashAnalytics{
+        width: 100%;
+    }
+}
+
+@media (max-width: 451px) {
+    #statsTableHeader{
+        font-size: 60% !important;
+    }
 }
