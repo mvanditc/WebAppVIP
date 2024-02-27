@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="" />
     <link rel="icon" href="../assets/favicon.ico">
-    <link rel="stylesheet" href="../../src/css/scanComponent.css">
+    <link rel="stylesheet" href="../../src/css/scanPage.css">
 
     <!-- FontAwesome CDN, used for adding icons to the HTML -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -72,7 +72,61 @@
         </div>
     </div>
 
+    <!--  HTML CODE FOR BODY  -->
+    <div id="scanPage-main-container">
+        <div id="scanPage-container" class="scanPage-contaner">
+            <div id="scanPage-initial-container">
+                <div id="scanPage-scan-target-container">
+                    <div>
+                        <p>Scan target:&nbsp</p>
+                        <a id="scanPage-scan-target" target="_blank">-</a>
+                    </div>
+                </div>
+            </div>
+            <div id="scanPage-progressBar-container">
+                <div id="scanPage-progressBar"></div>
+                <div id="scanPage-progressBar-percentage-container">
+                    <p>Scan Progress:&nbsp</p>
+                    <p id="scanPage-progressBar-percentage"></p>
+                </div>
+            </div>
+            <div id="scanPage-time-elapsed-container">
+                <p>Time Elapsed:&nbsp</p>
+                <p id="scanPage-time-elapsed"></p>
+            </div>
+            <div id="scanPage-vulnerabilities-container">
+                <p id="scanPage-vulnerabilities-found-title">Vulnerabilities Found:</p>
+                <div id="scanPage-risks">
+                    <div class="scanPage-risk-container">
+                        <p>Informational Risk:&nbsp</p>
+                        <p id="scanPage-informational-risk">1</p>
+                    </div>
+                    <div class="scanPage-risk-container">
+                        <p>Low Risk:&nbsp</p>
+                        <p id="scanPage-low-risk">1</p>
+                    </div>
+                    <div class="scanPage-risk-container">
+                        <p>Medium Risk:&nbsp</p>
+                        <p id="scanPage-medium-risk">2</p>
+                    </div>
+                    <div class="scanPage-risk-container">
+                        <p>High Risk:&nbsp</p>
+                        <p id="scanPage-high-risk">3</p>
+                    </div>
+                    <div class="scanPage-risk-container">
+                        <p>Unclassified Risk:&nbsp</p>
+                        <p id="scanPage-undefined-risk">3</p>
+                    </div>
+                </div>
+            </div>
+            <div id="scanPage-view-details-container">
+                <a href="scanResultsPage.html">view details</a>
+            </div>
+        </div>
+    </div>
+
     <script src="../../src/js/index.js"></script>
+    <script src="../../src/js/scanPage.js"></script>
     <script src="../../src/js/navbar.js"></script>
 </body>
 
