@@ -7,10 +7,12 @@ let languageSelectorContent = document.getElementById("languageSelectorContent")
 
 function closeLanguageSelectorModal(){
     languageSelectorModal.style.display = "none"
+    languageSelectorButton.style.backgroundColor = ""
 }
 
 function openLanguageSelectorModal(){
     languageSelectorModal.style.display = ""
+    languageSelectorButton.style.backgroundColor = "var(--selected-navbar-list-button-color)"
 }
 
 languageSelectorModal.style.display = "none"
