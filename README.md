@@ -16,9 +16,11 @@
 
 1) Open two terminals.
 
-2) In the first terminal, type the command 'python3 -m http.server'. This should give the message 'Serving HTTP on :: port YOUR_PORT (http://[::]:YOUR_PORT/) ...'
+2) Run npm install in any one.
 
-3) In the second terminal, cd into the folder 'server'. In this folder, paste the command 'npx nodemon temporaryServer.js'. This will start the backend.
+3) In the first terminal, type the command 'python3 -m http.server'. This should give the message 'Serving HTTP on :: port YOUR_PORT (http://[::]:YOUR_PORT/) ...'
+
+4) In the second terminal, cd into the folder 'server'. In this folder, paste the command 'npx nodemon temporaryServer.js'. This will start the backend.
 
 # Important Notes (Read this before you start making changes):
 

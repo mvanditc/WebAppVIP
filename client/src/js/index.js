@@ -10,7 +10,7 @@ let $informationalRisk = document.getElementById('index-scanComponent-informatio
 let $lowRisk = document.getElementById('index-scanComponent-low-risk');
 let $mediumRisk = document.getElementById('index-scanComponent-medium-risk');
 let $highRisk = document.getElementById('index-scanComponent-high-risk');
-let $undefinedRisk = document.getElementById('index-scanComponent-undefined-risk');
+let $unclassifiedRisk = document.getElementById('index-scanComponent-undefined-risk');
 
 let $timeElapsed = document.getElementById('index-scanComponent-time-elapsed');
 
@@ -26,7 +26,7 @@ $informationalRisk.textContent = '-'
 $lowRisk.textContent = '-';
 $mediumRisk.textContent = '-';
 $highRisk.textContent = '-';
-$undefinedRisk.textContent = '-';
+$unclassifiedRisk.textContent = '-';
 $scanProgress.textContent = '-';
 $timeElapsed.textContent = '-';
 
@@ -52,6 +52,30 @@ function checkScanQueueLength() {
 window.addEventListener('storage', function (event) {
   if (event.key === 'SCAN_QUEUE') {
     scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+  }
+});
+
+window.addEventListener('unload', function (event) {
+  if (completedScans.length > 0)  {
+
+    completedScans.forEach((scan) => {
+      const scanTarget = scan['url'];
+      const scanStatus = scan['status'];
+      const vulnerabilities = scan['vulnerabilities'];
+      const informationalRisk = vulnerabilities['informational'];
+      const lowRisk = vulnerabilities['low'];
+      const mediumRisk = vulnerabilities['medium'];
+      const highRisk = vulnerabilities['high'];
+      const unclassifiedRisk = vulnerabilities['unclassified'];
+
+      $scanTarget.textContent = scanTarget;
+      $scanStatus.textContent = scanStatus;
+      $informationalRisk.textContent = informationalRisk;
+      $lowRisk.textContent = lowRisk;
+      $mediumRisk.textContent = mediumRisk;
+      $highRisk.textContent = highRisk;
+      $unclassifiedRisk.textContent = unclassifiedRisk;
+    })
   }
 });
 
@@ -181,7 +205,6 @@ async function sendUrlForScan() {
     const result = await response.json();
     
     if (response.status === 200) {
-      console.log('function called');
       $scanTarget.textContent = globalUrl;
       const scanId = result.scanId;
 
@@ -354,7 +377,7 @@ async function fetchScanResults(scanId) {
           $lowRisk.textContent = lowRisk;
           $mediumRisk.textContent = mediumRisk;
           $highRisk.textContent = highRisk;
-          $undefinedRisk.textContent = unclassifiedRisk;
+          $unclassifiedRisk.textContent = unclassifiedRisk;
 
           $viewDetailsButton.style.display = 'block'
 
