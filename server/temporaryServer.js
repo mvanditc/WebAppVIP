@@ -21,7 +21,6 @@ app.use(bodyParser.json());
 let scanQueue = [];
 let isScanning = false;
 let savedScanId = null;
-let scanTerminated = false;
 
 // Message to display on server
 app.get('/', (req, res) => {
@@ -61,21 +60,11 @@ app.post("/addScanToQueue", async (req, res) => {
     }
 });
 
-app.get('/setScanTerminatedValue', (req, res) => {
-    scanTerminated = false;
-    res.status(200).send('Scan terminated value has been set');
-})
-
 app.get('/submit', async (req, res) => {
-    if (scanTerminated) {
-        res.status(403).json({ error: 'Scan was terminated' });
-    }
-    else {
-        console.log('scan queue is: ', scanQueue);
-        const scanCompleted = await processScanQueue();
-        if (scanCompleted) {
-            res.status(200).json({ scanId: savedScanId });
-        }
+    console.log('scan queue is: ', scanQueue);
+    const scanCompleted = await processScanQueue();
+    if (scanCompleted) {
+        res.status(200).json({ scanId: savedScanId });
     }
 })
 
@@ -193,7 +182,6 @@ app.get('/updateScanResults', async (req, res) => {
     const url = req.query.url;
 
     const scanRequest = scanQueue[0];
-    scanTerminated = true;
 
     // fetchScanResults will update the file for scanned results and return boolean
     console.log(`Fetching scan results now`);
@@ -313,13 +301,12 @@ const stopScan = async (scanId) => {
 
 app.get('/stopScan', async (req, res) => {
     const scanId = req.query.scanId;
+    scanQueue.shift();
 
     try {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
         console.log('Scan stopped successfully:', stopResponse.data);
         isScanning = false;
-        scanTerminated = true;
-        scanQueue.shift();
 
         res.status(200).json({ message: 'Scan stopped successfully' });
     }
@@ -333,7 +320,7 @@ const sendScanData = async (results) => {
     try {
         console.log("results from scan: ");
         results.forEach((result, index) => {
-            console.log(`Result ${index + 1}:`, result);
+            console.log(`Result ${index + 1}:`, result); 
             // printing to console for now, work on sending to client
         });
     }

@@ -1,5 +1,3 @@
-/* scanPage.css is used to style the scanPage.html file */
-
 @import './global.css';
 @import './navbar.css';
 
@@ -25,7 +23,7 @@ body {
     justify-content: flex-start;
     background-color: black;
     border: 10px solid rgba(133, 42, 252, 0.861);
-    max-height: 550px;
+    max-height: 75vh;
     width: 70vw;
     max-width: 800px;
     font-family: 'font1';
@@ -36,18 +34,22 @@ body {
 }
 
 #scanPage-initial-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 
-#scanPage-initial-container p {
-    margin: 5px 0px;
-}
-
-#scanPage-scan-target-container div {
+#scanPage-initial-container div {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-right: 5px;
+}
+
+#scanPage-initial-container p {
+    margin: 5px 0px;
 }
 
 #scanPage-scan-target {

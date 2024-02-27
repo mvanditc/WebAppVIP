@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               // updateScanResultsList(scanData);
               
               $scanProgress.textContent = '-';
-              $timeElapsed.textContent = '-';
+              $timeElapsed.textContent = '-'; 
   
               const riskLevelsArray = result['riskLevelsArray'];
   

@@ -1,5 +1,3 @@
-/* index.css is used to style the index.html file */
-
 @import './global.css';
 @import './navbar.css';
 
@@ -8,4 +6,131 @@ body {
     color: white;
     margin: 0;
     padding: 0;
+}
+
+#index-scanComponent-main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*height: calc(100vh - 100px);*/
+    margin: 15px 0px;
+}
+
+#index-scanComponent-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: black;
+    border: 10px solid rgba(133, 42, 252, 0.861);
+    max-height: 75vh;
+    width: 70vw;
+    max-width: 800px;
+    font-family: 'font1';
+    padding: 30px 20px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+#index-scanComponent-initial-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#index-scanComponent-initial-container div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 5px;
+}
+
+#index-scanComponent-initial-container p {
+    margin: 5px 0px;
+}
+
+#index-scanComponent-scan-target {
+    color: var(--blue-text);
+    text-decoration: none;
+}
+
+#index-scanComponent-scan-target:hover {
+    cursor: pointer;
+}
+
+#index-scanComponent-progressBar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#index-scanComponent-progressBar-percentage-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#index-scanComponent-time-elapsed-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+
+.index-scanComponent-risk-container {
+    display: flex;
+    flex-direction: row;
+    margin: -20px 0px;
+}
+
+#index-scanComponent-informational-risk {
+    color: rgb(0, 116, 204);
+}
+
+#index-scanComponent-low-risk {
+    color: yellow;
+}
+
+#index-scanComponent-medium-risk {
+    color: orange;
+}
+
+#index-scanComponent-high-risk {
+    color: red;
+}
+
+#index-scanComponent-undefined-risk {
+    color: rgb(170, 170, 170);
+}
+
+#index-scanComponent-vulnerabilities-container {
+    margin-bottom: 45px;
+}
+
+#index-scanComponent-vulnerabilities-found-title {
+    margin-bottom: 30px;
+}
+
+#index-scanComponent-risks div {
+    margin-bottom: 5px;
+}
+
+#index-scanComponent-view-details-container {
+    text-align: center;
+}
+
+#index-scanComponent-view-details-container a {
+    color: white;
+}
+
+@media screen and (max-width: 400px),
+(max-height: 850px) {
+    #index-scanComponent-container {
+        font-size: 14px;
+    }
 }
