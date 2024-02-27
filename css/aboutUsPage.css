@@ -1,11 +1,101 @@
 /* aboutUsPage.css is used to style the aboutUsPage.html file */
 
-@import '/css/global.css';
-@import '/css/navbar.css';
+@import 'global.css';
+@import 'navbar.css';
 
 body {
     background-color: var(--background-color);
     color: white;
     margin: 0;
     padding: 0;
+    font-family: "font1";
+}
+
+.title {
+    color: white;
+    margin-left: 4%;
+    white-space: normal;
+    display: inline-block;
+}
+    
+
+.mission-statement-content {
+    margin-left: 15%;
+    text-align: left;
+    color: black;
+    height: 200px;
+    width:75%;
+    white-space: normal;
+    display: inline-block;
+    margin-bottom: auto;
+}
+
+/* For screens smaller than 280 pixels */
+@media (max-width: 291px) {
+    .mission-statement-content{
+        font-size: 0.5em;
+    }
+    .title{
+        font-size: 0.9em;
+    }
+    .flex-container{
+        flex-direction: column;
+    }
+
+}
+
+/* For screens smaller than 388 pixels */
+@media (max-width: 388px){
+    .mission-statement-content{
+        font-size: 0.6em;
+    }
+    .flex-container{
+        flex-direction: column;
+    }
+    .box {
+        height: 90vw;
+        width: 90vw;
+    }
+}
+
+
+/* For screens larger than 389 pixels */
+@media (min-width: 389px) {
+    .mission-statement-content{
+        font-size: 0.8em;
+    }
+    .box {
+        height: 40vw;
+        width: 40vw;
+        padding: 2px;
+    }
+}
+
+/* For screens larger than 768 pixels */
+@media (min-width: 769px) {
+    .mission-statement-content{
+        font-size: 1em;
+    }
+    .box {
+        height: 27vw;
+        width: 27vw;
+    }
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.center {
+    margin:auto;
+    width:90%;
+}
+
+.box {
+    margin-top: 2%;
+    background: lightgray;
+    border-radius: 20px;
 }

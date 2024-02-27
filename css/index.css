@@ -3,6 +3,7 @@
 @import '/css/global.css';
 @import '/css/navbar.css';
 @import '/css/colorPicker.css';
+@import '/css/languageSelector.css';
 
 body {
     background-color: var(--background-color);
