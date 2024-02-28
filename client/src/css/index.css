@@ -8,7 +8,7 @@ body {
     padding: 0;
 }
 
-#index-scanComponent-main-container {
+#index-scanPage-main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,7 +17,7 @@ body {
     margin: 15px 0px;
 }
 
-#index-scanComponent-container {
+#index-scanPage-container {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -33,7 +33,7 @@ body {
     flex-direction: column;
 }
 
-#index-scanComponent-initial-container {
+#index-scanPage-initial-container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -41,40 +41,40 @@ body {
     margin-bottom: 10px;
 }
 
-#index-scanComponent-initial-container div {
+#index-scanPage-initial-container div {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-right: 5px;
 }
 
-#index-scanComponent-initial-container p {
+#index-scanPage-initial-container p {
     margin: 5px 0px;
 }
 
-#index-scanComponent-scan-target {
+#index-scanPage-scan-target {
     color: var(--blue-text);
     text-decoration: none;
 }
 
-#index-scanComponent-scan-target:hover {
+#index-scanPage-scan-target:hover {
     cursor: pointer;
 }
 
-#index-scanComponent-progressBar-container {
+#index-scanPage-progressBar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
 }
 
-#index-scanComponent-progressBar-percentage-container {
+#index-scanPage-progressBar-percentage-container {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-#index-scanComponent-time-elapsed-container {
+#index-scanPage-time-elapsed-container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -82,55 +82,55 @@ body {
     margin-bottom: 30px;
 }
 
-.index-scanComponent-risk-container {
+.index-scanPage-risk-container {
     display: flex;
     flex-direction: row;
     margin: -20px 0px;
 }
 
-#index-scanComponent-informational-risk {
+#index-scanPage-informational-risk {
     color: rgb(0, 116, 204);
 }
 
-#index-scanComponent-low-risk {
+#index-scanPage-low-risk {
     color: yellow;
 }
 
-#index-scanComponent-medium-risk {
+#index-scanPage-medium-risk {
     color: orange;
 }
 
-#index-scanComponent-high-risk {
+#index-scanPage-high-risk {
     color: red;
 }
 
-#index-scanComponent-undefined-risk {
+#index-scanPage-undefined-risk {
     color: rgb(170, 170, 170);
 }
 
-#index-scanComponent-vulnerabilities-container {
+#index-scanPage-vulnerabilities-container {
     margin-bottom: 45px;
 }
 
-#index-scanComponent-vulnerabilities-found-title {
+#index-scanPage-vulnerabilities-found-title {
     margin-bottom: 30px;
 }
 
-#index-scanComponent-risks div {
+#index-scanPage-risks div {
     margin-bottom: 5px;
 }
 
-#index-scanComponent-view-details-container {
+#index-scanPage-view-details-container {
     text-align: center;
 }
 
-#index-scanComponent-view-details-container a {
+#index-scanPage-view-details-container a {
     color: white;
 }
 
 @media screen and (max-width: 400px),
 (max-height: 850px) {
-    #index-scanComponent-container {
+    #index-scanPage-container {
         font-size: 14px;
     }
 }

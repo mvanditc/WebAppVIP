@@ -61,7 +61,6 @@ app.post("/addScanToQueue", async (req, res) => {
 });
 
 app.get('/submit', async (req, res) => {
-    console.log('scan queue is: ', scanQueue);
     const scanCompleted = await processScanQueue();
     if (scanCompleted) {
         res.status(200).json({ scanId: savedScanId });
