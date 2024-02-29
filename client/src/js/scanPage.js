@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         $scanTarget.textContent = savedScanDetails['url'];
         $viewDetailsButton.style.display = 'block';
         $progressBar.style.display = 'none';
+        $scanProgress.textContent = '-';
         $timeElapsed.textContent = '-'
     }
     else {
@@ -160,6 +161,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function terminateScan({ scanId, reason }) {
         if (globalScanId !== null && scanTerminated) {
+            console.log('global scan idL ', globalScanId);
+            console.log('scan terminated val: ', scanTerminated);
             try {
                 const params = new URLSearchParams({ scanId, reason });
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
