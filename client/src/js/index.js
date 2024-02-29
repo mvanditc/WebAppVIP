@@ -37,7 +37,10 @@ window.addEventListener('storage', async function (event) {
     currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
     if (Object.keys(currentScan).length > 0) {
       let id = currentScan.id;
-      if (scanQueue[id - 2].status === 'Complete') {
+
+      let currentScanIndex = scanQueue.findIndex((scanObj) => scanObj.id === id);
+
+      if (scanQueue[currentScanIndex - 1].status === 'Complete') {
         await userWithinScanLimit(currentScan.url);
         window.location.href = `scanPage.html?url=${encodeURIComponent(currentScan.url)}`;
       }
