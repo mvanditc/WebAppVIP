@@ -15,34 +15,33 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let $timeElapsed = document.getElementById('scanPage-time-elapsed');
 
-    let globalTerminationTime = 20; // scan time limit in seconds
+    let globalTerminationTime = 10; // scan time limit in seconds
     let terminationTime = globalTerminationTime;
     let statusCheckTimer = 1;
     let scanTerminated = false;
     let globalScanId = null;
     let scanQueue = [];
 
-    window.addEventListener('pageshow', function (event) {
-        if (!event.persisted) {
-            // Call the function when the page is shown or reloaded
-            sendUrlForScan();
-        }
-    });
+    // window.addEventListener('pageshow', function (event) {
+    //     if (!event.persisted) {
+    //         // Call the function when the page is shown or reloaded
+    //         sendUrlForScan();
+    //     }
+    // });
     
     window.addEventListener('unload', function () {
-        terminateScan({scanId: globalScanId, reason: 'userAction'});
         scanTerminated = true;
+        terminateScan({scanId: globalScanId, reason: 'userAction'});
     });
   
-    $scanTarget.addEventListener('click', () => {
-        window.open(inputUrl, '_blank');
-    })
+    if ($scanTarget) {
+        $scanTarget.addEventListener('click', () => {
+            window.open(inputUrl, '_blank');
+        })
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const inputUrl = urlParams.get('url');
-
-    // first function that begins the scan process
-    sendUrlForScan();
 
     const savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
     if (Object.keys(savedScanDetails).length > 0) {
@@ -57,6 +56,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setScanStatus(savedScanDetails['status']);
         $scanTarget.textContent = savedScanDetails['url'];
         $viewDetailsButton.style.display = 'block';
+        $progressBar.style.display = 'none';
+        $timeElapsed.textContent = '-'
     }
     else {
         $informationalRisk.textContent = '-'
@@ -67,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         $scanProgress.textContent = '-';
         $timeElapsed.textContent = '-';
         $viewDetailsButton.style.display = 'none';
+
+        // first function that begins the scan process
+        sendUrlForScan();
     }
 
     function setScanStatus(status) {
@@ -82,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch('http://localhost:8800/submit');
             const result = await response.json();
 
-            
             if (response.status === 200) {
                 $scanTarget.textContent = inputUrl;
                 scanQueue.push(inputUrl);
@@ -156,29 +159,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     async function terminateScan({ scanId, reason }) {
-        if (globalScanId !== null && !scanTerminated) {
+        if (globalScanId !== null && scanTerminated) {
             try {
-                const params = new URLSearchParams({ scanId });
+                const params = new URLSearchParams({ scanId, reason });
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
         
                 if (response.status === 200) {
-                    reason === 'timeout' && fetchScanResults(scanId);
+                    reason === 'timeout' && await fetchScanResults(scanId);
         
-                    updateScanQueue();
+                    updateCurrentScanInStorage();
+                    reason !== 'timeout' && updateScanQueueInStorage();
                 }
             } catch (error) {
                 console.log("Error terminating scan: ", error);
-                updateScanQueue();
+                updateCurrentScanInStorage();
+                updateScanQueueInStorage();
             }
         }
     }
     
-    function updateScanQueue() {
+    function updateCurrentScanInStorage() {
+        const savedScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+        if (Object.keys(savedScan).length > 0) {
+            const url = savedScan.url;
+            let id = currentScan.id;
+            sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({ id: id, url: url, status: 'Complete' }));
+        }
+    }
+
+    function updateScanQueueInStorage() {
         const savedQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
         if (savedQueue.length > 0) {
-            savedQueue.shift();
+            let id = currentScan.id;
+            const tempScan = savedQueue[id - 1];
+            const updatedScan = { id: id, url: tempScan.url, status: 'Complete' };
+            savedQueue[id - 1] = updatedScan;
+
             localStorage.setItem('SCAN_QUEUE', JSON.stringify(savedQueue));
         }
+    }
+
+    function getNextScanId(scanQueue) {
+        const maxId = scanQueue.reduce((max, obj) => Math.max(max, obj.id), 0);
+        return maxId + 1;
     }
     
     // Function to update scan progress that is seen on the page
@@ -209,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
         else {
-            fetchScanResults(scanId);
+            // fetchScanResults(scanId);
         }
     }
     
@@ -262,7 +285,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
                 scanTerminated = true;
                 updateScanDetails({ informationalRisk, lowRisk, mediumRisk, highRisk, unclassifiedRisk });
-                updateScanQueue();
+                
+                updateCurrentScanInStorage();
+                updateScanQueueInStorage();
             }
             else {
                 console.log("Error fetching scan data, fetch returned null");

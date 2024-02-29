@@ -178,8 +178,6 @@ const checkScanStatus = async (scanRequest, scanId) => {
 app.get('/updateScanResults', async (req, res) => {
     // Access the query parameters sent from frontend
     const scanId = req.query.scanId;
-    const url = req.query.url;
-
     const scanRequest = scanQueue[0];
 
     // fetchScanResults will update the file for scanned results and return boolean
@@ -219,6 +217,7 @@ function getVulnerability(idArray) {
 // Get the scan results from zap for given scan id
 const fetchScanResults = async (scanRequest, scanId) => {
     try {
+        console.log('scan request is: ', scanRequest);
         const userIP = scanRequest.ip;
         const url = scanRequest.url;
 
@@ -300,7 +299,9 @@ const stopScan = async (scanId) => {
 
 app.get('/stopScan', async (req, res) => {
     const scanId = req.query.scanId;
-    scanQueue.shift();
+    const stopReason = req.query.reason;
+
+    stopReason !== 'timeout' && scanQueue.shift();
 
     try {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
