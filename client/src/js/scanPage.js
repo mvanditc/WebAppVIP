@@ -165,6 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('scan terminated val: ', scanTerminated);
             try {
                 const params = new URLSearchParams({ scanId, reason });
+                console.log(params);
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
         
                 if (response.status === 200) {

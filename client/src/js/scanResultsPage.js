@@ -1,149 +1,139 @@
 // JavaScript used for the Result Page's functionality.
 // Sample data
-const issues = [
-    // Low Risk Issues
-    {
-        id: 1,
-        title: "Insecure Cookies",
-        url: "http://example.com/insecure-cookies",
-        riskLevel: "low",
-        description:
-            "The application cookies are not set with the secure attribute.",
-        actionableSteps:
-            "Ensure all cookies are set with the secure attribute in production.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 2,
-        title: "Clickjacking Vulnerability",
-        url: "http://example.com/clickjacking",
-        riskLevel: "low",
-        description: "The application is vulnerable to clickjacking attacks.",
-        actionableSteps:
-            "Implement X-Frame-Options header to mitigate clickjacking risks.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 3,
-        title: "Missing HTTP Security Headers",
-        url: "http://example.com/missing-headers",
-        riskLevel: "low",
-        description: "The application is missing important HTTP security headers.",
-        actionableSteps:
-            "Add headers like Strict-Transport-Security and Content-Security-Policy.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 4,
-        title: "Mixed Content",
-        url: "http://example.com/mixed-content",
-        riskLevel: "low",
-        description: "The application contains mixed content (HTTP and HTTPS).",
-        actionableSteps: "Update all resources to use secure (https) connections.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 5,
-        title: "Password Policy",
-        url: "http://example.com/password-policy",
-        riskLevel: "low",
-        description: "The application has a weak password policy.",
-        actionableSteps:
-            "Implement a strong password policy with complexity requirements.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 6,
-        title: "Missing Security Headers",
-        url: "http://example.com/missing-security-headers",
-        riskLevel: "low",
-        description:
-            "The application is missing some recommended security headers.",
-        actionableSteps:
-            "Include headers like Referrer-Policy and Feature-Policy for added security.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 7,
-        title: "Content Spoofing",
-        url: "http://example.com/content-spoofing",
-        riskLevel: "low",
-        description: "The application is susceptible to content spoofing.",
-        actionableSteps:
-            "Implement measures to prevent content spoofing, such as proper input validation.",
-        dateScanned: new Date(),
-    },
-    // Moderate Risk Issues
-    {
-        id: 8,
-        title: "Cross-Site Scripting (XSS)",
-        url: "http://example.com/xss-vulnerability",
-        riskLevel: "moderate",
-        description: "The application's search feature is vulnerable to XSS.",
-        actionableSteps:
-            "Sanitize all user inputs and implement Content Security Policy (CSP).",
-        dateScanned: new Date(),
-    },
-    {
-        id: 9,
-        title: "Insecure Direct Object References (IDOR)",
-        url: "http://example.com/idor-vulnerability",
-        riskLevel: "moderate",
-        description: "The application exposes internal objects directly.",
-        actionableSteps:
-            "Implement proper access controls and validate user permissions.",
-        dateScanned: new Date(),
-    },
-    // High Risk Issues
-    {
-        id: 10,
-        title: "SQL Injection",
-        url: "http://example.com/sql-injection",
-        riskLevel: "high",
-        description: "The application's login form is vulnerable to SQL injection.",
-        actionableSteps: "Utilize prepared statements and parameterized queries.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 11,
-        title: "Server-Side Request Forgery (SSRF)",
-        url: "http://example.com/ssrf-vulnerability",
-        riskLevel: "high",
-        description: "The application is vulnerable to SSRF attacks.",
-        actionableSteps:
-            "Validate and sanitize user-input URLs, and restrict server-side requests.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 12,
-        title: "Security Misconfigurations",
-        url: "http://example.com/security-misconfigurations",
-        riskLevel: "high",
-        description:
-            "The application has security misconfigurations that could lead to vulnerabilities.",
-        actionableSteps:
-            "Regularly audit and review server configurations to ensure they follow security best practices.",
-        dateScanned: new Date(),
-    },
-];
+const issues = [{
+    id: 1,
+    title: "Insecure Cookies",
+    url: "http://example.com/insecure-cookies",
+    riskLevel: "low",
+    description:
+        "The application cookies are not set with the secure attribute.",
+    actionableSteps:
+        "Ensure all cookies are set with the secure attribute in production.",
+    dateScanned: new Date(),
+    highConfidence:
+        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
+    mediumConfidence:
+        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
+    lowConfidence:
+        [],
+}, {
+    id: 2,
+    title: "Insecure Cookies",
+    url: "http://example.com/insecure-cookies",
+    riskLevel: "low",
+    description:
+        "The application cookies are not set with the secure attribute.",
+    actionableSteps:
+        "Ensure all cookies are set with the secure attribute in production.",
+    dateScanned: new Date(),
+    highConfidence:
+        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
+    mediumConfidence:
+        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
+    lowConfidence:
+        ["afbwiufaiubf", "awduoawbdwau", "wubdaubwbduaiobduawdb", "dfwaobdouwabo"],
+}, {
+    id: 3,
+    title: "Insecure Cookies",
+    url: "http://example.com/insecure-cookies",
+    riskLevel: "low",
+    description:
+        "The application cookies are not set with the secure attribute.",
+    actionableSteps:
+        "Ensure all cookies are set with the secure attribute in production.",
+    dateScanned: new Date(),
+    highConfidence:
+        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
+    mediumConfidence:
+        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
+    lowConfidence:
+        ["afbwiufaiubf", "awduoawbdwau", "wubdaubwbduaiobduawdb", "dfwaobdouwabo"],
+}];
 
+
+fetch('http://localhost:8800/returnScanIds',
+    {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(vulnerability => {
+            for (let x = 0; x < vulnerability.length; x++){
+                if (vulnerability[x] == null){
+                    vulnerability[x] = 'N/A';
+                }
+            }
+            if (typeof vulnerability[2] == "string") {
+                issues.push({
+                    id: vulnerability[0],
+                    title: vulnerability[1],
+                    url: vulnerability[2],
+                    riskLevel: vulnerability[3],
+                    description: vulnerability[4],
+                    actionableSteps: vulnerability[5],
+                    dateScanned: vulnerability[6],
+                    highConfidence: [],
+                    mediumConfidence: [],
+                    lowConfidence: [],
+                })
+
+            } else
+                issues.push({
+                    id: vulnerability[0],
+                    title: vulnerability[1],
+                    url: vulnerability[2][0],
+                    riskLevel: vulnerability[3],
+                    description: vulnerability[4],
+                    actionableSteps: vulnerability[5],
+                    dateScanned: vulnerability[6],
+                    highConfidence: [],
+                    mediumConfidence: [],
+                    lowConfidence: [],
+                })
+        })
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+fetch('http://localhost:8800/returnInfo',
+    {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        for (let key in data) {
+            issues.forEach((issue) => {
+                if (key == issue.id) {
+                    let temp = data[key];
+                    issue.highConfidence = temp.highConfidence;
+                    issue.lowConfidence = temp.lowConfidence;
+                    issue.mediumConfidence = temp.mediumConfidence;
+                }
+            });
+        }
+    })
 const scanCoverageData = {
-    testsPerformed: [
-        "Testing for example 1",
-        "Testing for example 2",
-        "Testing for example 3",
-        "Testing for example 4",
-        "Testing for example 5",
-        "Testing for example 6",
-        "Testing for example 7",
-        "Testing for example 8",
-    ],
-    scanParameters: {
-        target: "http://www.example.com",
-    },
+    testsPerformed: [],
+
+    scanParameters: {},
 };
 
+issues.forEach((issue) => {
+    scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
+    scanCoverageData.scanParameters[issue.title] = issue.url;
+});
+
+
+
 function createIssueHTML(issue) {
+    let highConfidenceHTML = createConfidenceHTML(issue.highConfidence);
+    let mediumConfidenceHTML = createConfidenceHTML(issue.mediumConfidence);
+    let lowConfidenceHTML = createConfidenceHTML(issue.lowConfidence);
+    let highConfidenceid = "high-confidence" + issue.id.toString();
+    let data_toggle_high = highConfidenceid;
+    let mediumConfidenceid = "medium-confidence" + issue.id.toString();
+    let data_toggle_medium = mediumConfidenceid;
+    let lowConfidenceid = "low-confidence" + issue.id.toString();
+    let data_toggle_low = lowConfidenceid;
     return `
       <section class="white-box">
         <div>
@@ -156,9 +146,26 @@ function createIssueHTML(issue) {
           <p>${issue.description}</p>
           <h4>Actionable Steps</h4>
           <p>${issue.actionableSteps}</p>
+          <h4 class="expandable-header" data-toggle=${data_toggle_high}>High Confidence (${issue.highConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${highConfidenceid}>${highConfidenceHTML}</div>
+          <h4 class="expandable-header" data-toggle=${data_toggle_medium}>Medium Confidence (${issue.mediumConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${mediumConfidenceid}>${mediumConfidenceHTML}</div>
+          <h4 class="expandable-header" data-toggle=${data_toggle_low}>Low Confidence (${issue.lowConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${lowConfidenceid}>${lowConfidenceHTML}</div>
         </div>
       </section>
     `;
+}
+
+function createConfidenceHTML(confidenceArray) {
+    if (confidenceArray.length === 0) {
+        return '';
+    }
+
+    return confidenceArray.map((item, index) => `<div>${index + 1}. ${item}</div>`).join('');
 }
 
 function getRiskColor(riskLevel) {
@@ -274,6 +281,14 @@ function renderScanCoverage() {
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('exportPrint').addEventListener('click', function () {
+        toggleAll();
+        window.print();
+        toggleAll();
+    });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     const dropdown = document.getElementById("risk-level-dropdown");
     dropdown.addEventListener("change", function () {
@@ -283,3 +298,48 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSummary(); // Update the summary counts on page load
     renderScanCoverage();
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    var expandableHeaders = document.querySelectorAll('.expandable-header');
+
+    expandableHeaders.forEach(function (header) {
+        header.addEventListener('click', function () {
+            var targetId = this.dataset.toggle;
+            var targetContainer = document.getElementById(targetId)
+
+            // Toggle visibility of target container
+            if (targetContainer) {
+                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
+                    targetContainer.style.display = 'flex';
+                } else {
+                    targetContainer.style.display = 'none';
+                }
+            }
+        });
+    });
+});
+
+function toggleAll() {
+    issues.forEach(issue => {
+        var highContainer = document.getElementById("high-confidence" + issue.id.toString());
+        var mediumContainer = document.getElementById("medium-confidence" + issue.id.toString());
+        var lowContainer = document.getElementById("low-confidence" + issue.id.toString());
+
+        toggleVisibility(highContainer);
+        toggleVisibility(mediumContainer);
+        toggleVisibility(lowContainer);
+    })
+}
+
+function toggleVisibility(container) {
+    if (container && container.style.display!== 'flex') {
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'flex';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+}
+
+
+

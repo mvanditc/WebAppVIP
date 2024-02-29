@@ -21,6 +21,8 @@ app.use(bodyParser.json());
 let scanQueue = [];
 let isScanning = false;
 let savedScanId = null;
+let returnInfo = {};
+let globalPluginIdsArray = [];
 
 // Message to display on server
 app.get('/', (req, res) => {
@@ -195,7 +197,12 @@ app.get('/updateScanResults', async (req, res) => {
 
 app.get('/returnScanIDs', (req,res) => {
     try {
-        res.json(getVulnerability([32,0,5,8])) // this is where the return id's need to be taken in from
+        if (globalPluginIdsArray.length > 0) {
+            res.json(getVulnerability(globalPluginIdsArray)) // this is where the return id's need to be taken in from
+        }
+        else {
+            res.status(403).json({ error: 'Array is empty'})
+        }
     } catch(error) {
         console.error(error)
     }
@@ -226,6 +233,8 @@ const fetchScanResults = async (scanRequest, scanId) => {
         const fetchedAlerts = resultsResponse.data.alerts;
         const currentData = JSON.parse(fs.readFileSync(scanDataPath));
 
+        populate_returnInfo(fetchedAlerts);
+
         // Create a Set to track unique alert identifiers (pluginId)
         const uniqueAlerts = new Set();
 
@@ -249,6 +258,9 @@ const fetchScanResults = async (scanRequest, scanId) => {
         const pluginIdsArray = results.map((idObject) => {
             return idObject.pluginId;
         })
+
+        globalPluginIdsArray = pluginIdsArray;
+
         const vulnerabilities = getVulnerability(pluginIdsArray);
         const riskLevelsArray = {
             'Informational': 0,
@@ -282,6 +294,28 @@ const fetchScanResults = async (scanRequest, scanId) => {
     }
 };
 
+function populate_returnInfo(scanResults){
+    scanResults.forEach(alert => {
+        if (alert.pluginId in returnInfo){
+            if (alert.confidence==="Medium")
+                returnInfo[alert.pluginId].mediumConfidence.push(alert.url);
+            if (alert.confidence==="High")
+                returnInfo[alert.pluginId].highConfidence.push(alert.url);
+            if (alert.confidence==="Low")
+                returnInfo[alert.pluginId].lowConfidence.push(alert.url);
+        }
+        else{
+            returnInfo[alert.pluginId] = {lowConfidence:[],mediumConfidence:[],highConfidence:[]}
+            if (alert.confidence==="Medium")
+                returnInfo[alert.pluginId].mediumConfidence.push(alert.url);
+            if (alert.confidence==="High")
+                returnInfo[alert.pluginId].highConfidence.push(alert.url);
+            if (alert.confidence==="Low")
+                returnInfo[alert.pluginId].lowConfidence.push(alert.url);
+        }
+    })
+} 
+
 // Function to stop the scan
 const stopScan = async (scanId) => {
     try {
@@ -312,6 +346,14 @@ app.get('/stopScan', async (req, res) => {
     }
     catch (error) {
         console.error('Error stopping scan:', error);
+    }
+})
+
+app.get('/returnInfo', (req,res) =>{
+    try{
+        res.json(returnInfo);
+    }catch(error){
+        console.log(error);
     }
 })
 

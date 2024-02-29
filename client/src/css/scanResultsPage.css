@@ -1,7 +1,7 @@
 /* scanResultsPage.css is used to style the scanResultsPage.html file */
 
-@import './global.css';
-@import './navbar.css';
+@import 'global.css';
+@import 'navbar.css';
 
 body {
   font-family: "font1", sans-serif;
@@ -9,6 +9,7 @@ body {
   color: white;
   margin: 0;
   padding: 0;
+  page-break-after: always;  
 }
 
 main {
@@ -22,9 +23,8 @@ main {
 /* URL */
 a {
   overflow-wrap: break-word;
-  word-wrap: break-word;
-  /* For older browser compatibility */
-  text-decoration: none
+  word-wrap: break-word; /* For older browser compatibility */
+  text-decoration:none
 }
 
 /* Scan Results Heading */
@@ -33,6 +33,11 @@ a {
   text-align: center;
   margin: 0;
   padding-bottom: 20px;
+}
+
+/* Adjusts for first section to avoid unnecessary break at the beginning */
+.scan-results-heading:first-child {
+  page-break-before: auto;
 }
 
 /* Black Box Summary */
@@ -60,6 +65,20 @@ a {
   margin: 0px 0;
 }
 
+.confidence-container{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.confidence-container {
+  display: none; /* Initially hide confidence container */
+}
+
+.expandable-header {
+  cursor: pointer;
+}
+
 .yellow {
   color: #f1c40f;
 }
@@ -75,11 +94,12 @@ a {
 /* Box shared for Findings Section and Scan Coverage*/
 .white-box {
   background-color: white;
-  color: var(--black-text);
+  color: var(--text-color);
   border-radius: 10px;
   padding: 5px 20px 20px 20px;
-  margin-bottom: 20px;
-  /* Spacing between multiple issue boxes */
+  margin-bottom: 20px; /* Spacing between multiple issue boxes */
+  page-break-inside: avoid; /* Prevents break inside sections */
+  page-break-before: auto; /* Break before each section */
 }
 
 /* Section Titles */
@@ -133,10 +153,8 @@ p {
 
 /* Colored Circle */
 .issue-circle {
-  width: 1.15rem;
-  /* Adjust the size of the circle */
-  height: 1.15rem;
-  /* Adjust the size of the circle */
+  width: 1.15rem; /* Adjust the size of the circle */
+  height: 1.15rem; /* Adjust the size of the circle */
   /* background-color: #ff5733; */
   border-radius: 50%;
   display: inline-block;
@@ -145,58 +163,73 @@ p {
 
 /* Scan Coverage Section */
 .scan-coverage {
-  display: flex;
-  /* Use flexbox to create a row layout */
-  justify-content: space-between;
-  /* Space items horizontally */
-  align-items: flex-start;
-  /* Align items at the top */
-  flex-wrap: wrap;
-  /* Allow items to wrap to the next row on smaller screens */
+  display: flex; /* Use flexbox to create a row layout */
+  justify-content: space-between; /* Space items horizontally */
+  align-items: flex-start; /* Align items at the top */
+  flex-wrap: wrap; /* Allow items to wrap to the next row on smaller screens */
 }
 
 .scan-coverage div {
-  flex: 0 0 calc(50% - 10px);
-  /* Make each item take up 50% of the width with some spacing */
-  margin-right: 10px;
-  /* Add spacing between columns */
+  flex: 0 0 calc(50% - 10px); /* Make each item take up 50% of the width with some spacing */
+  margin-right: 10px; /* Add spacing between columns */
 }
 
 .scan-coverage p {
   font-size: 1rem;
   margin: 5px 0;
-  flex: 0 0 100%;
-  /* Make sure each item takes up the full width on small screens */
+  flex: 0 0 100%; /* Make sure each item takes up the full width on small screens */
+}
+
+/* Export Button */
+.export-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.export-button:hover {
+  background-color: gray;
 }
 
 /* Responsive adjustments */
 /* Adjust styles for screens with a minimum width of 280 pixels */
 @media (max-width: 280px) {
   .scan-coverage div {
-    flex-basis: 100%;
-    /* Make sure each div takes up 100% of the width */
-    margin-right: 0;
-    /* Remove the margin between columns */
+    flex-basis: 100%; /* Make sure each div takes up 100% of the width */
+    margin-right: 0; /* Remove the margin between columns */
   }
 
   .scan-coverage p {
-    flex: 0 0 100%;
-    /* Make sure each p element takes up the full width */
+    flex: 0 0 100%; /* Make sure each p element takes up the full width */
   }
 }
 
 /* For screens larger than 768 pixels */
 @media (min-width: 769px) {
   .scan-coverage div {
-    flex: 0 0 calc(50% - 10px);
-    /* Reset the divs to occupy 50% of the width with spacing */
-    margin-right: 10px;
-    /* Add spacing between columns */
+    flex: 0 0 calc(50% - 10px); /* Reset the divs to occupy 50% of the width with spacing */
+    margin-right: 10px; /* Add spacing between columns */
   }
 
   /* Reset the p elements inside the divs to occupy 100% of the width */
   .scan-coverage p {
-    flex: 0 0 100%;
-    /* Make sure each p element takes up the full width */
+    flex: 0 0 100%; /* Make sure each p element takes up the full width */
+  }
+}
+
+@media print {  
+  .navbar, .footer, .interactive-content, .filter-by-risk-level, .export {
+    display: none;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .black-box-summary, .issue-circle {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }
