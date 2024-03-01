@@ -1,57 +1,10 @@
 // JavaScript used for the Result Page's functionality.
 // Sample data
-const issues = [{
-    id: 1,
-    title: "Insecure Cookies",
-    url: "http://example.com/insecure-cookies",
-    riskLevel: "low",
-    description:
-        "The application cookies are not set with the secure attribute.",
-    actionableSteps:
-        "Ensure all cookies are set with the secure attribute in production.",
-    dateScanned: new Date(),
-    highConfidence:
-        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
-    mediumConfidence:
-        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
-    lowConfidence:
-        [],
-}, {
-    id: 2,
-    title: "Insecure Cookies",
-    url: "http://example.com/insecure-cookies",
-    riskLevel: "low",
-    description:
-        "The application cookies are not set with the secure attribute.",
-    actionableSteps:
-        "Ensure all cookies are set with the secure attribute in production.",
-    dateScanned: new Date(),
-    highConfidence:
-        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
-    mediumConfidence:
-        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
-    lowConfidence:
-        ["afbwiufaiubf", "awduoawbdwau", "wubdaubwbduaiobduawdb", "dfwaobdouwabo"],
-}, {
-    id: 3,
-    title: "Insecure Cookies",
-    url: "http://example.com/insecure-cookies",
-    riskLevel: "low",
-    description:
-        "The application cookies are not set with the secure attribute.",
-    actionableSteps:
-        "Ensure all cookies are set with the secure attribute in production.",
-    dateScanned: new Date(),
-    highConfidence:
-        ["http://example.com/insecure-cookies-blahblhablhablhejajjjejaudia", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies", "http://example.com/insecure-cookies"],
-    mediumConfidence:
-        ["http://example.com/insecure-cookies", "http://exampleeeeeeeeeeee.com/insecure-cookies"],
-    lowConfidence:
-        ["afbwiufaiubf", "awduoawbdwau", "wubdaubwbduaiobduawdb", "dfwaobdouwabo"],
-}];
+let issues = [];
 
-
-fetch('http://localhost:8800/returnScanIds',
+async function fetchInfo(){
+    let fetchedIssues = [];
+    await fetch('http://localhost:8800/returnScanIds',
     {
         method: 'GET'
     })
@@ -64,7 +17,7 @@ fetch('http://localhost:8800/returnScanIds',
                 }
             }
             if (typeof vulnerability[2] == "string") {
-                issues.push({
+                let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
                     url: vulnerability[2],
@@ -75,10 +28,11 @@ fetch('http://localhost:8800/returnScanIds',
                     highConfidence: [],
                     mediumConfidence: [],
                     lowConfidence: [],
-                })
+                };
+                fetchedIssues.push(temp_dict);
 
-            } else
-                issues.push({
+            } else{
+                let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
                     url: vulnerability[2][0],
@@ -89,19 +43,22 @@ fetch('http://localhost:8800/returnScanIds',
                     highConfidence: [],
                     mediumConfidence: [],
                     lowConfidence: [],
-                })
+                };
+                fetchedIssues.push(temp_dict);
+            }
+                
         })
     })
     .catch(error => console.error('Error fetching data:', error));
 
-fetch('http://localhost:8800/returnInfo',
+await fetch('http://localhost:8800/returnInfo',
     {
         method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
         for (let key in data) {
-            issues.forEach((issue) => {
+            fetchedIssues.forEach((issue) => {
                 if (key == issue.id) {
                     let temp = data[key];
                     issue.highConfidence = temp.highConfidence;
@@ -110,17 +67,26 @@ fetch('http://localhost:8800/returnInfo',
                 }
             });
         }
-    })
+    }).catch(error => console.error('Error fetching data:', error));
+
+    return fetchedIssues;
+}
+
+
+
+
 const scanCoverageData = {
     testsPerformed: [],
 
     scanParameters: {},
 };
 
+function populateScanCoverageData(){
 issues.forEach((issue) => {
     scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
     scanCoverageData.scanParameters[issue.title] = issue.url;
 });
+}
 
 
 
@@ -170,10 +136,14 @@ function createConfidenceHTML(confidenceArray) {
 }
 
 function getRiskColor(riskLevel) {
+    let unclassified = "N/A";
     const riskColors = {
-        low: "#f1c40f", // yellow
-        moderate: "#e67e22", // orange
-        high: "#e74c3c", // red
+        Low: "#f1c40f", // yellow
+        Moderate: "#e67e22", // orange
+        High: "#e74c3c", // red
+        Informational: "#0074CC",
+        [unclassified]: "#AAAAAA",
+
     };
     return riskColors[riskLevel];
 }
@@ -182,13 +152,19 @@ function updateSummary() {
     // Calculate totals of each risk
     const totalIssues = issues.length;
     const lowRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "low"
+        (issue) => issue.riskLevel === "Low"
     ).length;
     const moderateRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "moderate"
+        (issue) => issue.riskLevel === "Moderate"
     ).length;
     const highRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "high"
+        (issue) => issue.riskLevel === "High"
+    ).length;
+    const informationalRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "Informational"
+    ).length;
+    const unclassifiedRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "N/A"
     ).length;
 
     document.querySelector(
@@ -203,6 +179,12 @@ function updateSummary() {
     document.querySelector(
         ".black-box-summary .red"
     ).textContent = `${highRiskCount} High Risk Issues`;
+    document.querySelector(
+        ".black-box-summary .blue"
+    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
+    document.querySelector(
+        ".black-box-summary .off-white"
+    ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
 function renderIssues(filteredIssues) {
@@ -214,7 +196,7 @@ function renderIssues(filteredIssues) {
 
 function filterIssues(riskLevel) {
     const filteredIssues = issues.filter(
-        (issue) => riskLevel === "all" || issue.riskLevel === riskLevel
+        (issue) => riskLevel === "All" || issue.riskLevel === riskLevel
     );
     filteredIssues.sort((a, b) => a.dateScanned - b.dateScanned);
     renderIssues(filteredIssues);
@@ -226,28 +208,40 @@ function updateDropdownSelection(selectedRiskLevel) {
     const dropdown = document.getElementById("risk-level-dropdown");
     const totalIssues = issues.length;
     const lowRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "low"
+        (issue) => issue.riskLevel === "Low"
     ).length;
     const moderateRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "moderate"
+        (issue) => issue.riskLevel === "Moderate"
     ).length;
     const highRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "high"
+        (issue) => issue.riskLevel === "High"
+    ).length;
+    const informationalRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "Informational"
+    ).length;
+    const unclassifiedRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "N/A"
     ).length;
 
     // Update dropdown options
     dropdown.querySelector(
-        'option[value="all"]'
+        'option[value="All"]'
     ).textContent = `All (${totalIssues})`;
     dropdown.querySelector(
-        'option[value="low"]'
+        'option[value="Low"]'
     ).textContent = `Low Risk (${lowRiskCount})`;
     dropdown.querySelector(
-        'option[value="moderate"]'
+        'option[value="Moderate"]'
     ).textContent = `Moderate Risk (${moderateRiskCount})`;
     dropdown.querySelector(
-        'option[value="high"]'
+        'option[value="High"]'
     ).textContent = `High Risk (${highRiskCount})`;
+    dropdown.querySelector(
+        'option[value="Informational"]'
+    ).textContent = `Informational Risk (${informationalRiskCount})`;
+    dropdown.querySelector(
+        'option[value="N/A"]'
+    ).textContent = `Unclassified Risk (${unclassifiedRiskCount})`;
 
     // Set the selected value
     dropdown.value = selectedRiskLevel;
@@ -282,29 +276,28 @@ function renderScanCoverage() {
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async () => {
+    issues = await fetchInfo();
+    populateScanCoverageData();
+    const dropdown = document.getElementById("risk-level-dropdown");
+    dropdown.addEventListener("change", function () {
+        filterIssues(this.value);
+    });
+    filterIssues("All"); // Render issues when the page is first loaded
+    updateSummary(); // Update the summary counts on page load
+    renderScanCoverage();
+
     document.getElementById('exportPrint').addEventListener('click', function () {
         toggleAll();
         window.print();
         toggleAll();
     });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-    const dropdown = document.getElementById("risk-level-dropdown");
-    dropdown.addEventListener("change", function () {
-        filterIssues(this.value);
-    });
-    filterIssues("all"); // Render issues when the page is first loaded
-    updateSummary(); // Update the summary counts on page load
-    renderScanCoverage();
-});
-
-document.addEventListener('DOMContentLoaded', function () {
     var expandableHeaders = document.querySelectorAll('.expandable-header');
 
     expandableHeaders.forEach(function (header) {
         header.addEventListener('click', function () {
+            console.log("it was clicked");
             var targetId = this.dataset.toggle;
             var targetContainer = document.getElementById(targetId)
 
