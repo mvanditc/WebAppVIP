@@ -125,6 +125,7 @@ issues.forEach((issue) => {
 
 
 function createIssueHTML(issue) {
+    console.log(issue);
     let highConfidenceHTML = createConfidenceHTML(issue.highConfidence);
     let mediumConfidenceHTML = createConfidenceHTML(issue.mediumConfidence);
     let lowConfidenceHTML = createConfidenceHTML(issue.lowConfidence);
