@@ -28,7 +28,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     //         sendUrlForScan();
     //     }
     // });
-    
+
+    // window.addEventListener('beforeunload', function (event) {
+    //     if (!scanTerminated) {
+    //         const confirmationMessage = "You are in the middle of a scan. Are you sure you want to leave?";
+    //         event.returnValue = confirmationMessage;
+    //         return confirmationMessage;
+    //     }
+    // });
+
     window.addEventListener('unload', function () {
         scanTerminated = true;
         terminateScan({scanId: globalScanId, reason: 'userAction'});
@@ -161,11 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function terminateScan({ scanId, reason }) {
         if (globalScanId !== null && scanTerminated) {
-            console.log('global scan idL ', globalScanId);
-            console.log('scan terminated val: ', scanTerminated);
             try {
                 const params = new URLSearchParams({ scanId, reason });
-                console.log(params);
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
         
                 if (response.status === 200) {
