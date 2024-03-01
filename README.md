@@ -1,4 +1,4 @@
-# Two things needed after you clone:
+# Things to do after after you clone:
 
 1) Create the file 'config.json' inside the 'server' folder. In this file, paste this code (make sure to paste your OWN api key from ZAP):
 
@@ -16,11 +16,9 @@
 
 1) Open two terminals.
 
-2) Run npm install in any one.
+2) In the first terminal, type the command 'python3 -m http.server'. This should give the message 'Serving HTTP on :: port YOUR_PORT (http://[::]:YOUR_PORT/) ...'
 
-3) In the first terminal, type the command 'python3 -m http.server'. This should give the message 'Serving HTTP on :: port YOUR_PORT (http://[::]:YOUR_PORT/) ...'
-
-4) In the second terminal, cd into the folder 'server'. In this folder, paste the command 'npx nodemon temporaryServer.js'. This will start the backend.
+3) In the second terminal, cd into the folder 'server'. Here, run npm install. In this folder, paste the command 'npx nodemon temporaryServer.js'. This will start the backend.
 
 # Important Notes (Read this before you start making changes):
 
