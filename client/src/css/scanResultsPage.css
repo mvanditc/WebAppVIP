@@ -91,6 +91,14 @@ a {
   color: #e74c3c;
 }
 
+.blue {
+  color: rgb(0, 116, 204);
+}
+
+.off-white {
+  color: rgb(170, 170, 170);
+}
+
 /* Box shared for Findings Section and Scan Coverage*/
 .white-box {
   background-color: white;
