@@ -17,6 +17,7 @@ async function fetchInfo(){
                 }
             }
             if (typeof vulnerability[2] == "string") {
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
                 let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
@@ -32,6 +33,7 @@ async function fetchInfo(){
                 fetchedIssues.push(temp_dict);
 
             } else{
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
                 let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
@@ -82,25 +84,50 @@ const scanCoverageData = {
 };
 
 function populateScanCoverageData(){
-issues.forEach((issue) => {
-    scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
-    scanCoverageData.scanParameters[issue.title] = issue.url;
-});
+    let tempArray;
+    issues.forEach((issue) => {
+        scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
+        tempArray = allSubpages(issue);
+        if (tempArray.length >=3) tempArray = [tempArray[0],tempArray[1],tempArray[2], (tempArray.length - 3).toString() + " more..."];
+        console.log(tempArray);
+        scanCoverageData.scanParameters[issue.title] = tempArray;
+    });
 }
 
+function allSubpages(issue){
+    let allSubpages = [];
 
+        if (issue.highConfidence.length > 0){
+            issue.highConfidence.forEach((url) => {
+                allSubpages.push(url);
+            })
+        }
+        if (issue.mediumConfidence.length > 0){
+        issue.mediumConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+        if (issue.lowConfidence.length > 0){
+        issue.lowConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+    return allSubpages;
+}
 
-function createIssueHTML(issue) {
-    console.log(issue);
+function createIssueHTML(issue, filter) {
+    console.log(issue.id);
+    console.log("Sorting by " + filter);
     let highConfidenceHTML = createConfidenceHTML(issue.highConfidence);
     let mediumConfidenceHTML = createConfidenceHTML(issue.mediumConfidence);
     let lowConfidenceHTML = createConfidenceHTML(issue.lowConfidence);
-    let highConfidenceid = "high-confidence" + issue.id.toString();
+    let highConfidenceid = "high-confidence" + issue.id.toString() + filter;
     let data_toggle_high = highConfidenceid;
-    let mediumConfidenceid = "medium-confidence" + issue.id.toString();
+    let mediumConfidenceid = "medium-confidence" + issue.id.toString() + filter;
     let data_toggle_medium = mediumConfidenceid;
-    let lowConfidenceid = "low-confidence" + issue.id.toString();
+    let lowConfidenceid = "low-confidence" + issue.id.toString(); + filter;
     let data_toggle_low = lowConfidenceid;
+
     return `
       <section class="white-box">
         <div>
@@ -187,11 +214,41 @@ function updateSummary() {
     ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
-function renderIssues(filteredIssues) {
+function sortIssues (filteredIssues) {
+    let informationalIssues = [];
+    let otherIssues = [];
+    issues.forEach((issue) => {
+        if (issue.riskLevel == "Informational") informationalIssues.push(issue);
+        else otherIssues.push(issue);
+    });
+
+    issues = informationalIssues;
+
+    otherIssues.forEach((other) =>{
+        issues.push(other);
+    })
+}
+function renderIssues(filteredIssues, filter) {
     const issuesContainer = document.getElementById("issues-list");
+
     issuesContainer.innerHTML = filteredIssues
-        .map((issue) => createIssueHTML(issue))
+        .map((issue) => createIssueHTML(issue, filter))
         .join("");
+
+    document.querySelectorAll('.expandable-header').forEach(header => {
+        header.addEventListener('click', function () {
+            console.log("it was clicked");
+            var targetId = this.dataset.toggle;
+            var targetContainer = document.getElementById(targetId);
+            if (targetContainer) {
+                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
+                    targetContainer.style.display = 'flex';
+                } else {
+                    targetContainer.style.display = 'none';
+                }
+            }
+        });
+    });
 }
 
 function filterIssues(riskLevel) {
@@ -199,9 +256,9 @@ function filterIssues(riskLevel) {
         (issue) => riskLevel === "All" || issue.riskLevel === riskLevel
     );
     filteredIssues.sort((a, b) => a.dateScanned - b.dateScanned);
-    renderIssues(filteredIssues);
+    renderIssues(filteredIssues, riskLevel);
     updateSummary();
-    updateDropdownSelection(riskLevel, filteredIssues.length);
+    updateDropdownSelection(riskLevel);
 }
 
 function updateDropdownSelection(selectedRiskLevel) {
@@ -252,13 +309,6 @@ function createTestsPerformedHTML(tests) {
     return tests.map((test) => `<p>✓ ${test}</p>`).join("");
 }
 
-function createScanParametersHTML(parameters) {
-    // Use Object.entries to create an HTML string for each key-value pair in parameters
-    return Object.entries(parameters)
-        .map(([key, value]) => `<h5>${key}</h5><p>${value}</p>`)
-        .join("");
-}
-
 function renderScanCoverage() {
     const testsPerformedContainer = document.getElementById("test-performed");
     const scanParametersContainer = document.getElementById("scan-parameter");
@@ -270,17 +320,24 @@ function renderScanCoverage() {
     testsPerformedContainer.innerHTML = testsPerformedHTML;
 
     // Create HTML for scan parameters
-    const scanParametersHTML = Object.entries(scanCoverageData.scanParameters)
-        .map(([key, value]) => `<p>${key}: ${value}</p>`)
-        .join("");
+    let scanParametersHTML = '';
+
+    Object.entries(scanCoverageData.scanParameters)
+        .forEach(([key, value]) => {
+            const formattedValue = Array.isArray(value) ? value.map(item => `<p>${item}</p>`).join('') : `<p>${value}</p>`;
+            scanParametersHTML += `<p>${key}:</p>${formattedValue}<br>`;
+        });
+
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
     issues = await fetchInfo();
+    sortIssues();
     populateScanCoverageData();
     const dropdown = document.getElementById("risk-level-dropdown");
     dropdown.addEventListener("change", function () {
+        console.log("the value of this value is " +this.value);
         filterIssues(this.value);
     });
     filterIssues("All"); // Render issues when the page is first loaded
@@ -293,24 +350,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         toggleAll();
     });
 
-    var expandableHeaders = document.querySelectorAll('.expandable-header');
-
-    expandableHeaders.forEach(function (header) {
-        header.addEventListener('click', function () {
-            console.log("it was clicked");
-            var targetId = this.dataset.toggle;
-            var targetContainer = document.getElementById(targetId)
-
-            // Toggle visibility of target container
-            if (targetContainer) {
-                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
-                    targetContainer.style.display = 'flex';
-                } else {
-                    targetContainer.style.display = 'none';
-                }
-            }
-        });
-    });
 });
 
 function toggleAll() {
