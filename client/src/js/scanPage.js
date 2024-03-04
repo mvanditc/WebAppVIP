@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         $viewDetailsButton.style.display = 'block';
         $progressBar.style.display = 'none';
         $scanProgress.textContent = '-';
-        $timeElapsed.textContent = '-'
+        $timeElapsed.textContent = '-';
+        $timeElapsed.style.color = 'white';
     }
     else {
         $informationalRisk.textContent = '-'
@@ -76,6 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         $unclassifiedRisk.textContent = '-';
         $scanProgress.textContent = '-';
         $timeElapsed.textContent = '-';
+        $timeElapsed.style.color = 'white';
         $viewDetailsButton.style.display = 'none';
 
         // first function that begins the scan process
@@ -83,10 +85,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function setScanStatus(status) {
+        while ($scanStatus.firstChild) {
+            $scanStatus.firstChild.remove();
+        }
         const statusSpan = document.createElement('span');
         statusSpan.textContent = status;
         statusSpan.style.color = status === 'Complete' ? 'rgb(0, 255, 0)' : 'rgb(71, 182, 255)';
-        $scanStatus.textContent = 'Scan Status: ';
         $scanStatus.appendChild(statusSpan);
     }
     
@@ -115,6 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (terminationTime <= 0) {
                         scanTerminated = true;
                         $timeElapsed.textContent = `Exceeded scan time limit. Fetching results...`;
+                        $timeElapsed.style.color = '#ababab';
         
                         clearInterval(timerInterval); 
                         terminateScan({scanId: scanId, reason: 'timeout'});
@@ -132,6 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (scanUpdated) {
                         clearInterval(timerInterval); 
                         $timeElapsed.textContent = 'Successfully completed scan within time limit. Fetching results...';
+                        $timeElapsed.style.color = '#ababab';
                     }
                 }
                 else {
@@ -216,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to update scan progress that is seen on the page
     async function updateScanProgress(progressData, scanId) {
         if (!scanTerminated) {
-            const maxChars = 15;
+            const maxChars = 12;
             const filledCharsCount = Math.round((progressData.status / 100) * maxChars);
             const filledChars = '█'.repeat(filledCharsCount);
             const dashChars = '--'.repeat(maxChars - filledCharsCount);
@@ -272,6 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 $scanProgress.textContent = '-';
                 $timeElapsed.textContent = '-'; 
+                $timeElapsed.style.color = 'white';
                 $progressBar.style.display = 'none';
     
                 const riskLevelsArray = result['riskLevelsArray'];
