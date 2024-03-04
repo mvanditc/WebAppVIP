@@ -172,6 +172,7 @@ function createConfidenceHTML(confidenceArray) {
 function getRiskColor(riskLevel) {
     let unclassified = "N/A";
     const riskColors = {
+        
         Low: "#f1c40f", // yellow
         Moderate: "#e67e22", // orange
         High: "#e74c3c", // red
@@ -205,6 +206,9 @@ function updateSummary() {
         ".black-box-summary p"
     ).textContent = `We found ${totalIssues} security vulnerabilities`;
     document.querySelector(
+        ".black-box-summary .blue"
+    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
+    document.querySelector(
         ".black-box-summary .yellow"
     ).textContent = `${lowRiskCount} Low Risk Issues`;
     document.querySelector(
@@ -213,9 +217,6 @@ function updateSummary() {
     document.querySelector(
         ".black-box-summary .red"
     ).textContent = `${highRiskCount} High Risk Issues`;
-    document.querySelector(
-        ".black-box-summary .blue"
-    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
     document.querySelector(
         ".black-box-summary .off-white"
     ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
@@ -272,6 +273,9 @@ function filterIssues(riskLevel) {
 function updateDropdownSelection(selectedRiskLevel) {
     const dropdown = document.getElementById("risk-level-dropdown");
     const totalIssues = issues.length;
+    const informationalRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "Informational"
+    ).length;
     const lowRiskCount = issues.filter(
         (issue) => issue.riskLevel === "Low"
     ).length;
@@ -280,9 +284,6 @@ function updateDropdownSelection(selectedRiskLevel) {
     ).length;
     const highRiskCount = issues.filter(
         (issue) => issue.riskLevel === "High"
-    ).length;
-    const informationalRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "Informational"
     ).length;
     const unclassifiedRiskCount = issues.filter(
         (issue) => issue.riskLevel === "N/A"
