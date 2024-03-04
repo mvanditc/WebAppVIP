@@ -25,6 +25,8 @@ async function fetchInfo(){
                 }
             }
             if (typeof vulnerability[2] == "string") {
+                // zap returns the risk level as medium so turn it into moderate to display as moderate
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
                 let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
@@ -40,6 +42,7 @@ async function fetchInfo(){
                 fetchedIssues.push(temp_dict);
 
             } else{
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
                 let temp_dict = {
                     id: vulnerability[0],
                     title: vulnerability[1],
@@ -90,16 +93,38 @@ const scanCoverageData = {
 };
 
 function populateScanCoverageData(){
-issues.forEach((issue) => {
-    scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
-    scanCoverageData.scanParameters[issue.title] = issue.url;
-});
+    let tempArray;
+    issues.forEach((issue) => {
+        scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
+        tempArray = allSubpages(issue);
+        if (tempArray.length >=3) tempArray = [tempArray[0],tempArray[1],tempArray[2], (tempArray.length - 3).toString() + " more..."];
+        scanCoverageData.scanParameters[issue.title] = tempArray;
+    });
 }
 
+function allSubpages(issue){
+    let allSubpages = [];
 
+        if (issue.highConfidence.length > 0){
+            issue.highConfidence.forEach((url) => {
+                allSubpages.push(url);
+            })
+        }
+        if (issue.mediumConfidence.length > 0){
+        issue.mediumConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+        if (issue.lowConfidence.length > 0){
+        issue.lowConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+    return allSubpages;
+}
 
 function createIssueHTML(issue) {
-    console.log(issue);
+    // creating the unique ids by setting them to their issue ids
     let highConfidenceHTML = createConfidenceHTML(issue.highConfidence);
     let mediumConfidenceHTML = createConfidenceHTML(issue.mediumConfidence);
     let lowConfidenceHTML = createConfidenceHTML(issue.lowConfidence);
@@ -109,6 +134,7 @@ function createIssueHTML(issue) {
     let data_toggle_medium = mediumConfidenceid;
     let lowConfidenceid = "low-confidence" + issue.id.toString();
     let data_toggle_low = lowConfidenceid;
+
     return `
       <section class="white-box">
         <div>
@@ -195,11 +221,42 @@ function updateSummary() {
     ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
-function renderIssues(filteredIssues) {
+// allows for when all issues are shown, informational issues are shown first.
+function sortIssues (filteredIssues) {
+    let informationalIssues = [];
+    let otherIssues = [];
+    issues.forEach((issue) => {
+        if (issue.riskLevel == "Informational") informationalIssues.push(issue);
+        else otherIssues.push(issue);
+    });
+
+    issues = informationalIssues;
+
+    otherIssues.forEach((other) =>{
+        issues.push(other);
+    })
+}
+function renderIssues(filteredIssues, filter) {
     const issuesContainer = document.getElementById("issues-list");
+
     issuesContainer.innerHTML = filteredIssues
         .map((issue) => createIssueHTML(issue))
         .join("");
+
+// adding event listeners whenever the issues are rendered
+    document.querySelectorAll('.expandable-header').forEach(header => {
+        header.addEventListener('click', function () {
+            var targetId = this.dataset.toggle;
+            var targetContainer = document.getElementById(targetId);
+            if (targetContainer) {
+                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
+                    targetContainer.style.display = 'flex'; // open position of subpage links
+                } else {
+                    targetContainer.style.display = 'none'; // closed position of subpage links
+                }
+            }
+        });
+    });
 }
 
 function filterIssues(riskLevel) {
@@ -207,9 +264,9 @@ function filterIssues(riskLevel) {
         (issue) => riskLevel === "All" || issue.riskLevel === riskLevel
     );
     filteredIssues.sort((a, b) => a.dateScanned - b.dateScanned);
-    renderIssues(filteredIssues);
+    renderIssues(filteredIssues, riskLevel);
     updateSummary();
-    updateDropdownSelection(riskLevel, filteredIssues.length);
+    updateDropdownSelection(riskLevel);
 }
 
 function updateDropdownSelection(selectedRiskLevel) {
@@ -260,13 +317,6 @@ function createTestsPerformedHTML(tests) {
     return tests.map((test) => `<p>✓ ${test}</p>`).join("");
 }
 
-function createScanParametersHTML(parameters) {
-    // Use Object.entries to create an HTML string for each key-value pair in parameters
-    return Object.entries(parameters)
-        .map(([key, value]) => `<h5>${key}</h5><p>${value}</p>`)
-        .join("");
-}
-
 function renderScanCoverage() {
     const testsPerformedContainer = document.getElementById("test-performed");
     const scanParametersContainer = document.getElementById("scan-parameter");
@@ -278,17 +328,24 @@ function renderScanCoverage() {
     testsPerformedContainer.innerHTML = testsPerformedHTML;
 
     // Create HTML for scan parameters
-    const scanParametersHTML = Object.entries(scanCoverageData.scanParameters)
-        .map(([key, value]) => `<p>${key}: ${value}</p>`)
-        .join("");
+    let scanParametersHTML = '';
+
+    Object.entries(scanCoverageData.scanParameters)
+        .forEach(([key, value]) => {
+            const formattedValue = Array.isArray(value) ? value.map(item => `<p>${item}</p>`).join('') : `<p>${value}</p>`;
+            scanParametersHTML += `<p>${key}:</p>${formattedValue}<br>`;
+        });
+
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
     issues = await fetchInfo();
+    sortIssues(); // making the informational display at the top
     populateScanCoverageData();
     const dropdown = document.getElementById("risk-level-dropdown");
     dropdown.addEventListener("change", function () {
+        console.log("the value of this value is " +this.value);
         filterIssues(this.value);
     });
     filterIssues("All"); // Render issues when the page is first loaded
@@ -298,27 +355,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('exportPrint').addEventListener('click', function () {
         toggleAll();
         window.print();
-        toggleAll();
+        untoggleAll();
     });
 
-    var expandableHeaders = document.querySelectorAll('.expandable-header');
-
-    expandableHeaders.forEach(function (header) {
-        header.addEventListener('click', function () {
-            console.log("it was clicked");
-            var targetId = this.dataset.toggle;
-            var targetContainer = document.getElementById(targetId)
-
-            // Toggle visibility of target container
-            if (targetContainer) {
-                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
-                    targetContainer.style.display = 'flex';
-                } else {
-                    targetContainer.style.display = 'none';
-                }
-            }
-        });
-    });
 });
 
 function toggleAll() {
@@ -327,14 +366,40 @@ function toggleAll() {
         var mediumContainer = document.getElementById("medium-confidence" + issue.id.toString());
         var lowContainer = document.getElementById("low-confidence" + issue.id.toString());
 
+        // sets all the subpage link containers to postion open
         toggleVisibility(highContainer);
         toggleVisibility(mediumContainer);
         toggleVisibility(lowContainer);
     })
 }
 
+function untoggleAll() {
+    issues.forEach(issue => {
+        var highContainer = document.getElementById("high-confidence" + issue.id.toString());
+        var mediumContainer = document.getElementById("medium-confidence" + issue.id.toString());
+        var lowContainer = document.getElementById("low-confidence" + issue.id.toString());
+
+        // sets all the subpage link containers to postion open
+        untoggleVisibility(highContainer);
+        untoggleVisibility(mediumContainer);
+        untoggleVisibility(lowContainer);
+    })
+}
+
 function toggleVisibility(container) {
-    if (container && container.style.display!== 'flex') {
+    // if statement makes sure the container is not already open
+    if (container && container.style.display !== 'flex') {
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'flex';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+}
+
+function untoggleVisibility(container) {
+    // if statement makes sure the container is not already open
+    if (container && container.style.display == 'flex') {
         if (container.style.display === 'none' || container.style.display === '') {
             container.style.display = 'flex';
         } else {
