@@ -4,7 +4,15 @@ let issues = [];
 
 async function fetchInfo(){
     let fetchedIssues = [];
-    await fetch('http://localhost:8800/returnScanIds',
+    
+    const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    let sessionId = null;
+    if (Object.keys(currentScan).length > 0) {
+        sessionId = currentScan.id;
+    }
+    
+    const params = new URLSearchParams({ sessionId })
+    await fetch(`http://localhost:8800/returnScanIds/?${params}`,
     {
         method: 'GET'
     })

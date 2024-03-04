@@ -267,7 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function fetchScanResults(scanId) {
         // Update the scan results list after scan is completed
-        const params = new URLSearchParams({ scanId, inputUrl })
+        const sessionId = currentScan.id;
+        const params = new URLSearchParams({ scanId, inputUrl, sessionId });
         const response = await fetch(`http://localhost:8800/updateScanResults/?${params}`);
         const result = await response.json();
     

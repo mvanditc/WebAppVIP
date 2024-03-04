@@ -22,7 +22,7 @@ let scanQueue = [];
 let isScanning = false;
 let savedScanId = null;
 let returnInfo = {};
-let globalPluginIdsArray = [];
+let globalPluginIdsArray = {};
 
 // Message to display on server
 app.get('/', (req, res) => {
@@ -181,10 +181,11 @@ app.get('/updateScanResults', async (req, res) => {
     // Access the query parameters sent from frontend
     const scanId = req.query.scanId;
     const scanRequest = scanQueue[0];
+    const sessionId = req.query.sessionId;
 
     // fetchScanResults will update the file for scanned results and return boolean
     console.log(`Fetching scan results now`);
-    const result = await fetchScanResults(scanRequest, scanId);
+    const result = await fetchScanResults(scanRequest, scanId, sessionId);
     if (result.success === true) {
         scanQueue.shift();
         res.status(200).json({ success: true, riskLevelsArray: result.riskLevelsArray });
@@ -196,9 +197,10 @@ app.get('/updateScanResults', async (req, res) => {
 })
 
 app.get('/returnScanIDs', (req,res) => {
+    const sessionId = req.query.sessionId;
     try {
-        if (globalPluginIdsArray.length > 0) {
-            res.json(getVulnerability(globalPluginIdsArray)) // this is where the return id's need to be taken in from
+        if (Object.keys(globalPluginIdsArray).length > 0) {
+            res.json(getVulnerability(sessionId))
         }
         else {
             res.status(403).json({ error: 'Array is empty'})
@@ -208,9 +210,10 @@ app.get('/returnScanIDs', (req,res) => {
     }
 })
 
-function getVulnerability(idArray) {
+function getVulnerability(sessionId) {
     const vulnerabilityNames = [];
-    idArray.forEach(id => {
+    const pluginIdsArray = globalPluginIdsArray[sessionId];
+    pluginIdsArray.forEach(id => {
         for (let i = 0; i <= 161; i++) {
             if (vulnerabilityResultsPath[i].alertID == id){
                 vulnerabilityNames.push([id,vulnerabilityResultsPath[i].alertName,vulnerabilityResultsPath[i].alertReferences,vulnerabilityResultsPath[i].alertRisk,vulnerabilityResultsPath[i].alertSummary,vulnerabilityResultsPath[i].alertSolution, new Date()])
@@ -222,9 +225,8 @@ function getVulnerability(idArray) {
 }
 
 // Get the scan results from zap for given scan id
-const fetchScanResults = async (scanRequest, scanId) => {
+const fetchScanResults = async (scanRequest, scanId, sessionId) => {
     try {
-        console.log('scan request is: ', scanRequest);
         const userIP = scanRequest.ip;
         const url = scanRequest.url;
 
@@ -259,9 +261,9 @@ const fetchScanResults = async (scanRequest, scanId) => {
             return idObject.pluginId;
         })
 
-        globalPluginIdsArray = pluginIdsArray;
+        globalPluginIdsArray[sessionId] = pluginIdsArray;
 
-        const vulnerabilities = getVulnerability(pluginIdsArray);
+        const vulnerabilities = getVulnerability(sessionId);
         const riskLevelsArray = {
             'Informational': 0,
             'Low': 0,
