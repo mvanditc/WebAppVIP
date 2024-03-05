@@ -1,0 +1,189 @@
+@import './global.css';
+@import './navbar.css';
+
+body {
+    background-color: var(--background-color);
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+#scanPage-main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /*height: calc(100vh - 100px);*/
+    margin: 15px 0px;
+}
+
+#scanPage-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: black;
+    border: 10px solid rgba(133, 42, 252, 0.861);
+    max-height: 1000px;
+    width: 70vw;
+    max-width: 800px;
+    font-family: 'font1';
+    padding: 30px 20px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+#scanPage-initial-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#scanPage-scan-target-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 5px;
+    max-width: 40%;
+}
+
+#scanPage-scan-target-text {
+    white-space: nowrap;
+}
+
+#scanPage-scan-target {
+    color: var(--blue-text);
+    text-decoration: none;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+#scanPage-initial-status-container {
+    display: flex;
+    flex-direction: row;
+}
+
+#scanPage-scan-status {
+    text-decoration: none;
+}
+
+#scanPage-scan-target:hover {
+    cursor: pointer;
+}
+
+#scanPage-progressBar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#scanPage-progressBar-percentage-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#scanPage-time-elapsed-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 0px;
+    margin-bottom: 30px;
+}
+
+#scanPage-time-elapsed-text {
+    white-space: nowrap;
+}
+
+.scanPage-risk-container {
+    display: flex;
+    flex-direction: row;
+    margin: -20px 0px;
+}
+
+#scanPage-informational-risk {
+    color: rgb(0, 116, 204);
+}
+
+#scanPage-low-risk {
+    color: yellow;
+}
+
+#scanPage-medium-risk {
+    color: orange;
+}
+
+#scanPage-high-risk {
+    color: red;
+}
+
+#scanPage-undefined-risk {
+    color: rgb(170, 170, 170);
+}
+
+#scanPage-vulnerabilities-container {
+    margin-bottom: 45px;
+}
+
+#scanPage-vulnerabilities-found-title {
+    margin-bottom: 30px;
+}
+
+#scanPage-risks {
+    margin-left: 20px;
+}
+
+#scanPage-risks div {
+    margin-bottom: 5px;
+}
+
+#scanPage-view-details-container {
+    text-align: center;
+}
+
+#scanPage-view-details-container a {
+    color: white;
+}
+
+@media screen and (max-width: 500px) {
+    #scanPage-container {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    #scanPage-initial-container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    #scanPage-scan-target-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #scanPage-initial-status-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #scanPage-scan-status {
+        margin: 0px;
+    }
+
+    #scanPage-scan-target {
+        margin: 0px;
+    }
+
+    #scanPage-time-elapsed {
+        overflow-wrap: break-word;
+        max-width: 100%;
+        line-height: 1.5;
+    }
+}

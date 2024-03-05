@@ -10,7 +10,7 @@
     <meta name="description" content="" />
     <link rel="icon" href="../assets/favicon.ico">
     <link rel="stylesheet" href="../../src/css/index.css">
-    <link rel="stylesheet" href="../../src/css/scanComponent.css">
+    <link rel="stylesheet" href="../../src/css/scanPage.css">
 
     <!-- FontAwesome CDN, used for adding icons to the HTML -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -74,14 +74,15 @@
     </div>
 
     <!--  HTML CODE FOR BODY  -->
-
     <div style="background-color: white; color: black;">
         <div>
             <h3>Sample sites</h3>
             <ul>
                 <li>https://www.westerncybersociety.com/</li>
                 <li>https://itssharl.ee/fr</li>
+                <li>https://brittanychiang.com/</li>
                 <li>https://www.zaproxy.org/docs/api/#introduction</li>
+                <li>https://www.youtube.com/</li>
             </ul>
         </div>
         <h2>Data List</h2>
@@ -90,7 +91,7 @@
         <form id="index-data-form">
             <label for="data">Data</label><br />
             <input type="text" id="index-data-input" required /><br />
-            <input type="submit" value="Submit" />
+            <input id="index-submit-button" type="submit" value="Submit" />
         </form>
         <div style="color: red;" id="index-scan-status-error"></div>
         <br>
@@ -105,61 +106,8 @@
         <div style="font-weight: 600;" id="index-current-scan"></div>
     </div>
 
-    <!--  HTML CODE FOR BODY  -->
-    <div id="index-scanComponent-main-container">
-        <div id="index-scanComponent-container" class="index-scanComponent-contaner">
-            <div id="index-scanComponent-initial-container">
-                <div>
-                    <p>Scan Target:&nbsp</p>
-                    <a id="index-scanComponent-scan-target" target="_blank">-</a>
-                </div>
-                <div id="index-scanComponent-initial-status-container">
-                    <p id="index-scanComponent-scan-status">Scan Status: -</p>
-                </div>
-            </div>
-            <div id="index-scanComponent-progressBar-container">
-                <div id="index-scanComponent-progressBar"></div>
-                <div id="index-scanComponent-progressBar-percentage-container">
-                    <p>Scan Progress:&nbsp</p>
-                    <p id="index-scanComponent-progressBar-percentage"></p>
-                </div>
-            </div>
-            <div id="index-scanComponent-time-elapsed-container">
-                <p>Time Elapsed:&nbsp</p>
-                <p id="index-scanComponent-time-elapsed"></p>
-            </div>
-            <div id="index-scanComponent-vulnerabilities-container">
-                <p id="index-scanComponent-vulnerabilities-found-title">Vulnerabilities Found:</p>
-                <div id="index-scanComponent-risks">
-                    <div class="index-scanComponent-risk-container">
-                        <p>Informational Risk:&nbsp</p>
-                        <p id="index-scanComponent-informational-risk">1</p>
-                    </div>
-                    <div class="index-scanComponent-risk-container">
-                        <p>Low Risk:&nbsp</p>
-                        <p id="index-scanComponent-low-risk">1</p>
-                    </div>
-                    <div class="index-scanComponent-risk-container">
-                        <p>Medium Risk:&nbsp</p>
-                        <p id="index-scanComponent-medium-risk">2</p>
-                    </div>
-                    <div class="index-scanComponent-risk-container">
-                        <p>High Risk:&nbsp</p>
-                        <p id="index-scanComponent-high-risk">3</p>
-                    </div>
-                    <div class="index-scanComponent-risk-container">
-                        <p>Unclassified Risk:&nbsp</p>
-                        <p id="index-scanComponent-undefined-risk">3</p>
-                    </div>
-                </div>
-            </div>
-            <div id="index-scanComponent-view-details-container">
-                <a href="scanResultsPage.html">view details</a>
-            </div>
-        </div>
-    </div>
-
     <script src="../../src/js/index.js"></script>
+    <script src="../../src/js/scanPage.js"></script>
     <script src="../../src/js/navbar.js"></script>
 </body>
 

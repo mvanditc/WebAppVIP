@@ -1,149 +1,140 @@
 // JavaScript used for the Result Page's functionality.
 // Sample data
-const issues = [
-    // Low Risk Issues
+let issues = [];
+
+async function fetchInfo(){
+    let fetchedIssues = [];
+    
+    const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    let sessionId = null;
+    if (Object.keys(currentScan).length > 0) {
+        sessionId = currentScan.id;
+    }
+    
+    const params = new URLSearchParams({ sessionId })
+    await fetch(`http://localhost:8800/returnScanIds/?${params}`,
     {
-        id: 1,
-        title: "Insecure Cookies",
-        url: "http://example.com/insecure-cookies",
-        riskLevel: "low",
-        description:
-            "The application cookies are not set with the secure attribute.",
-        actionableSteps:
-            "Ensure all cookies are set with the secure attribute in production.",
-        dateScanned: new Date(),
-    },
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(vulnerability => {
+            for (let x = 0; x < vulnerability.length; x++){
+                if (vulnerability[x] == null){
+                    vulnerability[x] = 'N/A';
+                }
+            }
+            if (typeof vulnerability[2] == "string") {
+                // zap returns the risk level as medium so turn it into moderate to display as moderate
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
+                let temp_dict = {
+                    id: vulnerability[0],
+                    title: vulnerability[1],
+                    url: vulnerability[2],
+                    riskLevel: vulnerability[3],
+                    description: vulnerability[4],
+                    actionableSteps: vulnerability[5],
+                    dateScanned: vulnerability[6],
+                    highConfidence: [],
+                    mediumConfidence: [],
+                    lowConfidence: [],
+                };
+                fetchedIssues.push(temp_dict);
+
+            } else{
+                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
+                let temp_dict = {
+                    id: vulnerability[0],
+                    title: vulnerability[1],
+                    url: vulnerability[2][0],
+                    riskLevel: vulnerability[3],
+                    description: vulnerability[4],
+                    actionableSteps: vulnerability[5],
+                    dateScanned: vulnerability[6],
+                    highConfidence: [],
+                    mediumConfidence: [],
+                    lowConfidence: [],
+                };
+                fetchedIssues.push(temp_dict);
+            }
+                
+        })
+    })
+    .catch(error => console.error('Error fetching data:', error));
+
+await fetch('http://localhost:8800/returnInfo',
     {
-        id: 2,
-        title: "Clickjacking Vulnerability",
-        url: "http://example.com/clickjacking",
-        riskLevel: "low",
-        description: "The application is vulnerable to clickjacking attacks.",
-        actionableSteps:
-            "Implement X-Frame-Options header to mitigate clickjacking risks.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 3,
-        title: "Missing HTTP Security Headers",
-        url: "http://example.com/missing-headers",
-        riskLevel: "low",
-        description: "The application is missing important HTTP security headers.",
-        actionableSteps:
-            "Add headers like Strict-Transport-Security and Content-Security-Policy.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 4,
-        title: "Mixed Content",
-        url: "http://example.com/mixed-content",
-        riskLevel: "low",
-        description: "The application contains mixed content (HTTP and HTTPS).",
-        actionableSteps: "Update all resources to use secure (https) connections.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 5,
-        title: "Password Policy",
-        url: "http://example.com/password-policy",
-        riskLevel: "low",
-        description: "The application has a weak password policy.",
-        actionableSteps:
-            "Implement a strong password policy with complexity requirements.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 6,
-        title: "Missing Security Headers",
-        url: "http://example.com/missing-security-headers",
-        riskLevel: "low",
-        description:
-            "The application is missing some recommended security headers.",
-        actionableSteps:
-            "Include headers like Referrer-Policy and Feature-Policy for added security.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 7,
-        title: "Content Spoofing",
-        url: "http://example.com/content-spoofing",
-        riskLevel: "low",
-        description: "The application is susceptible to content spoofing.",
-        actionableSteps:
-            "Implement measures to prevent content spoofing, such as proper input validation.",
-        dateScanned: new Date(),
-    },
-    // Moderate Risk Issues
-    {
-        id: 8,
-        title: "Cross-Site Scripting (XSS)",
-        url: "http://example.com/xss-vulnerability",
-        riskLevel: "moderate",
-        description: "The application's search feature is vulnerable to XSS.",
-        actionableSteps:
-            "Sanitize all user inputs and implement Content Security Policy (CSP).",
-        dateScanned: new Date(),
-    },
-    {
-        id: 9,
-        title: "Insecure Direct Object References (IDOR)",
-        url: "http://example.com/idor-vulnerability",
-        riskLevel: "moderate",
-        description: "The application exposes internal objects directly.",
-        actionableSteps:
-            "Implement proper access controls and validate user permissions.",
-        dateScanned: new Date(),
-    },
-    // High Risk Issues
-    {
-        id: 10,
-        title: "SQL Injection",
-        url: "http://example.com/sql-injection",
-        riskLevel: "high",
-        description: "The application's login form is vulnerable to SQL injection.",
-        actionableSteps: "Utilize prepared statements and parameterized queries.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 11,
-        title: "Server-Side Request Forgery (SSRF)",
-        url: "http://example.com/ssrf-vulnerability",
-        riskLevel: "high",
-        description: "The application is vulnerable to SSRF attacks.",
-        actionableSteps:
-            "Validate and sanitize user-input URLs, and restrict server-side requests.",
-        dateScanned: new Date(),
-    },
-    {
-        id: 12,
-        title: "Security Misconfigurations",
-        url: "http://example.com/security-misconfigurations",
-        riskLevel: "high",
-        description:
-            "The application has security misconfigurations that could lead to vulnerabilities.",
-        actionableSteps:
-            "Regularly audit and review server configurations to ensure they follow security best practices.",
-        dateScanned: new Date(),
-    },
-];
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        for (let key in data) {
+            fetchedIssues.forEach((issue) => {
+                if (key == issue.id) {
+                    let temp = data[key];
+                    issue.highConfidence = temp.highConfidence;
+                    issue.lowConfidence = temp.lowConfidence;
+                    issue.mediumConfidence = temp.mediumConfidence;
+                }
+            });
+        }
+    }).catch(error => console.error('Error fetching data:', error));
+
+    return fetchedIssues;
+}
+
+
+
 
 const scanCoverageData = {
-    testsPerformed: [
-        "Testing for example 1",
-        "Testing for example 2",
-        "Testing for example 3",
-        "Testing for example 4",
-        "Testing for example 5",
-        "Testing for example 6",
-        "Testing for example 7",
-        "Testing for example 8",
-    ],
-    scanParameters: {
-        target: "http://www.example.com",
-    },
+    testsPerformed: [],
+
+    scanParameters: {},
 };
 
+function populateScanCoverageData(){
+    let tempArray;
+    issues.forEach((issue) => {
+        scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
+        tempArray = allSubpages(issue);
+        if (tempArray.length >=3) tempArray = [tempArray[0],tempArray[1],tempArray[2], (tempArray.length - 3).toString() + " more..."];
+        scanCoverageData.scanParameters[issue.title] = tempArray;
+    });
+}
+
+function allSubpages(issue){
+    let allSubpages = [];
+
+        if (issue.highConfidence.length > 0){
+            issue.highConfidence.forEach((url) => {
+                allSubpages.push(url);
+            })
+        }
+        if (issue.mediumConfidence.length > 0){
+        issue.mediumConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+        if (issue.lowConfidence.length > 0){
+        issue.lowConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+        }
+    return allSubpages;
+}
+
 function createIssueHTML(issue) {
+    // creating the unique ids by setting them to their issue ids
+    let highConfidenceHTML = createConfidenceHTML(issue.highConfidence);
+    let mediumConfidenceHTML = createConfidenceHTML(issue.mediumConfidence);
+    let lowConfidenceHTML = createConfidenceHTML(issue.lowConfidence);
+    let highConfidenceid = "high-confidence" + issue.id.toString();
+    let data_toggle_high = highConfidenceid;
+    let mediumConfidenceid = "medium-confidence" + issue.id.toString();
+    let data_toggle_medium = mediumConfidenceid;
+    let lowConfidenceid = "low-confidence" + issue.id.toString();
+    let data_toggle_low = lowConfidenceid;
+
     return `
       <section class="white-box">
         <div>
@@ -156,16 +147,38 @@ function createIssueHTML(issue) {
           <p>${issue.description}</p>
           <h4>Actionable Steps</h4>
           <p>${issue.actionableSteps}</p>
+          <h4 class="expandable-header" data-toggle=${data_toggle_high}>High Confidence (${issue.highConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${highConfidenceid}>${highConfidenceHTML}</div>
+          <h4 class="expandable-header" data-toggle=${data_toggle_medium}>Medium Confidence (${issue.mediumConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${mediumConfidenceid}>${mediumConfidenceHTML}</div>
+          <h4 class="expandable-header" data-toggle=${data_toggle_low}>Low Confidence (${issue.lowConfidence.length}) ...</h4>
+          <p><p>
+          <div class="confidence-container" id=${lowConfidenceid}>${lowConfidenceHTML}</div>
         </div>
       </section>
     `;
 }
 
+function createConfidenceHTML(confidenceArray) {
+    if (confidenceArray.length === 0) {
+        return '';
+    }
+
+    return confidenceArray.map((item, index) => `<div>${index + 1}. ${item}</div>`).join('');
+}
+
 function getRiskColor(riskLevel) {
+    let unclassified = "N/A";
     const riskColors = {
-        low: "#f1c40f", // yellow
-        moderate: "#e67e22", // orange
-        high: "#e74c3c", // red
+        
+        Low: "#f1c40f", // yellow
+        Moderate: "#e67e22", // orange
+        High: "#e74c3c", // red
+        Informational: "#0074CC",
+        [unclassified]: "#AAAAAA",
+
     };
     return riskColors[riskLevel];
 }
@@ -174,18 +187,27 @@ function updateSummary() {
     // Calculate totals of each risk
     const totalIssues = issues.length;
     const lowRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "low"
+        (issue) => issue.riskLevel === "Low"
     ).length;
     const moderateRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "moderate"
+        (issue) => issue.riskLevel === "Moderate"
     ).length;
     const highRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "high"
+        (issue) => issue.riskLevel === "High"
+    ).length;
+    const informationalRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "Informational"
+    ).length;
+    const unclassifiedRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "N/A"
     ).length;
 
     document.querySelector(
         ".black-box-summary p"
     ).textContent = `We found ${totalIssues} security vulnerabilities`;
+    document.querySelector(
+        ".black-box-summary .blue"
+    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
     document.querySelector(
         ".black-box-summary .yellow"
     ).textContent = `${lowRiskCount} Low Risk Issues`;
@@ -195,51 +217,97 @@ function updateSummary() {
     document.querySelector(
         ".black-box-summary .red"
     ).textContent = `${highRiskCount} High Risk Issues`;
+    document.querySelector(
+        ".black-box-summary .off-white"
+    ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
-function renderIssues(filteredIssues) {
+// allows for when all issues are shown, informational issues are shown first.
+function sortIssues (filteredIssues) {
+    let informationalIssues = [];
+    let otherIssues = [];
+    issues.forEach((issue) => {
+        if (issue.riskLevel == "Informational") informationalIssues.push(issue);
+        else otherIssues.push(issue);
+    });
+
+    issues = informationalIssues;
+
+    otherIssues.forEach((other) =>{
+        issues.push(other);
+    })
+}
+function renderIssues(filteredIssues, filter) {
     const issuesContainer = document.getElementById("issues-list");
+
     issuesContainer.innerHTML = filteredIssues
         .map((issue) => createIssueHTML(issue))
         .join("");
+
+// adding event listeners whenever the issues are rendered
+    document.querySelectorAll('.expandable-header').forEach(header => {
+        header.addEventListener('click', function () {
+            var targetId = this.dataset.toggle;
+            var targetContainer = document.getElementById(targetId);
+            if (targetContainer) {
+                if (targetContainer.style.display === 'none' || targetContainer.style.display === '') {
+                    targetContainer.style.display = 'flex'; // open position of subpage links
+                } else {
+                    targetContainer.style.display = 'none'; // closed position of subpage links
+                }
+            }
+        });
+    });
 }
 
 function filterIssues(riskLevel) {
     const filteredIssues = issues.filter(
-        (issue) => riskLevel === "all" || issue.riskLevel === riskLevel
+        (issue) => riskLevel === "All" || issue.riskLevel === riskLevel
     );
     filteredIssues.sort((a, b) => a.dateScanned - b.dateScanned);
-    renderIssues(filteredIssues);
+    renderIssues(filteredIssues, riskLevel);
     updateSummary();
-    updateDropdownSelection(riskLevel, filteredIssues.length);
+    updateDropdownSelection(riskLevel);
 }
 
 function updateDropdownSelection(selectedRiskLevel) {
     const dropdown = document.getElementById("risk-level-dropdown");
     const totalIssues = issues.length;
+    const informationalRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "Informational"
+    ).length;
     const lowRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "low"
+        (issue) => issue.riskLevel === "Low"
     ).length;
     const moderateRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "moderate"
+        (issue) => issue.riskLevel === "Moderate"
     ).length;
     const highRiskCount = issues.filter(
-        (issue) => issue.riskLevel === "high"
+        (issue) => issue.riskLevel === "High"
+    ).length;
+    const unclassifiedRiskCount = issues.filter(
+        (issue) => issue.riskLevel === "N/A"
     ).length;
 
     // Update dropdown options
     dropdown.querySelector(
-        'option[value="all"]'
+        'option[value="All"]'
     ).textContent = `All (${totalIssues})`;
     dropdown.querySelector(
-        'option[value="low"]'
+        'option[value="Low"]'
     ).textContent = `Low Risk (${lowRiskCount})`;
     dropdown.querySelector(
-        'option[value="moderate"]'
+        'option[value="Moderate"]'
     ).textContent = `Moderate Risk (${moderateRiskCount})`;
     dropdown.querySelector(
-        'option[value="high"]'
+        'option[value="High"]'
     ).textContent = `High Risk (${highRiskCount})`;
+    dropdown.querySelector(
+        'option[value="Informational"]'
+    ).textContent = `Informational Risk (${informationalRiskCount})`;
+    dropdown.querySelector(
+        'option[value="N/A"]'
+    ).textContent = `Unclassified Risk (${unclassifiedRiskCount})`;
 
     // Set the selected value
     dropdown.value = selectedRiskLevel;
@@ -248,13 +316,6 @@ function updateDropdownSelection(selectedRiskLevel) {
 function createTestsPerformedHTML(tests) {
     // Use map to create an HTML string for each test, then join them into one string
     return tests.map((test) => `<p>✓ ${test}</p>`).join("");
-}
-
-function createScanParametersHTML(parameters) {
-    // Use Object.entries to create an HTML string for each key-value pair in parameters
-    return Object.entries(parameters)
-        .map(([key, value]) => `<h5>${key}</h5><p>${value}</p>`)
-        .join("");
 }
 
 function renderScanCoverage() {
@@ -268,18 +329,85 @@ function renderScanCoverage() {
     testsPerformedContainer.innerHTML = testsPerformedHTML;
 
     // Create HTML for scan parameters
-    const scanParametersHTML = Object.entries(scanCoverageData.scanParameters)
-        .map(([key, value]) => `<p>${key}: ${value}</p>`)
-        .join("");
+    let scanParametersHTML = '';
+
+    Object.entries(scanCoverageData.scanParameters)
+        .forEach(([key, value]) => {
+            const formattedValue = Array.isArray(value) ? value.map(item => `<p>${item}</p>`).join('') : `<p>${value}</p>`;
+            scanParametersHTML += `<p>${key}:</p>${formattedValue}<br>`;
+        });
+
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    issues = await fetchInfo();
+    sortIssues(); // making the informational display at the top
+    populateScanCoverageData();
     const dropdown = document.getElementById("risk-level-dropdown");
     dropdown.addEventListener("change", function () {
+        console.log("the value of this value is " +this.value);
         filterIssues(this.value);
     });
-    filterIssues("all"); // Render issues when the page is first loaded
+    filterIssues("All"); // Render issues when the page is first loaded
     updateSummary(); // Update the summary counts on page load
     renderScanCoverage();
+
+    document.getElementById('exportPrint').addEventListener('click', function () {
+        toggleAll();
+        window.print();
+        untoggleAll();
+    });
+
 });
+
+function toggleAll() {
+    issues.forEach(issue => {
+        var highContainer = document.getElementById("high-confidence" + issue.id.toString());
+        var mediumContainer = document.getElementById("medium-confidence" + issue.id.toString());
+        var lowContainer = document.getElementById("low-confidence" + issue.id.toString());
+
+        // sets all the subpage link containers to postion open
+        toggleVisibility(highContainer);
+        toggleVisibility(mediumContainer);
+        toggleVisibility(lowContainer);
+    })
+}
+
+function untoggleAll() {
+    issues.forEach(issue => {
+        var highContainer = document.getElementById("high-confidence" + issue.id.toString());
+        var mediumContainer = document.getElementById("medium-confidence" + issue.id.toString());
+        var lowContainer = document.getElementById("low-confidence" + issue.id.toString());
+
+        // sets all the subpage link containers to postion open
+        untoggleVisibility(highContainer);
+        untoggleVisibility(mediumContainer);
+        untoggleVisibility(lowContainer);
+    })
+}
+
+function toggleVisibility(container) {
+    // if statement makes sure the container is not already open
+    if (container && container.style.display !== 'flex') {
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'flex';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+}
+
+function untoggleVisibility(container) {
+    // if statement makes sure the container is not already open
+    if (container && container.style.display == 'flex') {
+        if (container.style.display === 'none' || container.style.display === '') {
+            container.style.display = 'flex';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+}
+
+
+
