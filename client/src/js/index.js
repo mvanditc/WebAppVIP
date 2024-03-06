@@ -28,6 +28,7 @@ function checkScanQueueLength() {
 }
 
 window.addEventListener('storage', async function (event) {
+  checkScanQueueLength();
   if (event.key === 'CURRENT_SCAN') {
     currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
   }
@@ -36,8 +37,7 @@ window.addEventListener('storage', async function (event) {
 
     currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
     if (Object.keys(currentScan).length > 0) {
-      let id = currentScan.id;
-      if (scanQueue[id - 2].status === 'Complete') {
+      if (scanQueue[scanQueue.length - 2].status === 'Complete') {
         await userWithinScanLimit(currentScan.url);
         window.location.href = `scanPage.html?url=${encodeURIComponent(currentScan.url)}`;
       }
@@ -96,46 +96,65 @@ function getNextScanId(scanQueue) {
 }
 
 function displayQueue() {
-  $submitBtn.disabled = true;
-  $scanQueue.textContent = 'Scans in Queue:';
-  $scanQueue.appendChild(document.createElement('p'));
-
-  const $scanDiv = document.createElement('div');
-  const $scanUrl = document.createElement('p');
-  const $cancelButton = document.createElement('button');
-  $cancelButton.textContent = 'Cancel Scan';
-
   currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
-  $scanUrl.textContent = currentScan.url;
+  if (Object.keys(currentScan).length > 0) {
+    scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
+    $submitBtn.disabled = true;
+    $scanQueue.textContent = 'Scans in Queue:';
+    $scanQueue.appendChild(document.createElement('p'));
   
-  $scanDiv.appendChild($scanUrl);
-  $scanDiv.appendChild($cancelButton);
-
-  const scanDivStyles = {
-    display: 'flex',
-    flexDirection: 'row',
-    height: '30px',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  }
-
-  Object.assign($scanDiv.style, scanDivStyles);
-
-  $cancelButton.addEventListener('click', () => {
-    scanQueue = scanQueue.filter(scanObj => scanObj.id !== currentScan.id);
-
-    localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
-    sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({}));
-    
-    $submitBtn.disabled = false;
-    
-    while ($scanQueue.firstChild) {
-      $scanQueue.removeChild($scanQueue.firstChild);
+    const $scanDiv = document.createElement('div');
+    const $scanUrl = document.createElement('p');
+    const $scanPosition = document.createElement('p');
+    const $cancelButton = document.createElement('button');
+    $cancelButton.textContent = 'Cancel Scan';
+  
+    if (scanQueue.length === 2) {
+      $scanPosition.textContent = `Position: 1`;
     }
-    checkScanQueueLength();
-  })
+    else {
+      $scanPosition.textContent = `Position: ${currentScan.id - 1}`;
+    }
+
+    $scanPosition.style.marginRight = '5px';
+    
+    $scanUrl.textContent = `Name: ${currentScan.url},`;
+    $scanUrl.style.marginRight = '5px';
+    
+    $scanDiv.appendChild($scanUrl);
+    $scanDiv.appendChild($scanPosition);
+    $scanDiv.appendChild($cancelButton);
   
-  $scanQueue.appendChild($scanDiv);
+    const scanDivStyles = {
+      display: 'flex',
+      flexDirection: 'row',
+      height: '30px',
+      alignItems: 'center',
+      justifyContent: 'flex-start'
+    }
+  
+    Object.assign($scanDiv.style, scanDivStyles);
+  
+    $cancelButton.addEventListener('click', () => {
+      scanQueue = scanQueue.filter(scanObj => scanObj.id !== currentScan.id);
+  
+      scanQueue.forEach((scanObj, index) => {
+        scanObj.id = index + 1;
+      });
+  
+      localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
+      sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({}));
+      
+      $submitBtn.disabled = false;
+      
+      while ($scanQueue.firstChild) {
+        $scanQueue.removeChild($scanQueue.firstChild);
+      }
+      checkScanQueueLength();
+    })
+    
+    $scanQueue.appendChild($scanDiv);
+  }
 }
 
 async function userWithinScanLimit(inputUrl) {

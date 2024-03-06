@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let $scanProgress = document.getElementById('scanPage-progressBar-percentage');
     let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
     let $scanStatus = document.getElementById('scanPage-scan-status');
+    let $consoleWindow = document.getElementById('scanPage-container');
 
     let $informationalRisk = document.getElementById('scanPage-informational-risk');
     let $lowRisk = document.getElementById('scanPage-low-risk');
@@ -28,7 +29,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     //         sendUrlForScan();
     //     }
     // });
-    
+
+    // window.addEventListener('beforeunload', function (event) {
+    //     if (!scanTerminated) {
+    //         const confirmationMessage = "You are in the middle of a scan. Are you sure you want to leave?";
+    //         event.returnValue = confirmationMessage;
+    //         return confirmationMessage;
+    //     }
+    // });
+
     window.addEventListener('unload', function () {
         scanTerminated = true;
         terminateScan({scanId: globalScanId, reason: 'userAction'});
@@ -38,12 +47,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         $scanTarget.addEventListener('click', () => {
             window.open(inputUrl, '_blank');
         })
+
+        // adjustConsoleWindowHeight();
     }
 
     const urlParams = new URLSearchParams(window.location.search);
     const inputUrl = urlParams.get('url');
 
-    const savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+    let savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
     if (Object.keys(savedScanDetails).length > 0) {
         const vulnerabilities = savedScanDetails['vulnerabilities'];
 
@@ -56,9 +67,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         setScanStatus(savedScanDetails['status']);
         $scanTarget.textContent = savedScanDetails['url'];
         $viewDetailsButton.style.display = 'block';
-        $progressBar.style.display = 'none';
-        $scanProgress.textContent = '-';
-        $timeElapsed.textContent = '-'
+        $timeElapsed.textContent = '-';
+        $timeElapsed.style.color = 'white';
+        
+        $progressBar.style.display = 'block';
+        const filledCharsCount = savedScanDetails['progressBar']['filledCharsCount'];
+        const filledChars = '█'.repeat(filledCharsCount);
+        const dashCharsCount = savedScanDetails['progressBar']['dashCharsCount'];
+        const dashChars = '--'.repeat(dashCharsCount);
+        $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
+
+        $scanProgress.textContent = `${savedScanDetails['progressBar']['percentage']}%`;
     }
     else {
         $informationalRisk.textContent = '-'
@@ -68,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         $unclassifiedRisk.textContent = '-';
         $scanProgress.textContent = '-';
         $timeElapsed.textContent = '-';
+        $timeElapsed.style.color = 'white';
         $viewDetailsButton.style.display = 'none';
 
         // first function that begins the scan process
@@ -75,10 +95,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function setScanStatus(status) {
+        while ($scanStatus.firstChild) {
+            $scanStatus.firstChild.remove();
+        }
         const statusSpan = document.createElement('span');
         statusSpan.textContent = status;
         statusSpan.style.color = status === 'Complete' ? 'rgb(0, 255, 0)' : 'rgb(71, 182, 255)';
-        $scanStatus.textContent = 'Scan Status: ';
         $scanStatus.appendChild(statusSpan);
     }
     
@@ -107,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (terminationTime <= 0) {
                         scanTerminated = true;
                         $timeElapsed.textContent = `Exceeded scan time limit. Fetching results...`;
+                        $timeElapsed.style.color = '#ababab';
         
                         clearInterval(timerInterval); 
                         terminateScan({scanId: scanId, reason: 'timeout'});
@@ -124,6 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (scanUpdated) {
                         clearInterval(timerInterval); 
                         $timeElapsed.textContent = 'Successfully completed scan within time limit. Fetching results...';
+                        $timeElapsed.style.color = '#ababab';
                     }
                 }
                 else {
@@ -161,8 +185,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function terminateScan({ scanId, reason }) {
         if (globalScanId !== null && scanTerminated) {
-            console.log('global scan idL ', globalScanId);
-            console.log('scan terminated val: ', scanTerminated);
             try {
                 const params = new URLSearchParams({ scanId, reason });
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
@@ -210,12 +232,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to update scan progress that is seen on the page
     async function updateScanProgress(progressData, scanId) {
         if (!scanTerminated) {
-            const maxChars = 15;
+            const maxChars = 12;
             const filledCharsCount = Math.round((progressData.status / 100) * maxChars);
             const filledChars = '█'.repeat(filledCharsCount);
-            const dashChars = '--'.repeat(maxChars - filledCharsCount);
+
+            let dashCharsCount = maxChars - filledCharsCount;
+            const dashChars = '--'.repeat(dashCharsCount);
     
             $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
+            
+            savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+            
+            if (!savedScanDetails['progressBar']) {
+                savedScanDetails['progressBar'] = {};
+            }
+
+            savedScanDetails['progressBar']['filledCharsCount'] = filledCharsCount;
+            savedScanDetails['progressBar']['dashCharsCount'] = dashCharsCount;
+            savedScanDetails['progressBar']['percentage'] = progressData.status;
+            sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
     
             $scanProgress.textContent = `${progressData.status}%`;
             console.log(`Scan Progress: ${progressData.status}%`);
@@ -255,7 +290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     async function fetchScanResults(scanId) {
         // Update the scan results list after scan is completed
-        const params = new URLSearchParams({ scanId, inputUrl })
+        const sessionId = currentScan.id;
+        const params = new URLSearchParams({ scanId, inputUrl, sessionId });
         const response = await fetch(`http://localhost:8800/updateScanResults/?${params}`);
         const result = await response.json();
     
@@ -264,9 +300,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (scanData !== null) {
                 // updateScanResultsList(scanData);
                 
-                $scanProgress.textContent = '-';
                 $timeElapsed.textContent = '-'; 
-                $progressBar.style.display = 'none';
+                $timeElapsed.style.color = 'white';
+                $progressBar.style.display = 'block';
     
                 const riskLevelsArray = result['riskLevelsArray'];
                 
@@ -299,19 +335,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function updateScanDetails({ informationalRisk, lowRisk, mediumRisk, highRisk, unclassifiedRisk }) {
-        const scanDetails = {
-            url: inputUrl,
-            status: 'Complete',
-            vulnerabilities: {
-                informational: informationalRisk,
-                low: lowRisk,
-                medium: mediumRisk,
-                high: highRisk,
-                unclassified: unclassifiedRisk
-            }
-        }
-    
-        sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(scanDetails));
+        savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS'));
+
+        savedScanDetails['url'] = inputUrl;
+        savedScanDetails['status'] = 'Complete';
+        savedScanDetails['vulnerabilities'] = {
+            informational: informationalRisk,
+            low: lowRisk,
+            medium: mediumRisk,
+            high: highRisk,
+            unclassified: unclassifiedRisk
+        };
+
+        sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
     }
     
     /*
