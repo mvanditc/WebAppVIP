@@ -10,7 +10,7 @@
 
 []
 
-3) Create the file 'webScraperResults1.json' to the 'database' folder and paste the json data. This json data is a file, please ask one of the repo members for the file details that you will have to copy and paste.
+3) Create the file 'webScraperResults1.json' in the 'database' folder and paste the json data. This json data is a file, please ask one of the repo members for the file details that you will have to copy and paste.
 
 # To run the code:
 
