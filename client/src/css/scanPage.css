@@ -22,7 +22,8 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     background-color: black;
-    border: 10px solid rgba(133, 42, 252, 0.861);
+    border-radius: 10px;
+    box-shadow: 0 0 0 10px var(--selected-navbar-toplevel-button-color);
     max-height: 1000px;
     width: 70vw;
     max-width: 800px;
@@ -146,6 +147,22 @@ body {
 
 #scanPage-view-details-container a {
     color: white;
+}
+
+/* View Details Button */
+.details-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+}
+  
+.details-button:hover {
+    background-color: gray;
 }
 
 @media screen and (max-width: 500px) {
