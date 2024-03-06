@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let $scanProgress = document.getElementById('scanPage-progressBar-percentage');
     let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
     let $scanStatus = document.getElementById('scanPage-scan-status');
-    let $consoleWindow = document.getElementById('scanPage-container');
 
     let $informationalRisk = document.getElementById('scanPage-informational-risk');
     let $lowRisk = document.getElementById('scanPage-low-risk');
@@ -23,21 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let globalScanId = null;
     let scanQueue = [];
 
-    // window.addEventListener('pageshow', function (event) {
-    //     if (!event.persisted) {
-    //         // Call the function when the page is shown or reloaded
-    //         sendUrlForScan();
-    //     }
-    // });
-
-    // window.addEventListener('beforeunload', function (event) {
-    //     if (!scanTerminated) {
-    //         const confirmationMessage = "You are in the middle of a scan. Are you sure you want to leave?";
-    //         event.returnValue = confirmationMessage;
-    //         return confirmationMessage;
-    //     }
-    // });
-
     window.addEventListener('unload', function () {
         scanTerminated = true;
         terminateScan({scanId: globalScanId, reason: 'userAction'});
@@ -47,51 +31,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         $scanTarget.addEventListener('click', () => {
             window.open(inputUrl, '_blank');
         })
-
-        // adjustConsoleWindowHeight();
     }
 
     const urlParams = new URLSearchParams(window.location.search);
     const inputUrl = urlParams.get('url');
 
-    let savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
-    if (Object.keys(savedScanDetails).length > 0) {
-        const vulnerabilities = savedScanDetails['vulnerabilities'];
-
-        $informationalRisk.textContent = vulnerabilities['informational'];
-        $lowRisk.textContent = vulnerabilities['low'];
-        $mediumRisk.textContent = vulnerabilities['medium'];
-        $highRisk.textContent = vulnerabilities['high'];
-        $unclassifiedRisk.textContent = vulnerabilities['unclassified'];
-
-        setScanStatus(savedScanDetails['status']);
-        $scanTarget.textContent = savedScanDetails['url'];
-        $viewDetailsButton.style.display = 'block';
-        $timeElapsed.textContent = '-';
-        $timeElapsed.style.color = 'white';
-        
-        $progressBar.style.display = 'block';
-        const filledCharsCount = savedScanDetails['progressBar']['filledCharsCount'];
-        const filledChars = '█'.repeat(filledCharsCount);
-        const dashCharsCount = savedScanDetails['progressBar']['dashCharsCount'];
-        const dashChars = '--'.repeat(dashCharsCount);
-        $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
-
-        $scanProgress.textContent = `${savedScanDetails['progressBar']['percentage']}%`;
+    let currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    if (currentScan.status === 'Scanning') {
+        sendUrlForScan();
     }
     else {
-        $informationalRisk.textContent = '-'
-        $lowRisk.textContent = '-';
-        $mediumRisk.textContent = '-';
-        $highRisk.textContent = '-';
-        $unclassifiedRisk.textContent = '-';
-        $scanProgress.textContent = '-';
-        $timeElapsed.textContent = '-';
-        $timeElapsed.style.color = 'white';
-        $viewDetailsButton.style.display = 'none';
-
-        // first function that begins the scan process
-        sendUrlForScan();
+        let savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+        if (Object.keys(savedScanDetails).length > 0) {
+            const vulnerabilities = savedScanDetails['vulnerabilities'];
+    
+            $informationalRisk.textContent = vulnerabilities['informational'];
+            $lowRisk.textContent = vulnerabilities['low'];
+            $mediumRisk.textContent = vulnerabilities['medium'];
+            $highRisk.textContent = vulnerabilities['high'];
+            $unclassifiedRisk.textContent = vulnerabilities['unclassified'];
+    
+            setScanStatus(savedScanDetails['status']);
+            $scanTarget.textContent = savedScanDetails['url'];
+            $viewDetailsButton.style.display = 'block';
+            $timeElapsed.textContent = '-';
+            $timeElapsed.style.color = 'white';
+            
+            $progressBar.style.display = 'block';
+            const filledCharsCount = savedScanDetails['progressBar']['filledCharsCount'];
+            const filledChars = '█'.repeat(filledCharsCount);
+            const dashCharsCount = savedScanDetails['progressBar']['dashCharsCount'];
+            const dashChars = '--'.repeat(dashCharsCount);
+            $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
+    
+            $scanProgress.textContent = `${savedScanDetails['progressBar']['percentage']}%`;
+        }
+        else {
+            $informationalRisk.textContent = '-'
+            $lowRisk.textContent = '-';
+            $mediumRisk.textContent = '-';
+            $highRisk.textContent = '-';
+            $unclassifiedRisk.textContent = '-';
+            $scanProgress.textContent = '-';
+            $timeElapsed.textContent = '-';
+            $timeElapsed.style.color = 'white';
+            $viewDetailsButton.style.display = 'none';
+    
+            // first function that begins the scan process
+            sendUrlForScan();
+        }
     }
 
     function setScanStatus(status) {
@@ -213,20 +201,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updateScanQueueInStorage() {
+        const savedScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
         const savedQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
-        if (savedQueue.length > 0) {
-            let id = currentScan.id;
-            const tempScan = savedQueue[id - 1];
-            const updatedScan = { id: id, url: tempScan.url, status: 'Complete' };
-            savedQueue[id - 1] = updatedScan;
+        
+        const scanToUpdateIndex = savedQueue.findIndex((scanObj) => scanObj.id === savedScan.id);
 
+        if (scanToUpdateIndex !== -1) {
+            savedQueue[scanToUpdateIndex].status = 'Complete';
             localStorage.setItem('SCAN_QUEUE', JSON.stringify(savedQueue));
+        } else {
+            console.log('Error getting index in update function for scan queue in storage');
         }
-    }
-
-    function getNextScanId(scanQueue) {
-        const maxId = scanQueue.reduce((max, obj) => Math.max(max, obj.id), 0);
-        return maxId + 1;
     }
     
     // Function to update scan progress that is seen on the page
