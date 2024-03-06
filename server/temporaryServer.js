@@ -35,10 +35,17 @@ app.get("/data", (req, res) => {
     res.json(data);
 });
 
+app.delete("/removeScanFromQueue/:id", async (req, res) => {
+    const id = req.params.id;
+    scanQueue = scanQueue.filter((scanObj) => scanObj.id !== id);
+    res.status(200);
+})
+
 // Perform scan using zap spider scan api
 app.post("/addScanToQueue", async (req, res) => {
     const url = req.body.url;
     const userIP = req.ip;
+    const id = req.body.id;
 
     try {
         // make sure user is allowed to perform scan before adding request to the queue
@@ -46,7 +53,7 @@ app.post("/addScanToQueue", async (req, res) => {
 
         if (canProceed) {
             // Create scan request object
-            const scanRequest = { ip: userIP, url: url };
+            const scanRequest = { ip: userIP, url: url, id: id };
 
             // Add new scan request to the queue
             scanQueue.push(scanRequest);
@@ -340,6 +347,7 @@ app.get('/stopScan', async (req, res) => {
 
     stopReason !== 'timeout' && scanQueue.shift();
 
+    console.log('scan queue is: ', scanQueue);
     try {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
         console.log('Scan stopped successfully:', stopResponse.data);
