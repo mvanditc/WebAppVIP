@@ -22,11 +22,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     let globalScanId = null;
     let scanQueue = [];
 
+    window.addEventListener('beforeunload', async function (event) {
+        const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+        const scanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+      
+        if (Object.keys(scanDetails).length > 0 && currentScan.status === 'Scanning') {
+            const confirmationMessage = 'Are you sure you want to leave?';
+            event.returnValue = confirmationMessage; 
+            return confirmationMessage; 
+        }
+    });
+
     window.addEventListener('unload', function () {
         scanTerminated = true;
         terminateScan({scanId: globalScanId, reason: 'userAction'});
     });
-  
+
     if ($scanTarget) {
         $scanTarget.addEventListener('click', () => {
             window.open(inputUrl, '_blank');
