@@ -68,7 +68,6 @@ await fetch('http://localhost:8800/returnInfo',
     })
     .then(response => response.json())
     .then(data => {
-        console.log('data is: ', data);
         for (let key in data) {
             fetchedIssues.forEach((issue) => {
                 if (key == issue.id) {
@@ -207,50 +206,34 @@ function updateSummary() {
         ".black-box-summary p"
     ).textContent = `We found ${totalIssues} security vulnerabilities`;
     document.querySelector(
-        ".black-box-summary .red"
-    ).textContent = `${highRiskCount} High Risk Issues`;
-    document.querySelector(
-        ".black-box-summary .orange"
-    ).textContent = `${moderateRiskCount} Moderate Risk Issues`;
+        ".black-box-summary .blue"
+    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
     document.querySelector(
         ".black-box-summary .yellow"
     ).textContent = `${lowRiskCount} Low Risk Issues`;
     document.querySelector(
-        ".black-box-summary .blue"
-    ).textContent = `${informationalRiskCount} Informational Risk Issues`;
+        ".black-box-summary .orange"
+    ).textContent = `${moderateRiskCount} Moderate Risk Issues`;
+    document.querySelector(
+        ".black-box-summary .red"
+    ).textContent = `${highRiskCount} High Risk Issues`;
     document.querySelector(
         ".black-box-summary .off-white"
     ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
-// allows for when all issues are shown, it sorts them from highest risk level to unclassified
+// allows for when all issues are shown, informational issues are shown first.
 function sortIssues (filteredIssues) {
-    let highIssues = [];
-    let moderateIssues = [];
-    let lowIssues = [];
     let informationalIssues = [];
-    let unclassifiedIssues = [];
+    let otherIssues = [];
     issues.forEach((issue) => {
-        if (issue.riskLevel == "High") highIssues.push(issue);
-        else if (issue.riskLevel == "Moderate") moderateIssues.push(issue);
-        else if (issue.riskLevel == "Low") lowIssues.push(issue);
-        else if (issue.riskLevel == "Informational") informationalIssues.push(issue);
-        else unclassifiedIssues.push(issue);
-
+        if (issue.riskLevel == "Informational") informationalIssues.push(issue);
+        else otherIssues.push(issue);
     });
 
-    issues = highIssues;
+    issues = informationalIssues;
 
-    moderateIssues.forEach((other) =>{
-        issues.push(other);
-    })
-    lowIssues.forEach((other) =>{
-        issues.push(other);
-    })
-    informationalIssues.forEach((other) =>{
-        issues.push(other);
-    })
-    unclassifiedIssues.forEach((other) =>{
+    otherIssues.forEach((other) =>{
         issues.push(other);
     })
 }
@@ -311,14 +294,14 @@ function updateDropdownSelection(selectedRiskLevel) {
         'option[value="All"]'
     ).textContent = `All (${totalIssues})`;
     dropdown.querySelector(
-        'option[value="High"]'
-    ).textContent = `High Risk (${highRiskCount})`;
+        'option[value="Low"]'
+    ).textContent = `Low Risk (${lowRiskCount})`;
     dropdown.querySelector(
         'option[value="Moderate"]'
     ).textContent = `Moderate Risk (${moderateRiskCount})`;
     dropdown.querySelector(
-        'option[value="Low"]'
-    ).textContent = `Low Risk (${lowRiskCount})`;
+        'option[value="High"]'
+    ).textContent = `High Risk (${highRiskCount})`;
     dropdown.querySelector(
         'option[value="Informational"]'
     ).textContent = `Informational Risk (${informationalRiskCount})`;
