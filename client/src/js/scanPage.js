@@ -291,6 +291,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function handleUserActionPageUnload() {
+        console.log('i was called');
         $viewDetailsButton.style.display = 'none';
         setScanStatus('Terminated');
     }

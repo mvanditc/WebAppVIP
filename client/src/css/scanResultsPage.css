@@ -208,6 +208,25 @@ p {
   background-color: gray;
 }
 
+/* Hover Description Styling */
+.info-popup {
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  color: black;
+}
+
+.info-button {
+  color: var(--background-color);
+}
+
+.info-button:hover + .info-popup {
+  display: block;
+}
+
 /* Responsive adjustments */
 /* Adjust styles for screens with a minimum width of 280 pixels */
 @media (max-width: 280px) {
