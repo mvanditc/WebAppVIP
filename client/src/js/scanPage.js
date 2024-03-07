@@ -141,6 +141,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const result = await response.json();
 
             if (response.status === 200) {
+                // Clear scan details if user submits another scan on same tab
+                sessionStorage.setItem('SCAN_DETAILS', JSON.stringify({}));
+
                 const scanId = result.scanId;
                 $scanTarget.textContent = inputUrl;
 
@@ -179,9 +182,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, 1000)
         
                 setScanStatus('Scanning...');
-
-                // Clear scan details if user submits another scan on same tab
-                sessionStorage.setItem('SCAN_DETAILS', JSON.stringify({}));
         
                 // Call function that gets the scan progress
                 const progressData = await fetchScanProgress(scanId);
@@ -392,10 +392,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setScanStatus('Complete');
     
                 scanTerminated = true;
-                updateScanDetails({ informationalRisk, lowRisk, mediumRisk, highRisk, unclassifiedRisk });
                 
                 updateCurrentScanInStorage();
                 updateScanQueueInStorage();
+
+                updateScanDetails({ informationalRisk, lowRisk, mediumRisk, highRisk, unclassifiedRisk });
             }
             else {
                 console.log("Error fetching scan data, fetch returned null");

@@ -192,6 +192,8 @@ app.get('/updateScanResults', async (req, res) => {
     // Access the query parameters sent from frontend
     const scanId = req.query.scanId;
     const scanRequest = scanQueue[0];
+
+    console.log('scan queue is: ', scanQueue);
     const sessionId = req.query.sessionId;
 
     // fetchScanResults will update the file for scanned results and return boolean
