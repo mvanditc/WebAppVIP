@@ -236,6 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const dashChars = '--'.repeat(dashCharsCount);
     
             $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
+            $viewDetailsButton.style.display = 'none';
             
             savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
             
