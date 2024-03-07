@@ -4,7 +4,15 @@ let issues = [];
 
 async function fetchInfo(){
     let fetchedIssues = [];
-    await fetch('http://localhost:8800/returnScanIds',
+    
+    const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    let sessionId = null;
+    if (Object.keys(currentScan).length > 0) {
+        sessionId = currentScan.id;
+    }
+    
+    const params = new URLSearchParams({ sessionId })
+    await fetch(`http://localhost:8800/returnScanIds/?${params}`,
     {
         method: 'GET'
     })
@@ -214,7 +222,7 @@ function updateSummary() {
     ).textContent = `${unclassifiedRiskCount} Unclassified Risk Issues`;
 }
 
-// allows for when all issues are shown, informational issues are shown first.
+// allows for when all issues are shown, it sorts them from highest risk level to unclassified
 function sortIssues (filteredIssues) {
     let highIssues = [];
     let moderateIssues = [];

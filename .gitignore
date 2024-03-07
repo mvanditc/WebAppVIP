@@ -3,3 +3,4 @@ database/webScraperResults1.json
 config.json
 .vscode/
 server/node_modules/
+.DS_Store
