@@ -84,6 +84,8 @@ if ($form) {
         scanQueue.push(currentScanObj);
         localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
         
+        await addScanToQueue(url);
+
         const queueEmpty = checkScanQueueLength();
         if (queueEmpty) {
           currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
@@ -171,7 +173,7 @@ async function removeScanFromQueue(currentScan) {
     });
 
     if (response.status === 200) {
-      scanQueue = scanQueue.filter(scanObj => scanObj.id !== scanIdToRemove);
+      scanQueue = scanQueue.filter(scanObj => scanObj.id !== currentScan.id);
 
       localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
       sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({}));
@@ -192,11 +194,9 @@ async function removeScanFromQueue(currentScan) {
   }
 }
 
-async function userWithinScanLimit(inputUrl) {
+async function addScanToQueue(inputUrl) {
   currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
-  console.log('id is: ', currentScan.id);
   try {
-    // post request format
     const response = await fetch('http://localhost:8800/addScanToQueue', {
       method: 'POST',
       headers: {
@@ -204,12 +204,25 @@ async function userWithinScanLimit(inputUrl) {
       },
       body: JSON.stringify({ url: inputUrl, id: currentScan.id }),
     });
+
+    if (response.status === 403) {
+      console.log('Error in adding scan to queue: ', error);
+    }
+  } catch (error) {
+    console.log('Error in adding scan to queue: ', error);
+  }
+}
+
+async function userWithinScanLimit() {
+  currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+  try {
+    const response = await fetch('http://localhost:8800/checkUserWithinScanLimit');
     
     if (response.status === 200) {
       return true;
     }
     else if (response.status === 403) {
-        return false;
+      return false;
     }
   } catch (error) {
       console.error('Error Submitting:', error);

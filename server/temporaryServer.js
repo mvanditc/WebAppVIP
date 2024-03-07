@@ -38,7 +38,20 @@ app.get("/data", (req, res) => {
 app.delete("/removeScanFromQueue/:id", async (req, res) => {
     const id = req.params.id;
     scanQueue = scanQueue.filter((scanObj) => scanObj.id !== id);
-    res.status(200);
+    res.status(200).send();
+})
+
+app.get("/checkUserWithinScanLimit", async (req, res) => {
+    const userIP = req.ip;
+    const canProceed = await validateUser(userIP);
+
+    if (canProceed) {
+        res.status(200).send();
+    }
+    else {
+        console.log("User has reached the limit of scans allowed in the past 24 hours.");
+        res.status(403).json({ error: "Limit reached" });
+    }
 })
 
 // Perform scan using zap spider scan api
@@ -48,24 +61,15 @@ app.post("/addScanToQueue", async (req, res) => {
     const id = req.body.id;
 
     try {
-        // make sure user is allowed to perform scan before adding request to the queue
-        const canProceed = await validateUser(userIP);
+        const scanRequest = { ip: userIP, url: url, id: id };
 
-        if (canProceed) {
-            // Create scan request object
-            const scanRequest = { ip: userIP, url: url, id: id };
+        // Add new scan request to the queue
+        scanQueue.push(scanRequest);
 
-            // Add new scan request to the queue
-            scanQueue.push(scanRequest);
-
-            res.status(200).json({ url: url });
-        }
-        else {
-            console.log("User has reached the limit of scans allowed in the past 24 hours.");
-            res.status(403).json({ error: "Limit reached" });
-        }
+        res.status(200).json({ url: url });
     } catch (error) {
-        console.log('Error with submit button, ', error);
+        console.log('Error with adding scan to queue, ', error);
+        res.status(403).json({ error: 'Error adding scan to queue' });
     }
 });
 
@@ -243,6 +247,7 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         const fetchedAlerts = resultsResponse.data.alerts;
         const currentData = JSON.parse(fs.readFileSync(scanDataPath));
 
+        returnInfo = {};
         populate_returnInfo(fetchedAlerts);
 
         // Create a Set to track unique alert identifiers (pluginId)
