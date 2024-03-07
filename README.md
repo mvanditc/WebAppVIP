@@ -20,6 +20,14 @@
 
 3) In the second terminal, cd into the folder 'server'. Here, run 'npm install'. Then run the command 'npx nodemon temporaryServer.js'. This will start the backend.
 
+# How to fix problems if you encounter any:
+
+1) Restart the server. This is where you typed 'npx nodemon temporaryServer.js.
+
+2) Clear browsing data.
+
+3) Refresh all tabs you have open.
+
 # Important Notes (Read this before you start making changes):
 
 1) If you scan more than 3 sites, you will get a message indicating you have reached the limit. To fix this, go to the user.json file, remove all the code from there, and add '[]' to the file. This file needs an empty array to work. 
