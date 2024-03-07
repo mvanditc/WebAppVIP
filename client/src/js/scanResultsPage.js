@@ -2,84 +2,84 @@
 // Sample data
 let issues = [];
 
-async function fetchInfo(){
+async function fetchInfo() {
     let fetchedIssues = [];
-    
+
     const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
     let sessionId = null;
     if (Object.keys(currentScan).length > 0) {
         sessionId = currentScan.id;
     }
-    
+
     const params = new URLSearchParams({ sessionId })
     await fetch(`http://localhost:8800/returnScanIDs/?${params}`,
-    {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(vulnerability => {
-            for (let x = 0; x < vulnerability.length; x++){
-                if (vulnerability[x] == null){
-                    vulnerability[x] = 'N/A';
-                }
-            }
-            if (typeof vulnerability[2] == "string") {
-                // zap returns the risk level as medium so turn it into moderate to display as moderate
-                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
-                let temp_dict = {
-                    id: vulnerability[0],
-                    title: vulnerability[1],
-                    url: vulnerability[2],
-                    riskLevel: vulnerability[3],
-                    description: vulnerability[4],
-                    actionableSteps: vulnerability[5],
-                    dateScanned: vulnerability[6],
-                    highConfidence: [],
-                    mediumConfidence: [],
-                    lowConfidence: [],
-                };
-                fetchedIssues.push(temp_dict);
-
-            } else{
-                if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
-                let temp_dict = {
-                    id: vulnerability[0],
-                    title: vulnerability[1],
-                    url: vulnerability[2][0],
-                    riskLevel: vulnerability[3],
-                    description: vulnerability[4],
-                    actionableSteps: vulnerability[5],
-                    dateScanned: vulnerability[6],
-                    highConfidence: [],
-                    mediumConfidence: [],
-                    lowConfidence: [],
-                };
-                fetchedIssues.push(temp_dict);
-            }
-                
+        {
+            method: 'GET'
         })
-    })
-    .catch(error => console.error('Error fetching data:', error));
-
-await fetch('http://localhost:8800/returnInfo',
-    {
-        method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('data is: ', data);
-        for (let key in data) {
-            fetchedIssues.forEach((issue) => {
-                if (key == issue.id) {
-                    let temp = data[key];
-                    issue.highConfidence = temp.highConfidence;
-                    issue.lowConfidence = temp.lowConfidence;
-                    issue.mediumConfidence = temp.mediumConfidence;
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(vulnerability => {
+                for (let x = 0; x < vulnerability.length; x++) {
+                    if (vulnerability[x] == null) {
+                        vulnerability[x] = 'N/A';
+                    }
                 }
-            });
-        }
-    }).catch(error => console.error('Error fetching data:', error));
+                if (typeof vulnerability[2] == "string") {
+                    // zap returns the risk level as medium so turn it into moderate to display as moderate
+                    if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
+                    let temp_dict = {
+                        id: vulnerability[0],
+                        title: vulnerability[1],
+                        url: vulnerability[2],
+                        riskLevel: vulnerability[3],
+                        description: vulnerability[4],
+                        actionableSteps: vulnerability[5],
+                        dateScanned: vulnerability[6],
+                        highConfidence: [],
+                        mediumConfidence: [],
+                        lowConfidence: [],
+                    };
+                    fetchedIssues.push(temp_dict);
+
+                } else {
+                    if (vulnerability[3] == "Medium") vulnerability[3] = "Moderate";
+                    let temp_dict = {
+                        id: vulnerability[0],
+                        title: vulnerability[1],
+                        url: vulnerability[2][0],
+                        riskLevel: vulnerability[3],
+                        description: vulnerability[4],
+                        actionableSteps: vulnerability[5],
+                        dateScanned: vulnerability[6],
+                        highConfidence: [],
+                        mediumConfidence: [],
+                        lowConfidence: [],
+                    };
+                    fetchedIssues.push(temp_dict);
+                }
+
+            })
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+    await fetch('http://localhost:8800/returnInfo',
+        {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('data is: ', data);
+            for (let key in data) {
+                fetchedIssues.forEach((issue) => {
+                    if (key == issue.id) {
+                        let temp = data[key];
+                        issue.highConfidence = temp.highConfidence;
+                        issue.lowConfidence = temp.lowConfidence;
+                        issue.mediumConfidence = temp.mediumConfidence;
+                    }
+                });
+            }
+        }).catch(error => console.error('Error fetching data:', error));
 
     return fetchedIssues;
 }
@@ -93,34 +93,34 @@ const scanCoverageData = {
     scanParameters: {},
 };
 
-function populateScanCoverageData(){
+function populateScanCoverageData() {
     let tempArray;
     issues.forEach((issue) => {
         scanCoverageData.testsPerformed.push('Testing for ' + issue.title);
         tempArray = allSubpages(issue);
-        if (tempArray.length >=3) tempArray = [tempArray[0],tempArray[1],tempArray[2], (tempArray.length - 3).toString() + " more..."];
+        if (tempArray.length >= 3) tempArray = [tempArray[0], tempArray[1], tempArray[2], (tempArray.length - 3).toString() + " more..."];
         scanCoverageData.scanParameters[issue.title] = tempArray;
     });
 }
 
-function allSubpages(issue){
+function allSubpages(issue) {
     let allSubpages = [];
 
-        if (issue.highConfidence.length > 0){
-            issue.highConfidence.forEach((url) => {
-                allSubpages.push(url);
-            })
-        }
-        if (issue.mediumConfidence.length > 0){
+    if (issue.highConfidence.length > 0) {
+        issue.highConfidence.forEach((url) => {
+            allSubpages.push(url);
+        })
+    }
+    if (issue.mediumConfidence.length > 0) {
         issue.mediumConfidence.forEach((url) => {
             allSubpages.push(url);
         })
-        }
-        if (issue.lowConfidence.length > 0){
+    }
+    if (issue.lowConfidence.length > 0) {
         issue.lowConfidence.forEach((url) => {
             allSubpages.push(url);
         })
-        }
+    }
     return allSubpages;
 }
 
@@ -137,28 +137,55 @@ function createIssueHTML(issue) {
     let data_toggle_low = lowConfidenceid;
 
     return `
-      <section class="white-box">
+        <section class="white-box">
         <div>
-          <h3><span class="issue-circle" style="background-color: ${getRiskColor(
-        issue.riskLevel
-    )};"></span> ${issue.title}</h3>
-          <h4>URL</h4>
-          <p><a href="${issue.url}" target="_blank">${issue.url}</a></p>
-          <h4>Risk Description</h4>
-          <p>${issue.description}</p>
-          <h4>Actionable Steps</h4>
-          <p>${issue.actionableSteps}</p>
-          <h4 class="expandable-header" data-toggle=${data_toggle_high}>High Confidence (${issue.highConfidence.length}) ...</h4>
-          <p><p>
-          <div class="confidence-container" id=${highConfidenceid}>${highConfidenceHTML}</div>
-          <h4 class="expandable-header" data-toggle=${data_toggle_medium}>Medium Confidence (${issue.mediumConfidence.length}) ...</h4>
-          <p><p>
-          <div class="confidence-container" id=${mediumConfidenceid}>${mediumConfidenceHTML}</div>
-          <h4 class="expandable-header" data-toggle=${data_toggle_low}>Low Confidence (${issue.lowConfidence.length}) ...</h4>
-          <p><p>
-          <div class="confidence-container" id=${lowConfidenceid}>${lowConfidenceHTML}</div>
+            <h3><span class="issue-circle" style="background-color: ${getRiskColor(
+                issue.riskLevel
+                )};"></span> ${issue.title}</h3>
+            <h4>
+                URL
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">The reference url for the vulnerability</div>
+            </h4>
+            <p><a href="${issue.url}" target="_blank">${issue.url}</a></p>
+            <h4>
+                Risk Description
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">Description of the vulnerability detected</div>
+            </h4>
+            <p>${issue.description}</p>
+            <h4>
+                Actionable Steps
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">Steps that can be taken to resolve this vulnerability</div>
+            </h4>
+            <p>${issue.actionableSteps}</p>
+            <h4 class="expandable-header" data-toggle=${data_toggle_high}>
+                High Confidence (${issue.highConfidence.length}) ...
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">High confidence URLs of every instance of the vulnerability detected</div>
+            </h4>
+            <p>
+            <p>
+            <div class="confidence-container" id=${highConfidenceid}>${highConfidenceHTML}</div>
+            <h4 class="expandable-header" data-toggle=${data_toggle_medium}>
+                Medium Confidence (${issue.mediumConfidence.length}) ...
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">Medium confidence URLs of every instance of the vulnerability detected</div>
+            </h4>
+            <p>
+            <p>
+            <div class="confidence-container" id=${mediumConfidenceid}>${mediumConfidenceHTML}</div>
+            <h4 class="expandable-header" data-toggle=${data_toggle_low}>
+                Low Confidence (${issue.lowConfidence.length}) ...
+                <i class="fa fa-question-circle info-button" aria-hidden="true"></i>
+                <div class="info-popup">Low confidence URLs of every instance of the vulnerability detected</div>
+            </h4>
+            <p>
+            <p>
+            <div class="confidence-container" id=${lowConfidenceid}>${lowConfidenceHTML}</div>
         </div>
-      </section>
+    </section>
     `;
 }
 
@@ -173,7 +200,7 @@ function createConfidenceHTML(confidenceArray) {
 function getRiskColor(riskLevel) {
     let unclassified = "N/A";
     const riskColors = {
-        
+
         Low: "#f1c40f", // yellow
         Moderate: "#e67e22", // orange
         High: "#e74c3c", // red
@@ -224,7 +251,7 @@ function updateSummary() {
 }
 
 // allows for when all issues are shown, it sorts them from highest risk level to unclassified
-function sortIssues (filteredIssues) {
+function sortIssues(filteredIssues) {
     let highIssues = [];
     let moderateIssues = [];
     let lowIssues = [];
@@ -241,16 +268,16 @@ function sortIssues (filteredIssues) {
 
     issues = highIssues;
 
-    moderateIssues.forEach((other) =>{
+    moderateIssues.forEach((other) => {
         issues.push(other);
     })
-    lowIssues.forEach((other) =>{
+    lowIssues.forEach((other) => {
         issues.push(other);
     })
-    informationalIssues.forEach((other) =>{
+    informationalIssues.forEach((other) => {
         issues.push(other);
     })
-    unclassifiedIssues.forEach((other) =>{
+    unclassifiedIssues.forEach((other) => {
         issues.push(other);
     })
 }
@@ -261,7 +288,7 @@ function renderIssues(filteredIssues, filter) {
         .map((issue) => createIssueHTML(issue))
         .join("");
 
-// adding event listeners whenever the issues are rendered
+    // adding event listeners whenever the issues are rendered
     document.querySelectorAll('.expandable-header').forEach(header => {
         header.addEventListener('click', function () {
             var targetId = this.dataset.toggle;
@@ -357,13 +384,24 @@ function renderScanCoverage() {
     scanParametersContainer.innerHTML = scanParametersHTML;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const infoButtons = document.querySelectorAll('.info-button');
+    
+    infoButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const popup = button.nextElementSibling;
+        popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+      });
+    });
+  });  
+
 document.addEventListener('DOMContentLoaded', async () => {
     issues = await fetchInfo();
     sortIssues(); // making the informational display at the top
     populateScanCoverageData();
     const dropdown = document.getElementById("risk-level-dropdown");
     dropdown.addEventListener("change", function () {
-        console.log("the value of this value is " +this.value);
+        console.log("the value of this value is " + this.value);
         filterIssues(this.value);
     });
     filterIssues("All"); // Render issues when the page is first loaded
