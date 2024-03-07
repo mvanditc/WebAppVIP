@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let $timeElapsed = document.getElementById('scanPage-time-elapsed');
     let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
     let $scanStatus = document.getElementById('scanPage-scan-status');
+    let $timeLimitMessage = document.getElementById('scanPage-time-limit-message');
+    let $timeLimit = document.getElementById('scanPage-time-limit-text');
 
     let $informationalRisk = document.getElementById('scanPage-informational-risk');
     let $lowRisk = document.getElementById('scanPage-low-risk');
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let $unclassifiedRisk = document.getElementById('scanPage-unclassified-risk');
 
     // Time remaining in seconds
-    let globalTerminationTime = 10; 
+    let globalTerminationTime = 8; 
     let terminationTime = globalTerminationTime;
 
     let globalElapsedTime = 0;
@@ -33,6 +35,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Keeps track of the scans in queue
     let scanQueue = [];
+
+    $timeLimit.textContent = `Time Limit: ${getFormattedTime(globalTerminationTime)}`;
 
     // Called when user refreshes or leaves the page
     window.addEventListener('beforeunload', async function (event) {
@@ -87,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             setScanStatus(savedScanDetails['status']);
             $scanTarget.textContent = savedScanDetails['url'];
             $viewDetailsButton.style.display = 'block';
-            $timeElapsed.textContent = getFormattedTimeElapsed(savedScanDetails['timeElapsed']);
+            $timeElapsed.textContent = getFormattedTime(savedScanDetails['timeElapsed']);
             $timeElapsed.style.color = 'white';
             
             $progressBar.style.display = 'block';
@@ -98,6 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             $progressBar.textContent = `[ ${filledChars}${dashChars} ]`;
     
             $scanProgress.textContent = `${savedScanDetails['progressBar']['percentage']}%`;
+            if (savedScanDetails['progressBar']['percentage'] !== 100) {
+                $timeLimitMessage.style.display = 'block';
+                $timeLimitMessage.textContent = '( Time Limit Exceeded - Scan Terminated Prematurely )';
+            }
+            else {
+                $timeLimitMessage.style.display = 'none';
+            }
         }
         // Scan was not performed so start the scan process
         else {
@@ -107,9 +118,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             $highRisk.textContent = '-';
             $unclassifiedRisk.textContent = '-';
             $scanProgress.textContent = '-';
+            $timeLimitMessage.style.display = 'none';
             $timeElapsed.textContent = '-';
             $timeElapsed.style.color = 'white';
             $viewDetailsButton.style.display = 'none';
+            $timeLimit.textContent= '-';
     
             sendUrlForScan();
         }
@@ -156,7 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 terminationTime = globalTerminationTime;
                 scanTerminated = false;
         
-                $timeElapsed.textContent = getFormattedTimeElapsed(elapsedTime);
+                $timeElapsed.textContent = getFormattedTime(elapsedTime);
+                $timeLimitMessage.style.display = 'none';
 
                 const savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
                 if (!savedScanDetails['timeElapsed']) {
@@ -166,19 +180,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Scan timer
                 const timerInterval = setInterval(() => {
                     elapsedTime++;
-                    $timeElapsed.textContent = getFormattedTimeElapsed(elapsedTime);
-                    savedScanDetails['timeElapsed'] = elapsedTime;
-                    sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
+                    $timeElapsed.textContent = getFormattedTime(elapsedTime);
+
+                    if (!scanTerminated) {
+                        let savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+                        savedScanDetails = {
+                            ...savedScanDetails,
+                            timeElapsed: elapsedTime
+                        };
+                        sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
+
+                        if (elapsedTime >= terminationTime) {
+                            scanTerminated = true;
+                            $timeLimitMessage.style.display = 'block';
+                            $timeLimitMessage.textContent = `( Exceeded scan time limit. Fetching results... )`;
+                            $timeLimitMessage.style.color = '#ababab';
+            
+                            clearInterval(timerInterval); 
+                            terminateScan({scanId: scanId, reason: 'timeout'});
+                        }
+                    }
+                    // savedScanDetails['timeElapsed'] = elapsedTime;
+                    // sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
         
                     // Timer reached 0
-                    if (elapsedTime >= terminationTime) {
-                        scanTerminated = true;
-                        $timeElapsed.textContent = `Exceeded scan time limit. Fetching results...`;
-                        $timeElapsed.style.color = '#ababab';
-        
-                        clearInterval(timerInterval); 
-                        terminateScan({scanId: scanId, reason: 'timeout'});
-                    }
                 }, 1000)
         
                 setScanStatus('Scanning...');
@@ -191,8 +216,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const scanUpdated = await updateScanProgress(progressData, scanId);
                     if (scanUpdated) {
                         clearInterval(timerInterval); 
-                        $timeElapsed.textContent = 'Successfully completed scan within time limit. Fetching results...';
-                        $timeElapsed.style.color = '#ababab';
+                        $timeLimitMessage.style.display = 'block';
+                        $timeLimitMessage.textContent = '( Successfully completed scan within time limit. Fetching results... )';
+                        $timeLimitMessage.style.color = '#ababab';
                     }
                 }
                 else {
@@ -208,7 +234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Convert seconds to minutes:seconds format
-    function getFormattedTimeElapsed(seconds) {
+    function getFormattedTime(seconds) {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         const formattedTime = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
@@ -362,15 +388,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const params = new URLSearchParams({ scanId, inputUrl, sessionId });
         const response = await fetch(`http://localhost:8800/updateScanResults/?${params}`);
         const result = await response.json();
+        const savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
     
         if (response.status === 200) {
             const scanData = await getScanResultsFromFile();
             if (scanData !== null) {
-                // updateScanResultsList(scanData);
-                
-                // $timeElapsed.textContent = '-'; 
                 $timeElapsed.style.color = 'white';
-                $timeElapsed.textContent = getFormattedTimeElapsed(savedScanDetails['timeElapsed']);
+                $timeElapsed.textContent = getFormattedTime(savedScanDetails['timeElapsed']);
+                if (savedScanDetails['progressBar']['percentage'] !== 100) {
+                    $timeLimitMessage.style.display = 'block';
+                } 
+                else {
+                    $timeLimitMessage.style.display = 'none';
+                }
                 $progressBar.style.display = 'block';
     
                 const riskLevelsArray = result['riskLevelsArray'];
@@ -388,6 +418,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 $unclassifiedRisk.textContent = unclassifiedRisk;
     
                 $viewDetailsButton.style.display = 'block';
+
+                if (savedScanDetails['progressBar']['percentage'] !== 100) {
+                    $timeLimitMessage.style.display = 'block';
+                    $timeLimitMessage.textContent = '( Time Limit Exceeded - Scan Terminated Prematurely )';
+                }
+                else {
+                    $timeLimitMessage.style.display = 'none';
+                }
     
                 setScanStatus('Complete');
     
