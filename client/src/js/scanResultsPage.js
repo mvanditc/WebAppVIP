@@ -12,7 +12,7 @@ async function fetchInfo(){
     }
     
     const params = new URLSearchParams({ sessionId })
-    await fetch(`http://localhost:8800/returnScanIds/?${params}`,
+    await fetch(`http://localhost:8800/returnScanIDs/?${params}`,
     {
         method: 'GET'
     })
@@ -68,6 +68,7 @@ await fetch('http://localhost:8800/returnInfo',
     })
     .then(response => response.json())
     .then(data => {
+        console.log('data is: ', data);
         for (let key in data) {
             fetchedIssues.forEach((issue) => {
                 if (key == issue.id) {

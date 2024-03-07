@@ -246,6 +246,7 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         const fetchedAlerts = resultsResponse.data.alerts;
         const currentData = JSON.parse(fs.readFileSync(scanDataPath));
 
+        returnInfo = {};
         populate_returnInfo(fetchedAlerts);
 
         // Create a Set to track unique alert identifiers (pluginId)
