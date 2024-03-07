@@ -238,6 +238,7 @@ function getVulnerability(sessionId) {
 // Get the scan results from zap for given scan id
 const fetchScanResults = async (scanRequest, scanId, sessionId) => {
     try {
+        console.log('scan request is: ', scanRequest);
         const userIP = scanRequest.ip;
         const url = scanRequest.url;
 

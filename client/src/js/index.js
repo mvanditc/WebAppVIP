@@ -119,7 +119,6 @@ function getNextScanId(scanQueue) {
 
 function displayQueue() {
   currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
-
   if (Object.keys(currentScan).length > 0) {
     scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
     $submitBtn.disabled = true;
