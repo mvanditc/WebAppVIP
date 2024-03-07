@@ -1,6 +1,6 @@
-# Things to do after after you clone:
+# First steps after cloning the repo:
 
-1) Create the file 'config.json' inside the 'server' folder. In this file, paste this code (make sure to paste your OWN api key from ZAP):
+1) Create the file 'config.json' in the 'server' folder. In this file, paste this code (make sure to paste your OWN api key from ZAP):
 
 {
   "apiKey": "INSERT_YOUR_API_KEY_HERE"
@@ -12,7 +12,7 @@
 
 3) Create the file 'webScraperResults1.json' in the 'database' folder and paste the json data. This json data is a file, please ask one of the repo members for the file details that you will have to copy and paste.
 
-# To run the code:
+# How to start the application:
 
 1) Open two terminals.
 
