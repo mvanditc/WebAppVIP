@@ -28,22 +28,37 @@ function checkScanQueueLength() {
 }
 
 window.addEventListener('storage', async function (event) {
-  checkScanQueueLength();
   if (event.key === 'CURRENT_SCAN') {
     currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    checkScanQueueLength();
+    handleStorageEvent();
   }
   if (event.key === 'SCAN_QUEUE') {
-    scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
-
+    scanQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || {};
     currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
-    if (Object.keys(currentScan).length > 0) {
-      if (scanQueue[scanQueue.length - 2].status === 'Complete') {
-        await userWithinScanLimit(currentScan.url);
+    checkScanQueueLength();
+    handleStorageEvent();
+  }
+});
+
+function handleStorageEvent() {
+  const lastCompletedScansArray = scanQueue.filter((scanObj) => scanObj.status === 'Complete');
+  const lastCompletedScan = lastCompletedScansArray.pop();
+
+  if (lastCompletedScan !== undefined) {
+    const currentScanIndex = scanQueue.findIndex((scanObj) => scanObj.id === currentScan.id);
+    const previousScans = currentScanIndex !== -1 ? scanQueue.slice(0, currentScanIndex) : scanQueue;
+
+    const isScanning = previousScans.some((scanObj) => scanObj.status === 'Scanning');
+
+    if (!isScanning) {
+      const nextScanInQueue = scanQueue.find((scanObj) => scanObj.status === 'Scanning');
+      if (currentScan.id === nextScanInQueue.id) {
         window.location.href = `scanPage.html?url=${encodeURIComponent(currentScan.url)}`;
       }
     }
   }
-});
+}
 
 if ($form) {
   $form.addEventListener('submit', async (event) => {
@@ -60,7 +75,7 @@ if ($form) {
       const withinLimit = await userWithinScanLimit(url);
       if (withinLimit) {
         const currentScanObj = {
-          id: String(getNextScanId(scanQueue)),
+          id: getNextScanId(scanQueue),
           url: url,
           status: 'Scanning'
         };
@@ -91,8 +106,13 @@ if ($form) {
 }
 
 function getNextScanId(scanQueue) {
-  const maxId = scanQueue.reduce((max, obj) => Math.max(max, obj.id), 0);
-  return maxId + 1;
+  if (scanQueue.length > 0) {
+    const lastId = scanQueue[scanQueue.length - 1].id;
+    const nextId = String(Number(lastId) + 1);
+    return nextId;
+  } else {
+    return '1';
+  }
 }
 
 function displayQueue() {
@@ -109,12 +129,10 @@ function displayQueue() {
     const $cancelButton = document.createElement('button');
     $cancelButton.textContent = 'Cancel Scan';
   
-    if (scanQueue.length === 2) {
-      $scanPosition.textContent = `Position: 1`;
-    }
-    else {
-      $scanPosition.textContent = `Position: ${currentScan.id - 1}`;
-    }
+    const scanningQueue = scanQueue.filter((scanObj) => scanObj.status === 'Scanning');
+    const currentScanIndex = scanningQueue.findIndex((scanObj) => scanObj.id === currentScan.id);
+    
+    $scanPosition.textContent = `Position: ${currentScanIndex}`;
 
     $scanPosition.style.marginRight = '5px';
     
@@ -135,29 +153,48 @@ function displayQueue() {
   
     Object.assign($scanDiv.style, scanDivStyles);
   
-    $cancelButton.addEventListener('click', () => {
-      scanQueue = scanQueue.filter(scanObj => scanObj.id !== currentScan.id);
-  
-      scanQueue.forEach((scanObj, index) => {
-        scanObj.id = index + 1;
-      });
-  
-      localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
-      sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({}));
-      
-      $submitBtn.disabled = false;
-      
-      while ($scanQueue.firstChild) {
-        $scanQueue.removeChild($scanQueue.firstChild);
-      }
-      checkScanQueueLength();
+    $cancelButton.addEventListener('click', async () => {
+      await removeScanFromQueue(currentScan);
     })
     
     $scanQueue.appendChild($scanDiv);
   }
 }
 
+async function removeScanFromQueue(currentScan) {
+  try {
+    const response = await fetch(`http://localhost:8800/removeScanFromQueue/${currentScan.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 200) {
+      scanQueue = scanQueue.filter(scanObj => scanObj.id !== scanIdToRemove);
+
+      localStorage.setItem('SCAN_QUEUE', JSON.stringify(scanQueue));
+      sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({}));
+
+      $submitBtn.disabled = false;
+
+      while ($scanQueue.firstChild) {
+        $scanQueue.removeChild($scanQueue.firstChild);
+      }
+
+      checkScanQueueLength();
+    } else {
+      console.error('Failed to remove scan from the server');
+    }
+  } 
+  catch (error) {
+    console.error('Error during the DELETE request:', error);
+  }
+}
+
 async function userWithinScanLimit(inputUrl) {
+  currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+  console.log('id is: ', currentScan.id);
   try {
     // post request format
     const response = await fetch('http://localhost:8800/addScanToQueue', {
@@ -165,7 +202,7 @@ async function userWithinScanLimit(inputUrl) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ url: inputUrl }),
+      body: JSON.stringify({ url: inputUrl, id: currentScan.id }),
     });
     
     if (response.status === 200) {
