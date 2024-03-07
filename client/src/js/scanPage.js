@@ -1,9 +1,11 @@
 // JavaScript used for the Scanning Page's functionality.
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // HTML elements
     let $scanTarget = document.getElementById('scanPage-scan-target');
     let $progressBar = document.getElementById('scanPage-progressBar');
     let $scanProgress = document.getElementById('scanPage-progressBar-percentage');
+    let $timeElapsed = document.getElementById('scanPage-time-elapsed');
     let $viewDetailsButton = document.getElementById('scanPage-view-details-container');
     let $scanStatus = document.getElementById('scanPage-scan-status');
 
@@ -13,46 +15,66 @@ document.addEventListener('DOMContentLoaded', async () => {
     let $highRisk = document.getElementById('scanPage-high-risk');
     let $unclassifiedRisk = document.getElementById('scanPage-unclassified-risk');
 
-    let $timeElapsed = document.getElementById('scanPage-time-elapsed');
-
-    let globalTerminationTime = 10; // scan time limit in seconds
+    // Time remaining in seconds
+    let globalTerminationTime = 10; 
     let terminationTime = globalTerminationTime;
+
+    let globalElapsedTime = 0;
+    let elapsedTime = globalElapsedTime;
+
+    // Represents how often to check scan progress
     let statusCheckTimer = 1;
+
+    // Used for boolean checks, set to true whenever scan is terminated
     let scanTerminated = false;
+
+    // The current scan id which can be used anywhere
     let globalScanId = null;
+
+    // Keeps track of the scans in queue
     let scanQueue = [];
 
+    // Called when user refreshes or leaves the page
     window.addEventListener('beforeunload', async function (event) {
         const currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
         const scanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
       
-        if (Object.keys(scanDetails).length > 0 && currentScan.status === 'Scanning') {
+        // Show dialog if user wants to leave page while scan is in progress
+        // First check: Wait for scan details to populate when the page is loaded. Second check: Don't show the dialog when submitting another scan on the main page. Third check: Check if the scan is in progress
+        if (Object.keys(scanDetails).length > 0 && scanDetails.status !== 'Complete' && currentScan.status === 'Scanning') {
             const confirmationMessage = 'Are you sure you want to leave?';
             event.returnValue = confirmationMessage; 
             return confirmationMessage; 
         }
     });
 
+    // Refresh the page
     window.addEventListener('unload', function () {
         scanTerminated = true;
         terminateScan({scanId: globalScanId, reason: 'userAction'});
     });
 
+    // Click scan target to open site in new tab
     if ($scanTarget) {
         $scanTarget.addEventListener('click', () => {
             window.open(inputUrl, '_blank');
         })
     }
 
+    // Get the submitted url from search bar
     const urlParams = new URLSearchParams(window.location.search);
     const inputUrl = urlParams.get('url');
 
     let currentScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
+    // User submitted new scan so status is Scanning, start the scan process
     if (currentScan.status === 'Scanning') {
         sendUrlForScan();
     }
+    // Scan status is complete so check next conditions
     else {
         let savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+
+        // Scan was performed and its details are saved in session storage so load those details when loading this page again
         if (Object.keys(savedScanDetails).length > 0) {
             const vulnerabilities = savedScanDetails['vulnerabilities'];
     
@@ -65,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             setScanStatus(savedScanDetails['status']);
             $scanTarget.textContent = savedScanDetails['url'];
             $viewDetailsButton.style.display = 'block';
-            $timeElapsed.textContent = '-';
+            $timeElapsed.textContent = getFormattedTimeElapsed(savedScanDetails['timeElapsed']);
             $timeElapsed.style.color = 'white';
             
             $progressBar.style.display = 'block';
@@ -77,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
             $scanProgress.textContent = `${savedScanDetails['progressBar']['percentage']}%`;
         }
+        // Scan was not performed so start the scan process
         else {
             $informationalRisk.textContent = '-'
             $lowRisk.textContent = '-';
@@ -88,44 +111,64 @@ document.addEventListener('DOMContentLoaded', async () => {
             $timeElapsed.style.color = 'white';
             $viewDetailsButton.style.display = 'none';
     
-            // first function that begins the scan process
             sendUrlForScan();
         }
     }
 
+    // Set scan status that is shown on the page
     function setScanStatus(status) {
         while ($scanStatus.firstChild) {
             $scanStatus.firstChild.remove();
         }
         const statusSpan = document.createElement('span');
         statusSpan.textContent = status;
-        statusSpan.style.color = status === 'Complete' ? 'rgb(0, 255, 0)' : 'rgb(71, 182, 255)';
+        if (status === 'Complete') {
+            statusSpan.style.color = 'rgb(0, 255, 0)';
+        }
+        else if (status === 'Scanning...') {
+            statusSpan.style.color = 'rgb(71, 182, 255)';
+        }
+        else if (status === 'Terminated') {
+            statusSpan.style.color = 'rgb(255, 0, 0)';
+        }
         $scanStatus.appendChild(statusSpan);
     }
     
+    // Main function to start the scan process
     async function sendUrlForScan() {
         try {
             const response = await fetch('http://localhost:8800/submit');
             const result = await response.json();
 
             if (response.status === 200) {
-                $scanTarget.textContent = inputUrl;
-                scanQueue.push(inputUrl);
                 const scanId = result.scanId;
+                $scanTarget.textContent = inputUrl;
+
+                // Push the url into the scan queue
+                scanQueue.push(inputUrl);
         
-                // Once the scan id is received, set the global variable to track this so we can use it in other function
+                // Once scan id is received, set the global variable
                 globalScanId = scanId;
         
                 terminationTime = globalTerminationTime;
                 scanTerminated = false;
         
-                $timeElapsed.textContent = getFormattedTimeElapsed(terminationTime);
+                $timeElapsed.textContent = getFormattedTimeElapsed(elapsedTime);
+
+                const savedScanDetails = JSON.parse(sessionStorage.getItem('SCAN_DETAILS')) || {};
+                if (!savedScanDetails['timeElapsed']) {
+                    savedScanDetails['timeElapsed'] = {};
+                }
                 
+                // Scan timer
                 const timerInterval = setInterval(() => {
-                    terminationTime--;
-                    $timeElapsed.textContent = getFormattedTimeElapsed(terminationTime);
+                    elapsedTime++;
+                    $timeElapsed.textContent = getFormattedTimeElapsed(elapsedTime);
+                    savedScanDetails['timeElapsed'] = elapsedTime;
+                    sessionStorage.setItem('SCAN_DETAILS', JSON.stringify(savedScanDetails));
         
-                    if (terminationTime <= 0) {
+                    // Timer reached 0
+                    if (elapsedTime >= terminationTime) {
                         scanTerminated = true;
                         $timeElapsed.textContent = `Exceeded scan time limit. Fetching results...`;
                         $timeElapsed.style.color = '#ababab';
@@ -136,12 +179,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, 1000)
         
                 setScanStatus('Scanning...');
+
+                // Clear scan details if user submits another scan on same tab
+                sessionStorage.setItem('SCAN_DETAILS', JSON.stringify({}));
         
-                // Get the progress from fetchScanProgress function
+                // Call function that gets the scan progress
                 const progressData = await fetchScanProgress(scanId);
         
                 if (progressData !== null) {
-                    // update scan progress on page
+                    // First call to update the scan progress, after this the function is called multiple times to update scan progress seen on the page
                     const scanUpdated = await updateScanProgress(progressData, scanId);
                     if (scanUpdated) {
                         clearInterval(timerInterval); 
@@ -162,12 +208,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     // Convert seconds to minutes:seconds format
-        function getFormattedTimeElapsed(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            const formattedTime = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-            return formattedTime;
-        }
+    function getFormattedTimeElapsed(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        const formattedTime = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        return formattedTime;
+    }
     
     // Get scan results stored in local file
     async function getScanResultsFromFile() {
@@ -182,35 +228,60 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     
+    // Terminate the scan
     async function terminateScan({ scanId, reason }) {
+        // Check if there exists a scan to be terminated, and if value of scanTerminated is true
         if (globalScanId !== null && scanTerminated) {
             try {
                 const params = new URLSearchParams({ scanId, reason });
                 const response = await fetch(`http://localhost:8800/stopScan/?${params}`);
         
                 if (response.status === 200) {
-                    reason === 'timeout' && await fetchScanResults(scanId);
+                    // Reason timeout means the scan was actually performed, and the user did not leave or refresh the page. Fetch the results in this case
+                    if (reason === 'timeout') {
+                        await fetchScanResults(scanId);
+                    } 
+                    else if (reason === 'userAction') {
+                        handleUserActionPageUnload();
+                    }
         
                     updateCurrentScanInStorage();
+
+                    // fetchScanResults will call this function so avoid executing it twice
                     reason !== 'timeout' && updateScanQueueInStorage();
                 }
             } catch (error) {
                 console.log("Error terminating scan: ", error);
+
+                if (reason === 'userAction') {
+                    handleUserActionPageUnload();
+                }
+
+                // Even upon error, update the scans in storage
                 updateCurrentScanInStorage();
                 updateScanQueueInStorage();
             }
         }
     }
+
+    function handleUserActionPageUnload() {
+        $viewDetailsButton.style.display = 'none';
+        setScanStatus('Terminated');
+    }
     
+    // Update current scan in session storage
     function updateCurrentScanInStorage() {
         const savedScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
         if (Object.keys(savedScan).length > 0) {
             const url = savedScan.url;
             let id = currentScan.id;
+
+            // Set current scan status to complete
             sessionStorage.setItem('CURRENT_SCAN', JSON.stringify({ id: id, url: url, status: 'Complete' }));
         }
     }
 
+    // Update scan queue in local storage
     function updateScanQueueInStorage() {
         const savedScan = JSON.parse(sessionStorage.getItem('CURRENT_SCAN')) || {};
         const savedQueue = JSON.parse(localStorage.getItem('SCAN_QUEUE')) || [];
@@ -297,8 +368,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (scanData !== null) {
                 // updateScanResultsList(scanData);
                 
-                $timeElapsed.textContent = '-'; 
+                // $timeElapsed.textContent = '-'; 
                 $timeElapsed.style.color = 'white';
+                $timeElapsed.textContent = getFormattedTimeElapsed(savedScanDetails['timeElapsed']);
                 $progressBar.style.display = 'block';
     
                 const riskLevelsArray = result['riskLevelsArray'];
