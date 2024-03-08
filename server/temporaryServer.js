@@ -194,7 +194,6 @@ app.get('/updateScanResults', async (req, res) => {
     const scanId = req.query.scanId;
     const scanRequest = scanQueue[0];
 
-    console.log('scan queue is: ', scanQueue);
     const sessionId = req.query.sessionId;
 
     // fetchScanResults will update the file for scanned results and return boolean
@@ -227,6 +226,7 @@ app.get('/returnScanIDs', (req,res) => {
 function getVulnerability(sessionId) {
     const vulnerabilityNames = [];
     const pluginIdsArray = globalPluginIdsArray[sessionId];
+
     pluginIdsArray.forEach(id => {
         for (let i = 0; i <= 161; i++) {
             if (vulnerabilityResultsPath[i].alertID == id){
@@ -235,13 +235,14 @@ function getVulnerability(sessionId) {
             }
         }
     })
+
+    console.log('answer is: ', vulnerabilityNames.length);
     return vulnerabilityNames;
 }
 
 // Get the scan results from zap for given scan id
 const fetchScanResults = async (scanRequest, scanId, sessionId) => {
     try {
-        console.log('scan request is: ', scanRequest);
         const userIP = scanRequest.ip;
         const url = scanRequest.url;
 
@@ -302,6 +303,8 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         globalPluginIdsArray[sessionId] = pluginIdsArray;
 
         const vulnerabilities = getVulnerability(sessionId);
+
+
         const riskLevelsArray = {
             'Informational': 0,
             'Low': 0,
@@ -377,7 +380,6 @@ app.get('/stopScan', async (req, res) => {
 
     stopReason !== 'timeout' && scanQueue.shift();
 
-    console.log('scan queue is: ', scanQueue);
     try {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
         console.log('Scan stopped successfully:', stopResponse.data);
