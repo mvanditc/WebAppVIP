@@ -12,6 +12,7 @@ const port = 8800;
 const config = require('./config.json');
 const scanDataPath = path.join(__dirname, "../database/data.json");
 const userDataPath = path.join(__dirname, "../database/user.json");
+const counterFilePath = path.join(__dirname, "../database/counter.txt");
 const vulnerabilityResultsPath = require('../database/webScraperResults1.json');
 const apiKey = config.apiKey;
 
@@ -35,30 +36,41 @@ app.get("/data", (req, res) => {
     res.json(data);
 });
 
+app.delete("/removeScanFromQueue/:id", async (req, res) => {
+    const id = req.params.id;
+    scanQueue = scanQueue.filter((scanObj) => scanObj.id !== id);
+    res.status(200).send();
+})
+
+app.get("/checkUserWithinScanLimit", async (req, res) => {
+    const userIP = req.ip;
+    const canProceed = await validateUser(userIP);
+
+    if (canProceed) {
+        res.status(200).send();
+    }
+    else {
+        console.log("User has reached the limit of scans allowed in the past 24 hours.");
+        res.status(403).json({ error: "Limit reached" });
+    }
+})
+
 // Perform scan using zap spider scan api
 app.post("/addScanToQueue", async (req, res) => {
     const url = req.body.url;
     const userIP = req.ip;
+    const id = req.body.id;
 
     try {
-        // make sure user is allowed to perform scan before adding request to the queue
-        const canProceed = await validateUser(userIP);
+        const scanRequest = { ip: userIP, url: url, id: id };
 
-        if (canProceed) {
-            // Create scan request object
-            const scanRequest = { ip: userIP, url: url };
+        // Add new scan request to the queue
+        scanQueue.push(scanRequest);
 
-            // Add new scan request to the queue
-            scanQueue.push(scanRequest);
-
-            res.status(200).json({ url: url });
-        }
-        else {
-            console.log("User has reached the limit of scans allowed in the past 24 hours.");
-            res.status(403).json({ error: "Limit reached" });
-        }
+        res.status(200).json({ url: url });
     } catch (error) {
-        console.log('Error with submit button, ', error);
+        console.log('Error with adding scan to queue, ', error);
+        res.status(403).json({ error: 'Error adding scan to queue' });
     }
 });
 
@@ -148,7 +160,7 @@ const checkScanStatus = async (scanRequest, scanId) => {
     try {
         const timeout = 20000; // Timeout after 20 seconds
         const interval = 2000; // Check status every 2 seconds
-        let elapsedTime = 0;
+        let elapsedTime = 0; 
 
         while (elapsedTime < timeout) {
             const statusResponse = await axios.get(`http://localhost:8080/JSON/spider/view/status/?scanId=${scanId}&apikey=${apiKey}`);
@@ -181,6 +193,8 @@ app.get('/updateScanResults', async (req, res) => {
     // Access the query parameters sent from frontend
     const scanId = req.query.scanId;
     const scanRequest = scanQueue[0];
+
+    console.log('scan queue is: ', scanQueue);
     const sessionId = req.query.sessionId;
 
     // fetchScanResults will update the file for scanned results and return boolean
@@ -227,6 +241,7 @@ function getVulnerability(sessionId) {
 // Get the scan results from zap for given scan id
 const fetchScanResults = async (scanRequest, scanId, sessionId) => {
     try {
+        console.log('scan request is: ', scanRequest);
         const userIP = scanRequest.ip;
         const url = scanRequest.url;
 
@@ -235,6 +250,7 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         const fetchedAlerts = resultsResponse.data.alerts;
         const currentData = JSON.parse(fs.readFileSync(scanDataPath));
 
+        returnInfo = {};
         populate_returnInfo(fetchedAlerts);
 
         // Create a Set to track unique alert identifiers (pluginId)
@@ -253,6 +269,28 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         }).map(alert => ({
             pluginId: alert.pluginId,
         }));
+
+        // Total number of vulnerabilities
+        const totalIssues = results.length;
+        let currentCount = 0;
+        try {
+            const currentCountStr = await fs.promises.readFile(counterFilePath, 'utf-8');
+            currentCount = parseInt(currentCountStr, 10);
+            if (isNaN(currentCount)) {
+                currentCount = 0;
+            }
+            currentCount += totalIssues;
+            await fs.writeFile(counterFilePath, currentCount.toString(), (err) => {
+                if (err) {
+                    console.error('Error updating counter:', err);
+                } else {
+                    console.log('Counter updated successfully');
+                }
+            });            
+        } catch (error) {
+            console.error('Error updating counter:', error);
+        }
+
         await sendScanData(results);
         currentData.push({ userIP, url, scanId, results });
         await fs.promises.writeFile(scanDataPath, JSON.stringify(currentData, null, 2));
@@ -339,6 +377,7 @@ app.get('/stopScan', async (req, res) => {
 
     stopReason !== 'timeout' && scanQueue.shift();
 
+    console.log('scan queue is: ', scanQueue);
     try {
         const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${scanId}&apikey=${apiKey}`);
         console.log('Scan stopped successfully:', stopResponse.data);

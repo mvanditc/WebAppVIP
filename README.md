@@ -1,6 +1,6 @@
-# Things to do after after you clone:
+# First steps after cloning the repo:
 
-1) Create the file 'config.json' inside the 'server' folder. In this file, paste this code (make sure to paste your OWN api key from ZAP):
+1) Create the file 'config.json' in the 'server' folder. In this file, paste this code (make sure to paste your OWN api key from ZAP):
 
 {
   "apiKey": "INSERT_YOUR_API_KEY_HERE"
@@ -10,15 +10,23 @@
 
 []
 
-3) Create the file 'webScraperResults1.json' to the 'database' folder and paste the json data. This json data is a file, please ask one of the repo members for the file details that you will have to copy and paste.
+3) Create the file 'webScraperResults1.json' in the 'database' folder and paste the json data. This json data is a file, please ask one of the repo members for the file details that you will have to copy and paste.
 
-# To run the code:
+# How to start the application:
 
 1) Open two terminals.
 
 2) In the first terminal, type the command 'python3 -m http.server'. This should give the message 'Serving HTTP on :: port YOUR_PORT (http://[::]:YOUR_PORT/) ...'
 
 3) In the second terminal, cd into the folder 'server'. Here, run 'npm install'. Then run the command 'npx nodemon temporaryServer.js'. This will start the backend.
+
+# How to fix problems if you encounter any:
+
+1) Restart the server. This is where you typed 'npx nodemon temporaryServer.js.
+
+2) Clear browsing data.
+
+3) Refresh all tabs you have open.
 
 # Important Notes (Read this before you start making changes):
 

@@ -44,7 +44,8 @@
             </div>
             <div id="resourcesHamburgbutton" class="hamburg-normal-toplevel-button prevent-select">
                 <span class="hamburg-toplevel-chevron"><i id="hamburgChevron"
-                        class="fa-solid fa-chevron-left fa-xs"></i></span> Resources
+                        class="fa-solid fa-chevron-left fa-xs"></i></span>
+                Resources
             </div>
             <div id="hamburgSubListContainer" class="hamburg-sublist">
                 <div id="techUsedHamburgbutton" class="hamburg-sublist-item prevent-select">Technology Used</div>
@@ -92,28 +93,34 @@
                     <p id="scanPage-progressBar-percentage"></p>
                 </div>
             </div>
-            <div id="scanPage-time-elapsed-container">
-                <p id="scanPage-time-elapsed-text">Time Elapsed:&nbsp</p>
-                <p id="scanPage-time-elapsed"></p>
+            <div id="scanPage-time-elapsed-outer-container">
+                <p id="scanPage-time-limit-text">Time Limit: &nbsp</p>
+                <div id="scanPage-time-elapsed-container">
+                    <div id="scanPage-time-elapsed-text-container">
+                        <p id="scanPage-time-elapsed-text">Time Elapsed:&nbsp</p>
+                        <p id="scanPage-time-elapsed"></p>
+                    </div>
+                    <p id="scanPage-time-limit-message"></p>
+                </div>
             </div>
             <div id="scanPage-vulnerabilities-container">
                 <p id="scanPage-vulnerabilities-found-title">Vulnerabilities Found:</p>
                 <div id="scanPage-risks">
                     <div class="scanPage-risk-container">
-                        <p>Informational Risk:&nbsp</p>
-                        <p id="scanPage-informational-risk">-</p>
-                    </div>
-                    <div class="scanPage-risk-container">
-                        <p>Low Risk:&nbsp</p>
-                        <p id="scanPage-low-risk">-</p>
+                        <p>High Risk:&nbsp</p>
+                        <p id="scanPage-high-risk">-</p>
                     </div>
                     <div class="scanPage-risk-container">
                         <p>Moderate Risk:&nbsp</p>
                         <p id="scanPage-medium-risk">-</p>
                     </div>
                     <div class="scanPage-risk-container">
-                        <p>High Risk:&nbsp</p>
-                        <p id="scanPage-high-risk">-</p>
+                        <p>Low Risk:&nbsp</p>
+                        <p id="scanPage-low-risk">-</p>
+                    </div>
+                    <div class="scanPage-risk-container">
+                        <p>Informational Risk:&nbsp</p>
+                        <p id="scanPage-informational-risk">-</p>
                     </div>
                     <div class="scanPage-risk-container">
                         <p>Unclassified Risk:&nbsp</p>
@@ -122,7 +129,9 @@
                 </div>
             </div>
             <div id="scanPage-view-details-container">
-                <a href="scanResultsPage.html">view details</a>
+                <a href="scanResultsPage.html">
+                    <button class="details-button">View Details</button>
+                </a>
             </div>
         </div>
     </div>

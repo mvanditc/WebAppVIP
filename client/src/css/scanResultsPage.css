@@ -106,7 +106,7 @@ a {
   border-radius: 10px;
   padding: 5px 20px 20px 20px;
   margin-bottom: 20px; /* Spacing between multiple issue boxes */
-  page-break-inside: avoid; /* Prevents break inside sections */
+  word-break: break-all;
   page-break-before: auto; /* Break before each section */
 }
 
@@ -121,6 +121,7 @@ a {
   color: var(--text-color);
   font-size: 1.25rem;
   margin: 15px 0 10px 0;
+  word-break: break-all;
 }
 
 .white-box h4 {
@@ -128,6 +129,7 @@ a {
   margin: 10px 0 0;
   font-weight: bold;
   padding-top: 15px;
+  word-break: break-all;
 }
 
 .white-box h5 {
@@ -135,11 +137,13 @@ a {
   margin: 10px 0 0;
   font-weight: bold;
   padding-top: 0px;
+  word-break: break-all;
 }
 
 p {
   padding-top: 5px;
   margin: 0;
+  word-break: break-all;
 }
 
 /* Findings Section Drop Down Filter Menu */
@@ -175,17 +179,20 @@ p {
   justify-content: space-between; /* Space items horizontally */
   align-items: flex-start; /* Align items at the top */
   flex-wrap: wrap; /* Allow items to wrap to the next row on smaller screens */
+  word-break: break-all;
 }
 
 .scan-coverage div {
   flex: 0 0 calc(50% - 10px); /* Make each item take up 50% of the width with some spacing */
   margin-right: 10px; /* Add spacing between columns */
+  word-break: break-all;
 }
 
 .scan-coverage p {
   font-size: 1rem;
   margin: 5px 0;
   flex: 0 0 100%; /* Make sure each item takes up the full width on small screens */
+  word-break: break-all;
 }
 
 /* Export Button */
@@ -199,6 +206,25 @@ p {
 
 .export-button:hover {
   background-color: gray;
+}
+
+/* Hover Description Styling */
+.info-popup {
+  display: none;
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  color: black;
+}
+
+.info-button {
+  color: var(--background-color);
+}
+
+.info-button:hover + .info-popup {
+  display: block;
 }
 
 /* Responsive adjustments */
