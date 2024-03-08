@@ -85,14 +85,13 @@
                 </div>
                 <span id="counter">0</span>
             </div>
-            <div id="google_translate_element"></div>
+            <div style="display: none;" id="google_translate_element"></div>
             <script type="text/javascript">
                 function googleTranslateElementInit() {
                     new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
                 }
-            </script>
-                    
-            <script type="text/javascript" src="../js/test.js"></script>
+            </script>      
+            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
             <div class="blurb-text">
                 <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>            
             </div>  
@@ -122,7 +121,7 @@
                 </div>
                 <div id="languageBottomButtonsContainer">
                     <button id="languageSelectorCancelButton">Cancel</button>
-                    <button id="languageSelectorApplyButton">Apply</button>
+                    <button id="languageSelectorApplyButton" class="disabledApply" disabled>Apply</button>
                 </div>
             </div>
         </div>

@@ -57,7 +57,6 @@
     padding: 15px;
     border-radius: 8px;
     border: 0px solid black;
-    cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
     display: flex;
     align-items: center;
@@ -70,10 +69,20 @@
 #languageSelectorCancelButton{
     margin: 10px 5px;
     background-color: #ff4d4d;
+    cursor: pointer;
 }
 #languageSelectorApplyButton{
     margin: 10px 5px;
+}
+.enabledApply{
     background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+.disabledApply{
+    background-color: #7e9b7f;
+    color: #4b554c;
+    cursor: default;
 }
 
 @media (max-width: 880px){

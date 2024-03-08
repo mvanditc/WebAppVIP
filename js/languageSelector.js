@@ -15,6 +15,13 @@ function closeLanguageSelectorModal(){
 function openLanguageSelectorModal(){
     languageSelectorModal.style.display = ""
     languageSelectorButton.style.backgroundColor = "var(--selected-navbar-list-button-color)"
+    languageSelectPopulator()
+    let translationSelectionFromLocalStorage = localStorage.getItem("selectedTranslation")
+    if (translationSelectionFromLocalStorage == null){
+        localStorage.setItem('selectedTranslation', '')
+    }else if (translationSelectionFromLocalStorage != ''){
+        languageSelectorInput.value = translationSelectionFromLocalStorage
+    }
 }
 
 languageSelectorModal.style.display = "none"
@@ -25,7 +32,8 @@ languageSelectorCancelButton.addEventListener("click", closeLanguageSelectorModa
 
 languageSelectorApplyButton.addEventListener("click", ()=>{
     applyTranslation()
-    //closeLanguageSelectorModal()
+    disableApplyButton()
+    closeLanguageSelectorModal()
 })
 
 languageSelectorModal.addEventListener("click", (event)=>{
@@ -41,9 +49,50 @@ function applyTranslation(){
     let googleTranslateElement = document.getElementById("google_translate_element")
     let googleTranslateSelect = googleTranslateElement.children[0].children[0].children[0]
 
-    languageSelectorInput.innerHTML = googleTranslateSelect.innerHTML
+    googleTranslateSelect.value = languageSelectorInput.value
 
-    googleTranslateSelect.value = "ja"
-
+    localStorage.setItem('selectedTranslation', languageSelectorInput.value)
     googleTranslateSelect.dispatchEvent(event);
+
+    
+    
 }
+
+function languageSelectPopulator() {
+    let googleTranslateElement = document.getElementById("google_translate_element")
+    let googleTranslateSelect = googleTranslateElement.children[0].children[0].children[0]
+    languageSelectorInput.innerHTML = googleTranslateSelect.innerHTML
+}
+
+function enableApplyButton(){
+    languageSelectorApplyButton.disabled = false;
+    languageSelectorApplyButton.classList.remove('disabledApply'); 
+    languageSelectorApplyButton.classList.add('enabledApply'); 
+
+}
+
+function disableApplyButton(){
+    languageSelectorApplyButton.disabled = true;
+    languageSelectorApplyButton.classList.remove('enabledApply'); 
+    languageSelectorApplyButton.classList.add('disabledApply'); 
+}
+
+document.addEventListener('DOMContentLoaded', ()=> {
+    let googleTranslateElement = document.getElementById("google_translate_element")
+    while (googleTranslateElement.innerHTML = ""){
+
+    }
+    
+    let translationSelectionFromLocalStorage = localStorage.getItem("selectedTranslation")
+    if (translationSelectionFromLocalStorage == null){
+        //
+    }else if (translationSelectionFromLocalStorage != ''){
+        languageSelectorInput.value = translationSelectionFromLocalStorage
+        applyTranslation()
+    }
+});
+
+
+
+window.addEventListener('load', languageSelectPopulator)
+languageSelectorInput.addEventListener('change', enableApplyButton)
