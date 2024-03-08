@@ -12,6 +12,7 @@ const port = 8800;
 const config = require('./config.json');
 const scanDataPath = path.join(__dirname, "../database/data.json");
 const userDataPath = path.join(__dirname, "../database/user.json");
+const counterFilePath = path.join(__dirname, "../database/counter.txt");
 const vulnerabilityResultsPath = require('../database/webScraperResults1.json');
 const apiKey = config.apiKey;
 
@@ -268,6 +269,28 @@ const fetchScanResults = async (scanRequest, scanId, sessionId) => {
         }).map(alert => ({
             pluginId: alert.pluginId,
         }));
+
+        // Total number of vulnerabilities
+        const totalIssues = results.length;
+        let currentCount = 0;
+        try {
+            const currentCountStr = await fs.promises.readFile(counterFilePath, 'utf-8');
+            currentCount = parseInt(currentCountStr, 10);
+            if (isNaN(currentCount)) {
+                currentCount = 0;
+            }
+            currentCount += totalIssues;
+            await fs.writeFile(counterFilePath, currentCount.toString(), (err) => {
+                if (err) {
+                    console.error('Error updating counter:', err);
+                } else {
+                    console.log('Counter updated successfully');
+                }
+            });            
+        } catch (error) {
+            console.error('Error updating counter:', error);
+        }
+
         await sendScanData(results);
         currentData.push({ userIP, url, scanId, results });
         await fs.promises.writeFile(scanDataPath, JSON.stringify(currentData, null, 2));
