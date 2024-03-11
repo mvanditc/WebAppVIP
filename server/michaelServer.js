@@ -23,12 +23,20 @@ const zapAPIKey = "ljhuthfiai88rg6t58ia539434"
 const timeLimit = 10 // Time Limit in Seconds
 const maxScanAmount = 3
 
+var currentScanTime = 0
+
 // Functional Variables
 var queue = []
 
 var isScanning = false
 var queueCorrectionNeeded = false
 var queueCorrectionCounting = false
+
+var scanningTimerNeeded = false
+
+var currentScanTargetURL = ""
+
+var waitingForScanToFinish = false
 
 var historyOfScanRequests = {} //{scanID: {"hash": hashedData, "targeturl": "www.example.com", "statusOfProcess": status, "zapID": id}} is an example of 1 entry
 const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete"]
@@ -47,6 +55,17 @@ app.use(bodyParser.json());
 // Defining ExpressJS Routes
 app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
+});
+
+app.get('/get-current-scan-details', (req, res) => {
+  res.json({
+    "isScanning": isScanning,
+    "currentScanTime": currentScanTime,
+    "scanningTimerNeeded": scanningTimerNeeded,
+    "queueCorrectionNeeded": queueCorrectionNeeded,
+    "queueCorrectionCounting": queueCorrectionCounting,
+    "waitingForScanToFinish": waitingForScanToFinish
+  });
 });
 
 app.get('/view-scan-request-history', (req, res) => {
@@ -154,7 +173,8 @@ app.get('/get-scan-queue-position', (req, res) => {
     if (scanIDScanPosition !== "-1") {
       res.json({
         "status": "success",
-        "position": scanIDScanPosition
+        "position": scanIDScanPosition,
+        "isScanning": isScanning
       });
     } else {
       console.log("scanId not found")
@@ -178,6 +198,7 @@ app.put('/process-queued-scan-if-next', (req, res) => {
   try{
     if (isScanning == false){
       const scanIDScanPosition = (queue.indexOf(targetScanID)).toString();
+      // If scan is next in queue and credentials match, then process request
       if (scanIDScanPosition == "0"){
         if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash){
           queue.shift();
@@ -218,9 +239,11 @@ app.put('/attempt-scan', async (req, res) => {
         historyOfScanRequests[targetScanID]["statusOfProcess"] = zapResponse.data.scan
         historyOfScanRequests[targetScanID]["zapID"] = zapResponse.data.scan
 
+        scanningTimerNeeded = true
         startScanningTimer(targetScanID)
         isScanning = true
         queueCorrectionNeeded = false
+        currentScanTargetURL = historyOfScanRequests[targetScanID]["targetURL"]
 
         res.json({ "status": "success" });
       }
@@ -235,6 +258,7 @@ app.put('/attempt-scan', async (req, res) => {
 });
 
 app.put('/get-scan-progress', async (req, res) => {
+  console.log("/get-scan-progress")
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
@@ -246,34 +270,27 @@ app.put('/get-scan-progress', async (req, res) => {
       const zapResponse = await getScanProgress(zapID);
       if (zapResponse.data.status == "100"){
         if (historyOfScanRequests[targetScanID]["statusOfProcess"] != "incomplete" && historyOfScanRequests[targetScanID]["statusOfProcess"] != "broken"){
-          const zapScanResultsResponse = await getScanResults(zapID);
-          const zapScanAlertsResponse = await getMostRecentScanAlerts();
-          const zapClearResponse = await clearAlertsForNewScan();
-
           historyOfScanRequests[targetScanID]["statusOfProcess"] = "done"
+          
+          scanningTimerNeeded = false
+          waitForScanToFinishClock()
 
           res.json({ 
             "status": "success",
+            "timeElapsed": currentScanTime.toString(),
+            "timeLimit": timeLimit,
             "scanProgress": zapResponse.data.status,
-            "scanResults": zapScanResultsResponse.data,
-            "scanAlerts": zapScanAlertsResponse.data
+            "currentScanTargetURL": currentScanTargetURL
           });
         }  
       }else{
         if (historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
-          const zapScanResultsResponse = await getScanResults(zapID);
-          const zapScanAlertsResponse = await getMostRecentScanAlerts();
-          const zapClearResponse = await clearAlertsForNewScan();
-
-          historyOfScanRequests[targetScanID]["statusOfProcess"] = "done"
-
-          isScanning = false
 
           res.json({ 
-            "status": "success",
-            "scanProgress": zapResponse.data.status,
-            "scanResults": zapScanResultsResponse.data,
-            "scanAlerts": zapScanAlertsResponse.data
+            "status": "waiting for finish",
+            "timeElapsed": currentScanTime.toString(),
+            "timeLimit": timeLimit,
+            "currentScanTargetURL": currentScanTargetURL
           });
         }else if(historyOfScanRequests[targetScanID]["statusOfProcess"] == "broken"){
           res.json({ 
@@ -282,12 +299,60 @@ app.put('/get-scan-progress', async (req, res) => {
         }else{
           res.json({ 
             "status": "success",
-            "scanProgress": zapResponse.data.status
+            "timeElapsed": currentScanTime.toString(),
+            "timeLimit": timeLimit,
+            "scanProgress": zapResponse.data.status,
+            "currentScanTargetURL": currentScanTargetURL
           });
         }
       }
+    }else if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash && historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
+      res.json({ 
+        "status": "waiting for finish"
+      });
     }else{
       res.json({ "status": "invalid scan id" });
+    }
+  }
+  catch (error) {
+    console.error('Error initiating spider scan:', error);
+    res.json({ "status": "fail" });
+  }
+});
+
+app.put('/wait-for-scan-to-finish', async (req, res) => {
+  console.log("/wait-for-scan-to-finish")
+  const requestData = req.body;
+  let targetScanID = requestData["scanid"];
+  let targetScanIDHash = requestData["hash"];
+  let zapID = historyOfScanRequests[targetScanID]["zapID"]
+
+
+  try {
+    if (waitingForScanToFinish == false && isScanning == true){
+      const zapScanResultsResponse = await getScanResults(zapID);
+      const zapScanAlertsResponse = await getMostRecentScanAlerts();
+
+      if (zapScanResultsResponse != null && zapScanAlertsResponse != null && scanningTimerNeeded == false && waitingForScanToFinish == false){
+        console.log("SCAN FINISHED")
+        res.json({ 
+          "status": "success",
+          "timeElapsed": currentScanTime.toString(),
+          "timeLimit": timeLimit,
+          "scanResults": zapScanResultsResponse.data,
+          "scanAlerts": zapScanAlertsResponse.data,
+          "currentScanTargetURL": currentScanTargetURL
+        });
+        await clearAlertsForNewScan()
+        isScanning = false
+      }else{
+        res.json({ "status": "false" });
+      }
+    }else{
+      if (isScanning = true){
+        waitForScanToFinishClock()
+      }
+      res.json({ "status": "false" });
     }
   }
   catch (error) {
@@ -308,29 +373,36 @@ function applySHA256(message) {
 // Scan Timing System
 async function startScanningTimer(scanID) {
   let counter = 0;
+  currentScanTime = 0
 
-  while (counter <= timeLimit) {
+  while (counter < timeLimit && scanningTimerNeeded) {
     console.log(`Current Scan Time Count: ${counter}`);
     await delay(1000);
     counter++;
+    currentScanTime = counter
   }
 
   if (historyOfScanRequests[scanID]["statusOfProcess"] == "done"){
-    console.log("SCAN DONE")
+    console.log("SCAN DONE, WAITING FOR FINISH")
+    scanningTimerNeeded = false
+    waitForScanToFinishClock()
     return
   }else if(historyOfScanRequests[scanID]["statusOfProcess"] == "waiting"){
     historyOfScanRequests[scanID]["statusOfProcess"] = "broken"
     console.log("SCAN BROKEN")
     let zapID = historyOfScanRequests[scanID]["zapID"]
-    const zapStopScanResponse = await stopCurrentScan(zapID);
-    isScanning = false
+    await stopCurrentScan(zapID);
+    scanningTimerNeeded = false
+    waitForScanToFinishClock()
   }else{
     historyOfScanRequests[scanID]["statusOfProcess"] = "incomplete"
     console.log("SCAN INCOMPLETE")
     let zapID = historyOfScanRequests[scanID]["zapID"]
-    const zapStopScanResponse = await stopCurrentScan(zapID);
-    isScanning = false
+    await stopCurrentScan(zapID);
+    scanningTimerNeeded = false
+    waitForScanToFinishClock()
   }
+  return
 }
 
 async function queueFlowCorrectionClock(){
@@ -372,6 +444,33 @@ async function queueFlowCorrection() {
   }
   return
 
+}
+
+async function waitForScanToFinishClock(){
+  if (waitingForScanToFinish == false){
+    console.log("waitForScanToFinishClock initialized")
+    waitingForScanToFinish = true
+    let previousAlertAmount = -1
+    while (waitingForScanToFinish){
+      await delay(5000);
+      let totalNumberOfAlertsResponse = await getTotalNumberOfAlerts();
+
+      try{
+        let currentAlertAmount = parseInt(totalNumberOfAlertsResponse.data.numberOfAlerts)
+        console.log("currentAlertAmount>previousAlertAmount")
+        console.log(currentAlertAmount + " > " + previousAlertAmount)
+        if (currentAlertAmount>previousAlertAmount){
+          previousAlertAmount = currentAlertAmount
+        }else{
+          console.log("waitingForScanToFinish = false")
+          waitingForScanToFinish = false
+        }
+      }catch{
+        console.log("No server response")
+      }
+    }
+  }
+  return
 }
 
 // Delay Function used for Timing
@@ -455,6 +554,19 @@ async function stopCurrentScan(targetScanID){
   try {
     const stopResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stop/?scanId=${targetScanID}&apikey=${zapAPIKey}`);
     return stopResponse;
+  }
+  catch (error) {
+      console.error('Error initiating spider scan:', error);
+
+      return null;
+  }
+}
+
+// Function to get current total number of alerts
+async function getTotalNumberOfAlerts(targetScanID){
+  try {
+    const totalNumberOfAlertsResponse = await axios.get(`http://localhost:8080/JSON/alert/view/numberOfAlerts/?apikey=${zapAPIKey}`);
+    return totalNumberOfAlertsResponse;
   }
   catch (error) {
       console.error('Error initiating spider scan:', error);

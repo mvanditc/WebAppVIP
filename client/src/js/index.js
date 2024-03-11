@@ -28,7 +28,7 @@ function getCurrentQueuePosition(){
   })
   .then(data => {
       console.log('Data from the backend:', data);
-      if (data["position"] == "0"){
+      if (data["position"] == "0" && data["isScanning"] == false){
         window.location.href = '../../public/html/scanPage.html';
       }
   })
