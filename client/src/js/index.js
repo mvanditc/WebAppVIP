@@ -2,8 +2,13 @@ let indexDataForm = document.getElementById("indexDataForm")
 let indexDataInput = document.getElementById("indexDataInput")
 
 let queuePositionClockNeeded = false
+let queuePositionClockRunning = false
 
 async function queuePositionCheckClock() {
+  if (queuePositionClockRunning == true){
+    return
+  }
+  queuePositionClockRunning = true
   while (queuePositionClockNeeded) {
     getCurrentQueuePosition();
     await delay(1000);

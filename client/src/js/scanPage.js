@@ -201,3 +201,31 @@ document.addEventListener('DOMContentLoaded', ()=>{
         return
     }
 })
+
+window.addEventListener('offline', ()=>{
+    if (!navigator.onLine){
+        fetch("http://localhost:3030/user-disconnected-while-scanning", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "scanid": storedScanID,
+                "hash": storedScanHash
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            };
+
+            return response.json();
+        })
+        .then(data => {
+            console.log('Queue Item Processed:', data);
+        })
+        .catch(error => {
+            console.error('Fetch error:', error.message);
+        });
+    }
+});

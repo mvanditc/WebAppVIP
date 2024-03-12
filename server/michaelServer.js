@@ -464,10 +464,32 @@ async function waitForScanToFinishClock(){
         }else{
           console.log("waitingForScanToFinish = false")
           waitingForScanToFinish = false
+          checkIfUserDisconnectedFromScanner()
         }
       }catch{
         console.log("No server response")
       }
+    }
+  }
+  return
+}
+
+async function checkIfUserDisconnectedFromScanner(){
+  if (isScanning == true){
+    console.log("checkIfUserDisconnectedFromScanner")
+    for (let i = 0; i < 6; i++) {
+      console.log("check: " + i)
+      await delay(5000);
+      if (isScanning == false){
+        console.log("isScanning == false")
+        break
+      }
+    }
+    if (isScanning == true){
+      console.log("isScanning == true")
+      isScanning = false
+      scanningTimerNeeded = false
+      waitingForScanToFinish = false
     }
   }
   return
