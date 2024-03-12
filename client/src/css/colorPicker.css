@@ -1,0 +1,277 @@
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  align-items: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden; /* Disable horizontal scrolling */
+}
+
+#siteThemePickerNavbarbutton{
+  background-image: url('../../public/assets/buttons/LargeThemeSelectorButton.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#siteThemePickerNavbarbutton:hover{
+  border: 2px solid var(--selected-navbar-list-button-color);
+}
+#siteThemePickerNavbarbutton div{
+  background-color: white;
+  padding: 10px 0px;
+}
+
+#siteThemePickerHamburgbutton{
+  background-image: url('../../public/assets/buttons/LargeThemeSelectorButton.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#siteThemePickerHamburgbutton:hover{
+  border: 2px solid var(--selected-navbar-list-button-color);
+}
+#siteThemePickerHamburgbutton div{
+  background-color: white;
+  padding: 10px 10px;
+  color: black;
+}
+
+
+/* Modal Header */
+.modal-header {
+  padding: 1px 1px;
+  color: black;
+  top: 0; 
+  left: 3; 
+  font-size: 1.8vw;
+}
+
+/*Modal Subheadings */
+.modal-subheadings {
+  color: #333333;
+  font-size: 1vw;
+  width: fit-content;
+}
+
+.preset-scroll-box{
+  width: fit-content;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 65%; /* Could be more or less, depending on screen size */
+  position: relative;
+  display: flex;
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+  flex-direction: column;
+}
+
+@keyframes animatetop {
+  from {top: -300px; opacity: 0}
+  to {top: 0; opacity: 1}
+}
+
+/* Styling for Preset Buttons */
+.preset-button {
+  width: 200px;
+  height: 40px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-right: 5%;
+  border: 1px solid #999;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: black; 
+  font-weight: bold;
+  font-size: 1vw;
+}
+
+.preset-button:hover {
+  background-color: #ddd; /* Hover background color */
+}
+
+/* Styling for Color Commit Buttons */
+.button-commit {
+  width: 45%; /* Adjust as needed */
+  padding: 15px; /* Adjust as needed */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Red Button */
+.red {
+  background-color: #ff4d4d; /* Red background color */
+  color: white; /* Text color */
+}
+
+.red:hover {
+  background-color: #ff6666; /* Hover background color */
+}
+
+/* Green Button */
+.green {
+  background-color: #4caf50; /* Green background color */
+  color: white; /* Text color */
+}
+
+.green:hover {
+  background-color: #66bb6a; /* Hover background color */
+}
+
+/* Additional Styling */
+.bottom-buttons {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Styling for HexCode Boxes */  
+.color-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.color-box {
+  width: calc(22% - 10px);
+  padding: 5px;
+  margin: 5px;
+  border: 2px solid #ccc;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.color-rectangle {
+  width: 80%;
+  height: 25px;
+  margin: 3px auto;
+  border: 1px solid black;
+}
+
+.color-box h3 {
+  margin-bottom: 1px;
+  color: black;
+  font-size: 1vw;
+}
+
+.color-box p {
+  margin: 0;
+  color: black;
+  font-size: 0.8em;
+}
+
+.modal-middle-section{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+/* Responsiveness For The Color Picker */
+@media (max-width: 1150px) {
+  .modal-header {
+      font-size: 3.5vw;
+  }
+
+  .modal-middle-section{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .preset-scroll-box{
+    overflow-y: auto;
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    border: 1px solid #000000; /* Add border for visual separation */
+    width: 90%; /* Adjusted width */
+    margin: 0 auto 20px; /* Center the scroll boxes horizontally with reduced bottom margin */
+    max-height: 120px; /* Adjust as needed */
+    display: flex; /* Change to flex display */
+    flex-direction: column; /* Align items vertically */
+    align-items: center;
+    font-size: 2.5vw;
+  }
+  .color-scroll-box {
+      overflow-y: auto;
+      overflow-x: hidden; /* Disable horizontal scrolling */
+      border: 1px solid #000000; /* Add border for visual separation */
+      width: 90%; /* Adjusted width */
+      margin: 0 auto 20px; /* Center the scroll boxes horizontally with reduced bottom margin */
+      max-height: 240px; /* Adjust as needed */
+      display: flex; /* Change to flex display */
+      flex-direction: column; /* Align items vertically */
+      align-items: stretch;
+      font-size: 2.5vw;
+  }
+
+  .color-boxes {
+      display: flex;
+      flex-direction: column; /* Align items vertically */
+      align-items: center;
+  }
+
+  .color-box,
+  .preset-button {
+      width: 80%; /* Set equal width for both color boxes and preset buttons */
+      margin-bottom: 10px; /* Adjust margin bottom */
+      display: flex; /* Ensure contents align properly */
+      align-items: center; /* Center content vertically */
+      font-size: 2.5vw;
+  }
+
+  .modal-subheadings {
+      width: 90%;
+      height: fit-content;
+      display: flex;
+      flex-direction: column; /* Align items vertically */
+      align-items: center; /* Center align items */
+      margin-top: -15px; /* Adjust margin */
+      font-size: 2vw;
+  }
+
+  .color-box h3,
+  .color-box p {
+      margin-bottom: 1px;
+      color: black;
+      font-size: 2.5vw; /* Adjust font size for smaller screens */
+  }
+
+  .preset-button {
+      margin-top: 0px;
+  }
+
+  /* Adjust the positioning of bottom buttons */
+  .bottom-buttons {
+    margin-top: 10px;
+    width: 90%;
+  }
+}

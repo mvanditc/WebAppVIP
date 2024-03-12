@@ -28,7 +28,7 @@ techUsedHamburgbutton = document.getElementById("techUsedHamburgbutton");
 vulnerabilityDictHamburgbutton = document.getElementById("vulnerabilityDictHamburgbutton");
 
 // Preseting the Navbar/Hamburger visibility
-if (window.innerWidth < 765){
+if (window.innerWidth < 780){
     navbarContainer.style.display = "none";
     hamburgerContainer.style.display = "flex";
     hamburgShowing = 1
@@ -43,7 +43,7 @@ else{
 
 // Window resize listener that controls navbar and hamburger visibility.
 window.addEventListener("resize", ()=>{
-    if (window.innerWidth < 765){
+    if (window.innerWidth < 780){
         navbarContainer.style.display = "none";
         navbarListContainer.style.display = "none"
         hamburgerContainer.style.display = "flex";

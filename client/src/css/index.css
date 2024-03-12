@@ -1,136 +1,150 @@
-@import './global.css';
-@import './navbar.css';
+/* index.css is used to style the index.html file */
+
+@import 'global.css';
+@import 'navbar.css';
+@import 'colorPicker.css';
+@import 'languageSelector.css';
 
 body {
     background-color: var(--background-color);
-    color: white;
+    font-family: "font1", sans-serif;
+    color: var(--white-text);
     margin: 0;
     padding: 0;
 }
 
-#index-scanPage-main-container {
+/* container for top page */
+.top-container {
+display: flex;
+align-items: center;
+justify-content: space-around;
+padding-top: 50px;
+margin-right: 10%;
+margin-left: 10%;
+flex-wrap: wrap;
+}
+
+/* Total Scans Popup */
+.button {
     display: flex;
-    flex-direction: column;
+    background-color: var(--secondary-color); 
+    position: relative;
+    height: 250px;
+    width: 250px;
+    border-radius: 50%; 
+    cursor: pointer;
+    font-family:'Arial';
+    color: var(--black-text);
+    text-align: center;
     align-items: center;
     justify-content: center;
-    /*height: calc(100vh - 100px);*/
-    margin: 15px 0px;
+    font-size: 25px;
 }
 
-#index-scanPage-container {
+#counter {
+    font-family:'Helvetica';
+    font-size: 30px; 
+    font-weight: bold;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Style for the blurb */
+.blurb-text {
+    color: var(--black-text);
+    font-size: 30px;
+    line-height: 1.4;
+    flex: 1;
+    margin: 0 20px;
+    font-family: Arial;
+}
+
+/* Search Bar */
+.bottom-container {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: black;
-    border: 10px solid rgba(133, 42, 252, 0.861);
-    max-height: 75vh;
-    width: 70vw;
-    max-width: 800px;
-    font-family: 'font1';
-    padding: 30px 20px;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+    padding: 20px;
+    gap: 10px;
+}
+  
+.search-label {
+    font-size: 28px;
+    color: var(--white-text);
+    white-space: nowrap;
+}
+  
+#search-input {
+    padding: 10px;
+    font-size: 28px;
+    border: 2px solid var(--background-color);
+    border-radius: 5px;
+    flex-grow: 1;
+    max-width: 500px;
+}
+  
+#search-button {
+    padding: 12px 20px;
+    background-color: var(--navbar-color);
+    color: var(---white-text);
     font-size: 18px;
-    display: flex;
-    flex-direction: column;
-}
-
-#index-scanPage-initial-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-#index-scanPage-initial-container div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 5px;
-}
-
-#index-scanPage-initial-container p {
-    margin: 5px 0px;
-}
-
-#index-scanPage-scan-target {
-    color: var(--blue-text);
-    text-decoration: none;
-}
-
-#index-scanPage-scan-target:hover {
+    border: none;
     cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    height: 55px;
 }
 
-#index-scanPage-progressBar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+.search-button-disabled {
+    background-color: rgb(108, 108, 108) !important;
+    color: rgb(209, 209, 209) !important;
+    cursor: default !important;
 }
 
-#index-scanPage-progressBar-percentage-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+/* Responsiveness  */
+@media (max-width: 770px) {
+    .top-container{
+        flex-direction: column;
+        align-items: center;
+        margin-right: 4%;
+        margin-left: 4%;
+    }
+    .button{
+        margin-top: -2%;
+        width: 90%;
+        height: 20vw;
+        border-radius: 9px;
+        font-size: 3.8vw;
+    }
+    #counter {
+        top: 65%;
+        font-size: 3.8vw;
+    }
 }
 
-#index-scanPage-time-elapsed-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top: 0px;
-    margin-bottom: 30px;
-}
-
-.index-scanPage-risk-container {
-    display: flex;
-    flex-direction: row;
-    margin: -20px 0px;
-}
-
-#index-scanPage-informational-risk {
-    color: rgb(0, 116, 204);
-}
-
-#index-scanPage-low-risk {
-    color: yellow;
-}
-
-#index-scanPage-medium-risk {
-    color: orange;
-}
-
-#index-scanPage-high-risk {
-    color: red;
-}
-
-#index-scanPage-undefined-risk {
-    color: rgb(170, 170, 170);
-}
-
-#index-scanPage-vulnerabilities-container {
-    margin-bottom: 45px;
-}
-
-#index-scanPage-vulnerabilities-found-title {
-    margin-bottom: 30px;
-}
-
-#index-scanPage-risks div {
-    margin-bottom: 5px;
-}
-
-#index-scanPage-view-details-container {
-    text-align: center;
-}
-
-#index-scanPage-view-details-container a {
-    color: white;
-}
-
-@media screen and (max-width: 400px),
-(max-height: 850px) {
-    #index-scanPage-container {
-        font-size: 14px;
+@media (max-width:640px){
+    .top-container{
+        margin-top: -5%;
+    }
+    .bottom-container{
+        flex-direction: column;
+        margin-top: -5%;
+        margin-bottom: 0%;
+    }
+    #search-input {
+        width: 100%;
+    }
+    .search-label {
+        text-align: center;
+    }
+    #search-button{
+        height: 50px;
+        width: 90%;
+    }
+    .blurb-text{
+        font-size: 5.8vw;
     }
 }

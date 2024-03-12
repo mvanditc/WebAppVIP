@@ -1,5 +1,6 @@
-let indexDataForm = document.getElementById("indexDataForm")
-let indexDataInput = document.getElementById("indexDataInput")
+let indexDataForm = document.getElementById("bottom-container")
+let indexDataSubmit = document.getElementById("search-button")
+let indexDataInput = document.getElementById("search-input")
 
 let queuePositionClockNeeded = false
 let queuePositionClockRunning = false
@@ -61,6 +62,9 @@ indexDataForm.addEventListener("submit", (event)=>{
   .then(data => {
       console.log('Data from the backend:', data);
       if (data['status'] == "success"){
+        indexDataSubmit.disabled = true
+        indexDataSubmit.classList.add("search-button-disabled")
+        
         let receivedScanID = data['scanID']
         let receivedScanHash = data['hash']
 

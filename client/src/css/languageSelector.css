@@ -1,0 +1,99 @@
+#languageSelectorButton{
+  border: 2px solid var(--white-text);
+  padding: 10px;
+  font-size: 30px;
+  border-radius: 5px;
+  margin: 0px 10px;
+}
+#languageSelectorButton:hover{
+  background-color: var(--navbar-list-button-color);
+  cursor: pointer;
+}
+#languageSelectorButton:active{
+  background-color: var(--selected-navbar-list-button-color);
+  cursor: pointer;
+}
+
+#languageSelectorModal{
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  background-color: rgba(65, 65, 65, 0.3);
+  justify-content: center;
+  z-index: 999;
+  align-items: flex-start;
+  color: black;
+}
+
+#languageSelectorContent{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 15px 15px 5px 15px;
+  margin-top: 10%;
+  
+}
+
+#languageSelectInputContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+#languageSelectorInput{
+  font-size: 1.2em;
+  margin: 10px 0px;
+}
+
+#languageBottomButtonsContainer{
+  display: flex;
+  flex-direction: row;
+}
+
+#languageBottomButtonsContainer button{
+  padding: 15px;
+  border-radius: 8px;
+  border: 0px solid black;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  font-size: 1.5em;
+}
+
+#languageSelectorCancelButton{
+  margin: 10px 5px;
+  background-color: #ff4d4d;
+  cursor: pointer;
+}
+#languageSelectorApplyButton{
+  margin: 10px 5px;
+}
+.enabledApply{
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+.disabledApply{
+  background-color: #7e9b7f;
+  color: #4b554c;
+  cursor: default;
+}
+
+@media (max-width: 880px){
+  #languageSelectorButton{
+      font-size: 18px;
+  }
+}
+
+@media (max-width: 320px){
+  #languageSelectorButton{
+      font-size: 15px;
+      margin: 0px;
+  }
+}
