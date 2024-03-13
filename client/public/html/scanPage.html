@@ -160,6 +160,104 @@
         </div>
     </div>
 
+    <div id="scanDetailsSectionContainer">
+        <div id="findingsAndFilterButton">
+            <div class="scan-details-h1">Findings</div>
+
+            <div id="FilterButtonWithLabelContainer">
+                <div>FILTER BY RISK LEVEL</div>
+                <select id="filterSelect">
+                    <option>All</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                    <option>Informational</option>
+                </select>
+            </div>
+        </div>
+        <div id="issueSectionContainer">
+            <div class="view-details-issue-container">
+                <div class="view-details-issue-title"><i class="fa-solid fa-circle view-details-med-risk"></i> Issue Title</div>
+                <div class="view-details-issue-subtitles">
+                    <div class="view-details-issue-subtitle">Alert Reference ID: <div class="alert-reference-id">10038-1</div></div>
+                    <div class="view-details-issue-subtitle">Alert Risk: <div class="view-details-med-risk">Medium</div></div>
+                </div>
+                <div class="view-details-issue-details-container">
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Description</div>
+                        <div class="view-details-issue-detail-content">The page includes one or more script files from a third-party domain.</div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Actionable Steps</div>
+                        <div class="view-details-issue-detail-content">Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application.</div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Tags</div>
+                        <div class="view-details-issue-detail-content">
+                            <div class="view-details-tag">OWASP_2021_A01</div>
+                            <div class="view-details-tag">OWASP_2017_A05</div>
+                        </div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Reference</div>
+                        <div class="view-details-issue-detail-content">
+                            <div class="view-details-reference">https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy</div>
+                            <div class="view-details-reference">https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</div>
+                            <div class="view-details-reference">https://www.w3.org/TR/CSP/\nhttps://w3c.github.io/webappsec-csp/\nhttps://web.dev/articles/csp</div>
+                            <div class="view-details-reference">https://caniuse.com/#feat=contentsecuritypolicy\nhttps://content-security-policy.com/</div>
+                        </div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Other Information</div>
+                        <div class="view-details-issue-detail-content">The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">High Confidence Links:</div>
+                        <div class="view-details-issue-confidence-links-container">
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                        </div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Medium Confidence Links:</div>
+                        <div class="view-details-issue-confidence-links-container">
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                        </div>
+                    </div>
+                    <div class="view-details-issue-detail">
+                        <div class="view-details-issue-detail-title">Low Confidence Links:</div>
+                        <div class="view-details-issue-confidence-links-container">
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                            <div>https://www.link1.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../../src/js/scanPage.js"></script>
 </body>
 

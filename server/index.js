@@ -39,7 +39,7 @@ fs.readFile("db/vulnerabilityDictionaryData.json", 'utf8', (err, data) => {
 const zapAPIKey = "ljhuthfiai88rg6t58ia539434"
 
 // Client Usability Settings
-const timeLimit = 15 // Time Limit in Seconds
+const timeLimit = 8 // Time Limit in Seconds
 const maxScanAmount = 3
 
 var currentScanTime = 0
@@ -64,6 +64,8 @@ var checkingIfUserIsDisconnected = false
 
 var historyOfScanRequests = {} //{scanID: {"hash": hashedData, "targeturl": "www.example.com", "statusOfProcess": status, "zapID": id}} is an example of 1 entry
 const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete", "cancelled"]
+
+let confidenceLevelReturnData = {};
 
 // Initializing ExpressJS Application
 const app = express();
@@ -310,7 +312,6 @@ app.put('/get-scan-progress', async (req, res) => {
     if (storedScanHash == targetScanIDHash && storedStatusOfProcess == zapID){
 
       const zapResponse = await getScanProgress(zapID);
-      const alertSummaryResponse = await getAlertSummary()
       const zapAlertSummaryResponse = await getAlertSummary();
 
       if (zapResponse.data.status == "100"){
@@ -378,20 +379,19 @@ app.put('/wait-for-scan-to-finish', async (req, res) => {
   if (historyOfScanRequests[currentScanID]["hash"] == targetScanIDHash){
     try {
       if (waitingForScanToFinish == false && isScanning == true){
-        const zapScanResultsResponse = await getScanResults(zapID);
         const zapScanAlertsResponse = await getMostRecentScanAlerts();
         const zapAlertSummaryResponse = await getAlertSummary();
   
         console.log("waitingForScanToFinish == false && isScanning == true")
   
-        if (zapScanResultsResponse != null && zapScanAlertsResponse != null && scanningTimerNeeded == false && waitingForScanToFinish == false){
+        if (zapScanAlertsResponse != null && scanningTimerNeeded == false && waitingForScanToFinish == false){
           console.log("SCAN FINISHED")
           res.json({ 
             "status": "success",
             "timeElapsed": currentScanTime.toString(),
             "timeLimit": timeLimit,
-            "scanResults": zapScanResultsResponse.data,
-            "scanAlerts": zapScanAlertsResponse.data,
+            "uniqueScanAlerts": zapScanAlertsResponse[0],
+            "confidenceLevelsData": zapScanAlertsResponse[1],
             "alertSummary": zapAlertSummaryResponse.data,
             "currentScanTargetURL": currentScanTargetURL
           });
@@ -656,7 +656,40 @@ async function getMostRecentScanAlerts(){
   try {
     const zapResponse = await axios.get(`http://localhost:8080/JSON/core/view/alerts/?apikey=${zapAPIKey}&baseurl=&start=&count=&riskId=`);
 
-    return zapResponse;
+    // Filter Results
+    let fetchedResults = zapResponse.data.alerts
+
+    confidenceLevelReturnData = {}
+    populate_confidenceLevelReturnData(fetchedResults);
+
+    // Create a Set to track unique alert identifiers (pluginId)
+    const uniqueAlerts = new Set();
+
+    // Filter out duplicate alerts based on 'pluginId'
+    const uniqueScanResults = fetchedResults.filter(alert => {
+        const identifier = `${alert.alertRef}`;
+        if (!uniqueAlerts.has(identifier)) {
+            uniqueAlerts.add(identifier);
+            // Unique, so keep this alert
+            return true;
+        }
+        // Duplicate ID, so ignore
+        return false;
+    }).map(alert => ({
+        alertData: {
+          alertRef: alert.alertRef,
+          name: alert.alert,
+          risk: alert.risk,
+          confidence: alert.confidence,
+          description: alert.description,
+          solution: alert.solution,
+          tags: alert.tags,
+          reference: alert.reference,
+          other: alert.other
+        }
+    }));
+
+    return [uniqueScanResults, confidenceLevelReturnData];
   }
   catch (error) {
       console.error('Error initiating spider scan:', error);
@@ -717,6 +750,28 @@ async function getAlertSummary(targetScanID){
       return null;
   }
 }
+
+function populate_confidenceLevelReturnData(scanResults){
+  scanResults.forEach(alert => {
+      if (alert.alertRef in confidenceLevelReturnData){
+          if (alert.confidence==="Medium")
+            confidenceLevelReturnData[alert.alertRef].mediumConfidence.push(alert.url);
+          if (alert.confidence==="High")
+            confidenceLevelReturnData[alert.alertRef].highConfidence.push(alert.url);
+          if (alert.confidence==="Low")
+            confidenceLevelReturnData[alert.alertRef].lowConfidence.push(alert.url);
+      }
+      else{
+          confidenceLevelReturnData[alert.alertRef] = {lowConfidence:[],mediumConfidence:[],highConfidence:[]}
+          if (alert.confidence==="Medium")
+            confidenceLevelReturnData[alert.alertRef].mediumConfidence.push(alert.url);
+          if (alert.confidence==="High")
+            confidenceLevelReturnData[alert.alertRef].highConfidence.push(alert.url);
+          if (alert.confidence==="Low")
+            confidenceLevelReturnData[alert.alertRef].lowConfidence.push(alert.url);
+      }
+  })
+} 
 
 // Allow Backend to Listen for Requests
 app.listen(port, () => {

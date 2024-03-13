@@ -6,6 +6,10 @@ body {
     color: white;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 #scanPage-main-container {
@@ -15,7 +19,7 @@ body {
     justify-content: center;
     margin: 5vh 0px;
     height: 90vh;
-    width: 100vw;
+    width: 96%;
 }
 
 #backToHomeArrow{
@@ -237,6 +241,113 @@ body {
     height: 20px;
     margin-right: 4px;
 }
+
+#scanDetailsSectionContainer{
+    display: none;
+    margin: 0px;
+    padding: 0px;
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    font-family: 'font1';
+}
+
+#findingsAndFilterButton{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 3em;
+}
+.scan-details-h1{
+    font-size: 30px;
+    margin-bottom: 1em;
+}
+#FilterButtonWithLabelContainer{
+    display: flex;
+    flex-direction: column;
+}
+#FilterButtonWithLabelContainer div{
+    font-size: 20px;
+}
+
+#FilterButtonWithLabelContainer select{
+    font-size: 26px;
+    border-radius: 5px;
+    padding: 10px 5px;
+}
+#issueSectionContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.view-details-issue-container{
+    background-color: white;
+    color: black;
+    padding: 2em;
+    margin: 2em 2em;
+    border-radius: 5px;
+}
+.view-details-issue-title{
+    font-size: 26px;
+    margin-bottom: 1em;
+}
+.view-details-issue-details-container{
+    font-size: 18px;
+}
+.view-details-issue-detail{
+    margin: 5px;
+}
+.view-details-issue-detail-title{
+    color: purple;
+}
+.view-details-issue-detail-content{
+    display: flex;
+    flex-direction: column;
+}
+.view-details-issue-subtitles{
+    display: flex;
+    flex-direction: column;
+}
+.view-details-issue-subtitle{
+    display: flex;
+}
+.view-details-high-risk{
+    color: red;
+}
+.view-details-med-risk{
+    color: orange;
+}
+.view-details-low-risk{
+    color: yellow;
+}
+.view-details-info-risk{
+    color: rgb(0, 116, 204);
+}
+.alert-reference-id{
+    color: var(--blue-text);
+}
+.view-details-tag{
+    color: var(--blue-text);
+    cursor: pointer;
+    text-decoration: underline;
+}
+.view-details-reference{
+    color: var(--blue-text);
+    cursor: pointer;
+    text-decoration: underline;
+}
+.view-details-issue-confidence-links-container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.view-details-issue-confidence-links-container div{
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 
 @media screen and (max-width: 656px) {
