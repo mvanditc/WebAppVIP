@@ -39,7 +39,7 @@ fs.readFile("db/vulnerabilityDictionaryData.json", 'utf8', (err, data) => {
 const zapAPIKey = "ljhuthfiai88rg6t58ia539434"
 
 // Client Usability Settings
-const timeLimit = 10 // Time Limit in Seconds
+const timeLimit = 15 // Time Limit in Seconds
 const maxScanAmount = 3
 
 var currentScanTime = 0
@@ -54,11 +54,16 @@ var queueCorrectionCounting = false
 var scanningTimerNeeded = false
 
 var currentScanTargetURL = ""
+var currentScanID = ""
 
 var waitingForScanToFinish = false
 
+var userCancelled = false
+
+var checkingIfUserIsDisconnected = false
+
 var historyOfScanRequests = {} //{scanID: {"hash": hashedData, "targeturl": "www.example.com", "statusOfProcess": status, "zapID": id}} is an example of 1 entry
-const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete"]
+const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete", "cancelled"]
 
 // Initializing ExpressJS Application
 const app = express();
@@ -100,6 +105,12 @@ app.get('/view-queue', (req, res) => {
 });
 
 app.put('/add-scan-to-queue', (req, res) => {
+  console.log("/add-scan-to-queue")
+  const ipAddress = req.ip;
+  const host = req.hostname;
+  console.log(ipAddress)
+  console.log(host)
+
   const requestData = req.body;
   let scanTargetURL = requestData["url"];
 
@@ -129,9 +140,6 @@ app.put('/add-scan-to-queue', (req, res) => {
       }
       historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
       queue.push(currentTimestamp)
-      if (queueCorrectionCounting == false && isScanning == false){
-        queueFlowCorrection()
-      }
       res.json({
         "status": "success",
         "scanID": currentTimestamp,
@@ -140,9 +148,6 @@ app.put('/add-scan-to-queue', (req, res) => {
     }else {
       historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
       queue.push(currentTimestamp)
-      if (queueCorrectionCounting == false && isScanning == false){
-        queueFlowCorrection()
-      }
       res.json({
         "status": "success",
         "scanID": currentTimestamp,
@@ -197,7 +202,8 @@ app.get('/get-scan-queue-position', (req, res) => {
       res.json({
         "status": "success",
         "position": scanIDScanPosition,
-        "isScanning": isScanning
+        "isScanning": isScanning,
+        "checkingIfUserIsDisconnected": checkingIfUserIsDisconnected
       });
     } else {
       console.log("scanId not found")
@@ -214,16 +220,18 @@ app.get('/get-scan-queue-position', (req, res) => {
 });
 
 app.put('/process-queued-scan-if-next', (req, res) => {
+  console.log("/process-queued-scan-if-next")
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
 
   try{
-    if (isScanning == false){
+    if (isScanning == false && checkingIfUserIsDisconnected == false){
       const scanIDScanPosition = (queue.indexOf(targetScanID)).toString();
       // If scan is next in queue and credentials match, then process request
       if (scanIDScanPosition == "0"){
         if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash){
+          isScanning = true
           queue.shift();
           historyOfScanRequests[targetScanID]["statusOfProcess"] = "waiting"
 
@@ -249,6 +257,7 @@ app.put('/process-queued-scan-if-next', (req, res) => {
 
 
 app.put('/attempt-scan', async (req, res) => {
+  console.log("/attempt-scan")
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
@@ -264,11 +273,17 @@ app.put('/attempt-scan', async (req, res) => {
 
         scanningTimerNeeded = true
         startScanningTimer(targetScanID)
-        isScanning = true
         queueCorrectionNeeded = false
         currentScanTargetURL = historyOfScanRequests[targetScanID]["targetURL"]
 
-        res.json({ "status": "success" });
+        currentScanID = targetScanID
+
+        userCancelled = false
+
+        res.json({
+          "status": "success",
+          "timeLimit": timeLimit
+        });
       }
     }else{
       res.json({ "status": "invalid scan id" });
@@ -286,11 +301,18 @@ app.put('/get-scan-progress', async (req, res) => {
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
 
+  let zapID = historyOfScanRequests[targetScanID]["zapID"]
+  let storedScanHash = historyOfScanRequests[targetScanID]["hash"]
+  let storedStatusOfProcess = historyOfScanRequests[targetScanID]["statusOfProcess"]
+
   try {
-    if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash && !scanHistoryProcesses.includes(historyOfScanRequests[targetScanID]["statusOfProcess"])){
-      let zapID = historyOfScanRequests[targetScanID]["zapID"]
+    //if requesting user's hash is valid and the current scan has the statusOfProcess library value set to the zapID
+    if (storedScanHash == targetScanIDHash && storedStatusOfProcess == zapID){
 
       const zapResponse = await getScanProgress(zapID);
+      const alertSummaryResponse = await getAlertSummary()
+      const zapAlertSummaryResponse = await getAlertSummary();
+
       if (zapResponse.data.status == "100"){
         if (historyOfScanRequests[targetScanID]["statusOfProcess"] != "incomplete" && historyOfScanRequests[targetScanID]["statusOfProcess"] != "broken"){
           historyOfScanRequests[targetScanID]["statusOfProcess"] = "done"
@@ -303,6 +325,7 @@ app.put('/get-scan-progress', async (req, res) => {
             "timeElapsed": currentScanTime.toString(),
             "timeLimit": timeLimit,
             "scanProgress": zapResponse.data.status,
+            "alertSummary": zapAlertSummaryResponse.data,
             "currentScanTargetURL": currentScanTargetURL
           });
         }  
@@ -313,6 +336,7 @@ app.put('/get-scan-progress', async (req, res) => {
             "status": "waiting for finish",
             "timeElapsed": currentScanTime.toString(),
             "timeLimit": timeLimit,
+            "alertSummary": zapAlertSummaryResponse.data,
             "currentScanTargetURL": currentScanTargetURL
           });
         }else if(historyOfScanRequests[targetScanID]["statusOfProcess"] == "broken"){
@@ -325,6 +349,7 @@ app.put('/get-scan-progress', async (req, res) => {
             "timeElapsed": currentScanTime.toString(),
             "timeLimit": timeLimit,
             "scanProgress": zapResponse.data.status,
+            "alertSummary": zapAlertSummaryResponse.data,
             "currentScanTargetURL": currentScanTargetURL
           });
         }
@@ -350,32 +375,68 @@ app.put('/wait-for-scan-to-finish', async (req, res) => {
   let targetScanIDHash = requestData["hash"];
   let zapID = historyOfScanRequests[targetScanID]["zapID"]
 
-
-  try {
-    if (waitingForScanToFinish == false && isScanning == true){
-      const zapScanResultsResponse = await getScanResults(zapID);
-      const zapScanAlertsResponse = await getMostRecentScanAlerts();
-
-      if (zapScanResultsResponse != null && zapScanAlertsResponse != null && scanningTimerNeeded == false && waitingForScanToFinish == false){
-        console.log("SCAN FINISHED")
-        res.json({ 
-          "status": "success",
-          "timeElapsed": currentScanTime.toString(),
-          "timeLimit": timeLimit,
-          "scanResults": zapScanResultsResponse.data,
-          "scanAlerts": zapScanAlertsResponse.data,
-          "currentScanTargetURL": currentScanTargetURL
-        });
-        await clearAlertsForNewScan()
-        isScanning = false
+  if (historyOfScanRequests[currentScanID]["hash"] == targetScanIDHash){
+    try {
+      if (waitingForScanToFinish == false && isScanning == true){
+        const zapScanResultsResponse = await getScanResults(zapID);
+        const zapScanAlertsResponse = await getMostRecentScanAlerts();
+        const zapAlertSummaryResponse = await getAlertSummary();
+  
+        console.log("waitingForScanToFinish == false && isScanning == true")
+  
+        if (zapScanResultsResponse != null && zapScanAlertsResponse != null && scanningTimerNeeded == false && waitingForScanToFinish == false){
+          console.log("SCAN FINISHED")
+          res.json({ 
+            "status": "success",
+            "timeElapsed": currentScanTime.toString(),
+            "timeLimit": timeLimit,
+            "scanResults": zapScanResultsResponse.data,
+            "scanAlerts": zapScanAlertsResponse.data,
+            "alertSummary": zapAlertSummaryResponse.data,
+            "currentScanTargetURL": currentScanTargetURL
+          });
+          isScanning = false
+          await clearAlertsForNewScan()
+        }else{
+          res.json({ "status": "false" });
+        }
       }else{
+        if (isScanning == true){
+          if (waitingForScanToFinish == false){
+            console.log("clock called")
+            waitForScanToFinishClock()
+          }
+        }
         res.json({ "status": "false" });
       }
-    }else{
-      if (isScanning = true){
-        waitForScanToFinishClock()
+    }
+    catch (error) {
+      console.error('Error initiating spider scan:', error);
+      res.json({ "status": "fail" });
+    }
+  }else{
+    res.json({ "status": "fail" });
+  }
+});
+
+app.put('/cancel-scan', async (req, res) => {
+  console.log("/cancel-scan")
+  const requestData = req.body;
+  let targetScanID = requestData["scanid"];
+  let targetScanIDHash = requestData["hash"];
+  let zapID = historyOfScanRequests[targetScanID]["zapID"]
+
+
+  try {
+    if(targetScanIDHash == historyOfScanRequests[targetScanID]["hash"]){
+      console.log("Scan Set to Cancelled")
+      historyOfScanRequests[targetScanID]["statusOfProcess"] = "cancelled"
+      if (targetScanIDHash == historyOfScanRequests[currentScanID]["hash"]){
+        userCancelled = true
       }
-      res.json({ "status": "false" });
+      res.json({ "status": "success" });
+    }else{
+      res.json({ "status": "fail" });
     }
   }
   catch (error) {
@@ -399,6 +460,9 @@ async function startScanningTimer(scanID) {
   currentScanTime = 0
 
   while (counter < timeLimit && scanningTimerNeeded) {
+    if(historyOfScanRequests[scanID]["statusOfProcess"] == "cancelled"){
+      break
+    }
     console.log(`Current Scan Time Count: ${counter}`);
     await delay(1000);
     counter++;
@@ -413,6 +477,12 @@ async function startScanningTimer(scanID) {
   }else if(historyOfScanRequests[scanID]["statusOfProcess"] == "waiting"){
     historyOfScanRequests[scanID]["statusOfProcess"] = "broken"
     console.log("SCAN BROKEN")
+    let zapID = historyOfScanRequests[scanID]["zapID"]
+    await stopCurrentScan(zapID);
+    scanningTimerNeeded = false
+    waitForScanToFinishClock()
+  }else if(historyOfScanRequests[scanID]["statusOfProcess"] == "cancelled"){
+    console.log("SCAN CANCELLED")
     let zapID = historyOfScanRequests[scanID]["zapID"]
     await stopCurrentScan(zapID);
     scanningTimerNeeded = false
@@ -441,7 +511,7 @@ async function queueFlowCorrectionClock(){
 async function queueFlowCorrection() {
   queueCorrectionNeeded = true
   queueCorrectionCounting = true
-  let timeToDequeue = 10;
+  let timeToDequeue = 20;
   let counter = 0;
 
   while (counter <= timeToDequeue) {
@@ -487,7 +557,10 @@ async function waitForScanToFinishClock(){
         }else{
           console.log("waitingForScanToFinish = false")
           waitingForScanToFinish = false
-          checkIfUserDisconnectedFromScanner()
+
+          //I must find a way to handle disconnected users, since they don't call the last step
+          await checkIfUserDisconnectedFromScanner()
+    
         }
       }catch{
         console.log("No server response")
@@ -500,21 +573,32 @@ async function waitForScanToFinishClock(){
 async function checkIfUserDisconnectedFromScanner(){
   if (isScanning == true){
     console.log("checkIfUserDisconnectedFromScanner")
-    for (let i = 0; i < 6; i++) {
+    checkingIfUserIsDisconnected = true
+    for (let i = 0; i < 30; i++) {
+      if (userCancelled){
+        console.log("userCancelled == true")
+        await clearAlertsForNewScan()
+        isScanning = false
+        checkingIfUserIsDisconnected = false
+        return
+      }
       console.log("check: " + i)
-      await delay(5000);
+      await delay(1000);
+      // They are missing isScanning == false
+
       if (isScanning == false){
         console.log("isScanning == false")
-        break
+        checkingIfUserIsDisconnected = false
+        return
       }
     }
-    if (isScanning == true){
+    if (isScanning == true){ // If scanning is still true after 30 seconds, user is disconnected, scan is made false, this opens queue
       console.log("isScanning == true")
+      await clearAlertsForNewScan()
       isScanning = false
-      scanningTimerNeeded = false
-      waitingForScanToFinish = false
     }
   }
+  checkingIfUserIsDisconnected = false
   return
 }
 
@@ -584,8 +668,9 @@ async function getMostRecentScanAlerts(){
 // Function to get current progress of a scan
 async function clearAlertsForNewScan(targetScanID){
   try {
-    const zapResponse = await axios.get(`http://localhost:8080/JSON/core/action/deleteAllAlerts/?apikey=${zapAPIKey}`);
-    return zapResponse;
+    const zapDeleteAlertsResponse = await axios.get(`http://localhost:8080/JSON/core/action/deleteAllAlerts/?apikey=${zapAPIKey}`);
+    const zapRemoveScanResponse = await axios.get(`http://localhost:8080/JSON/spider/action/removeScan/?apikey=${zapAPIKey}&scanId=${targetScanID}`);
+    return zapDeleteAlertsResponse;
   }
   catch (error) {
       console.error('Error initiating spider scan:', error);
@@ -612,6 +697,19 @@ async function getTotalNumberOfAlerts(targetScanID){
   try {
     const totalNumberOfAlertsResponse = await axios.get(`http://localhost:8080/JSON/alert/view/numberOfAlerts/?apikey=${zapAPIKey}`);
     return totalNumberOfAlertsResponse;
+  }
+  catch (error) {
+      console.error('Error initiating spider scan:', error);
+
+      return null;
+  }
+}
+
+// Function that gets number of alerts grouped by each risk level, optionally filtering by URL
+async function getAlertSummary(targetScanID){
+  try {
+    const alertSummaryResponse = await axios.get(`http://localhost:8080/JSON/alert/view/alertsSummary/?apikey=${zapAPIKey}&baseurl=`);
+    return alertSummaryResponse;
   }
   catch (error) {
       console.error('Error initiating spider scan:', error);

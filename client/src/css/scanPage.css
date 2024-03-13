@@ -13,7 +13,25 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 15px 0px;
+    margin: 5vh 0px;
+    height: 90vh;
+    width: 100vw;
+}
+
+#backToHomeArrow{
+    background-color: rgb(128, 0, 0);
+    border: 2px solid black;
+    border-radius: 10px;
+    z-index: 999;
+    position: absolute;
+    margin-left: -56px;
+    margin-top: -70px;
+    cursor: pointer;
+}
+#backToHomeArrow i {
+    font-size: 40px;
+    transform: rotate(180deg);
+    margin: 10px 20px;
 }
 
 #scanPage-container {
@@ -43,21 +61,42 @@ body {
 
 #scanPage-scan-target-container {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     margin-right: 5px;
     max-width: 60vw;
 }
+#scanPage-scan-target-container div{
+    margin: 5px 0px;
+}
 
 #scanPage-scan-target-text {
-    white-space: nowrap;
+    cursor: default;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+#copiedToClipBoardNotification{
+    cursor: default;
+    color: var(--black-text);
+    text-shadow: 
+      -1px -1px 0 var(--blue-text),  
+       1px -1px 0 var(--blue-text),
+      -1px  1px 0 var(--blue-text),
+       1px  1px 0 var(--blue-text);
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 #scanPage-scan-target {
     color: var(--blue-text);
     text-decoration: none;
-    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
     max-width: 100%;
+}
+#scanPage-scan-target:hover{
+    text-decoration: underline;
 }
 
 #scanPage-initial-status-container {
@@ -82,8 +121,12 @@ body {
 
 #scanPage-progressBar-percentage-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
+}
+
+#scanPage-progressBar-percentage-value{
+    cursor: default;
 }
 
 #scanPage-time-limit-message {
@@ -169,11 +212,12 @@ body {
 
 /* View Details Button */
 .details-button {
+    opacity: 0;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     background-color: white;
-    cursor: pointer;
+    cursor: default;
     margin-top: 20px;
     align-items: center;
     justify-content: center;
@@ -181,6 +225,50 @@ body {
 
 .details-button:hover {
     background-color: gray;
+}
+
+#progressBarContainer{
+    display: flex;
+}
+.progress-bar-block{
+    opacity: 0;
+    background-color: white;
+    width: 10px;
+    height: 20px;
+    margin-right: 4px;
+}
+
+
+@media screen and (max-width: 656px) {
+    .progress-bar-block {
+        width: 8px;
+        height: 16px;
+        margin-right: 3px;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .progress-bar-block {
+        width: 7px;
+        height: 14px;
+        margin-right: 3px;
+    }
+}
+
+@media screen and (max-width: 416px) {
+    .progress-bar-block {
+        width: 6px;
+        height: 12px;
+        margin-right: 3px;
+    }
+}
+
+@media screen and (max-width: 338px) {
+    .progress-bar-block {
+        width: 5px;
+        height: 10px;
+        margin-right: 2px;
+    }
 }
 
 
