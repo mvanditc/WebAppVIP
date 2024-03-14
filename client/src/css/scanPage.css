@@ -80,7 +80,13 @@ body {
     margin-bottom: 5px;
 }
 
-#copiedToClipBoardNotification{
+#copiedTargetToClipBoardNotification{
+    position: absolute;
+    display: block;
+    z-index: 999;
+}
+
+.copiedToTargetURLClipBoardNotification{
     cursor: default;
     color: var(--black-text);
     text-shadow: 
@@ -217,14 +223,18 @@ body {
 /* View Details Button */
 .details-button {
     opacity: 0;
+    font-family: 'font1';
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     background-color: white;
     cursor: default;
     margin-top: 20px;
+    width: max-content;
+    margin-bottom: 10px;
     align-items: center;
     justify-content: center;
+    transition: opacity 0.5s ease;
 }
 
 .details-button:hover {
@@ -233,6 +243,9 @@ body {
 
 #progressBarContainer{
     display: flex;
+    padding: 4px;
+    border: 2px solid var(--white-text);
+    border-radius: 2px;
 }
 .progress-bar-block{
     opacity: 0;
@@ -251,6 +264,7 @@ body {
     flex-direction: column;
     align-items: stretch;
     font-family: 'font1';
+    margin-bottom: 4em;
 }
 
 #findingsAndFilterButton{
@@ -260,6 +274,7 @@ body {
     margin-left: 3em;
 }
 .scan-details-h1{
+    display: flex;
     font-size: 30px;
     margin-bottom: 1em;
 }
@@ -287,6 +302,7 @@ body {
     padding: 2em;
     margin: 2em 2em;
     border-radius: 5px;
+    width: 90%;
 }
 .view-details-issue-title{
     font-size: 26px;
@@ -294,9 +310,16 @@ body {
 }
 .view-details-issue-details-container{
     font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 .view-details-issue-detail{
     margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 11px;
 }
 .view-details-issue-detail-title{
     color: purple;
@@ -328,26 +351,95 @@ body {
     color: var(--blue-text);
 }
 .view-details-tag{
-    color: var(--blue-text);
     cursor: pointer;
     text-decoration: underline;
 }
-.view-details-reference{
+.view-details-tag a{
+    color: var(--blue-text);
+}
+.view-details-reference span {
+    display: block;
+    width: 60vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .view-details-reference a {
     color: var(--blue-text);
     cursor: pointer;
     text-decoration: underline;
-}
+  }
+
 .view-details-issue-confidence-links-container{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    color: #d0d0d0;;
+    margin-left: 5px;
 }
-.view-details-issue-confidence-links-container div{
-    width: 300px;
+.view-details-issue-confidence-links-container div span{
+    width: max-content;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.confidence-link:hover{
+    color: var(--blue-text);
+    text-decoration: underline;
+    cursor: pointer;
 
+}
+.view-details-issue-detail-confidence{
+    display: flex;
+    background-color: black;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    border-radius: 5px;
+}
+.view-details-issue-detail-confidence div{
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 90%;
+}
+.view-details-issue-detail-confidence-title{
+    color: white;
+    display: inline;
+}
+.copy-confidence-level-links-button{
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    width: max-content;
+    margin-bottom: 10px;
+}
+.json-clipboard-copy{
+    cursor: default;
+    color: var(--white-text);
+    text-shadow: 
+      -1px -1px 0 var(--blue-text),  
+       1px -1px 0 var(--blue-text),
+      -1px  1px 0 var(--blue-text),
+       1px  1px 0 var(--blue-text);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+.dictionaryRef{
+    margin-bottom: 10px;
+    color: var(--blue-text);
+}
+#exportToPDFButton{
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 20px;
+    width: max-content;
+    margin-bottom: 10px;
+}
 
 
 @media screen and (max-width: 656px) {
@@ -442,3 +534,98 @@ body {
         max-width: 40%;
     }
 }
+
+@media screen and (max-height: 866px) {
+    #scanPage-container {
+        font-size: 14px;
+    }
+}
+@media screen and (max-height: 731px) {
+    #scanPage-container {
+        font-size: 12px;
+        margin-bottom: 0px !important;
+    }
+}
+
+@media screen and (max-height: 770px) {
+    #backToHomeArrow{
+        margin-left: -32px;
+        margin-top: -40px;
+    }
+    #backToHomeArrow i{
+        font-size: 24px;
+        transform: rotate(180deg);
+        margin: 6px 14px;
+    }
+}
+
+@media screen and (max-height: 667px) {
+    #backToHomeArrow{
+        margin-left: -32px;
+        margin-top: -40px;
+    }
+    #backToHomeArrow i{
+        font-size: 24px;
+        transform: rotate(180deg);
+        margin: 6px 14px;
+    }
+}
+
+@media screen and (max-height: 610px) {
+    #backToHomeArrow{
+        margin-left: -32px;
+        margin-top: -40px;
+    }
+    #backToHomeArrow i{
+        font-size: 24px;
+        transform: rotate(180deg);
+        margin: 6px 14px;
+    }
+    #scanPage-container {
+        font-size: 10px;
+    }
+    #scanPage-vulnerabilities-container {
+        margin-bottom: 0px;
+    }
+}
+
+@media screen and (max-height: 476px) {
+    #backToHomeArrow{
+        margin-left: -32px;
+        margin-top: -40px;
+    }
+    #backToHomeArrow i{
+        font-size: 24px;
+        transform: rotate(180deg);
+        margin: 6px 14px;
+    }
+    #scanPage-container {
+        font-size: 10px;
+    }
+    #scanPage-vulnerabilities-container {
+        margin-bottom: 0px;
+    }
+}
+
+@media screen and (max-width: 367px) {
+    #backToHomeArrow{
+        margin-left: -32px;
+        margin-top: -40px;
+    }
+    #backToHomeArrow i{
+        font-size: 24px;
+        transform: rotate(180deg);
+        margin: 6px 14px;
+    }
+}
+
+@media screen and (max-width: 880px) {
+    .view-details-issue-container {
+        background-color: white;
+        color: black;
+        padding: 2em;
+        margin: 2em 2em;
+        border-radius: 5px;
+    }
+}
+

@@ -38,9 +38,26 @@ fs.readFile("db/vulnerabilityDictionaryData.json", 'utf8', (err, data) => {
 // API Key to use ZAP
 const zapAPIKey = "ljhuthfiai88rg6t58ia539434"
 
+// SHA-256 Hashing Function used for data security
+function applySHA256(message) {
+  const sha256Hash = crypto.createHash('sha256');
+  sha256Hash.update(message);
+  return sha256Hash.digest('hex');
+}
+
 // Client Usability Settings
-const timeLimit = 8 // Time Limit in Seconds
-const maxScanAmount = 3
+let adminCredentials = {
+  "username": applySHA256("admin"),
+  "password": applySHA256("123123123"),
+  "loginToken": ""
+}
+
+let adminManagedVariables = {
+  "scanTimeLimit": "120", // in Seconds
+  "maxScansPerDay": "3"
+}
+const timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
+const maxScanAmount = parseInt(adminManagedVariables["maxScanAmount"])
 
 var currentScanTime = 0
 
@@ -82,6 +99,71 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
 });
+
+app.get('/getusers', (req, res) => {
+  res.send(adminCredentials);
+});
+
+app.put('/attempt-authentication', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        console.log(adminCredentials["loginToken"])
+        console.log(attemptedLoginToken)
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+            res.json({"status": 'success'});
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
+app.put('/attempt-login', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedPassword = requestData["password"];
+
+  try{
+      if (adminCredentials["username"] == applySHA256(attemptedUsername)){
+        if (adminCredentials["password"] == applySHA256(attemptedPassword)){
+          let currentTimestamp = (Date.now()).toString()
+          let randomValue = (Math.random()).toString();
+          let newLoginToken = applySHA256(attemptedUsername + "-" + currentTimestamp + "-" + randomValue)
+          adminCredentials["loginToken"] = newLoginToken;
+          console.log("ATTEMPTING LOGIN: SUCCESS")
+          res.json({
+              "status": 'success',
+              "loginToken": newLoginToken
+          });
+      }else{
+          console.log("ATTEMPTING LOGIN: Incorrect Password")
+          res.json({"status": 'fail'});
+      }
+      }else{
+        console.log("ATTEMPTING LOGIN: Incorrect Username")
+        res.json({"status": 'fail'});
+      }
+
+  }catch(error){
+    console.error('An error occurred:', error.message);
+    res.json({"status": 'fail'});
+  }
+});
+
 
 app.get('/get-vulnerability-dictionary-data', (req, res) => {
   res.json(vulnerabilityDictionary);
@@ -446,13 +528,6 @@ app.put('/cancel-scan', async (req, res) => {
 });
 
 // Helper Functions
-
-// SHA-256 Hashing Function used for data security
-function applySHA256(message) {
-  const sha256Hash = crypto.createHash('sha256');
-  sha256Hash.update(message);
-  return sha256Hash.digest('hex');
-}
 
 // Scan Timing System
 async function startScanningTimer(scanID) {

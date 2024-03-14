@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dash</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="../../src/css/adminDash.css">
+  </head>
+  <body>
+    <div id="adminDashContainer">
+      <div class="largeSectionGroup">
+        <h1 class="adminDashLargeSectionTitle">Site Settings</h1>
+        <div class="adminDashLargeSection" id="adminDashSettingsSection">
+          <div id="configAndStatusBlackBox">
+            <span id="WelcomeAdminText">Welcome Admin!</span>
+            <div id="currentConfigurationsContainer" class="blackBoxTextGroup">
+              <span>Current Configurations:</span>
+              <span>&nbsp;&nbsp;Scan Seconds Limit: 120</span>
+              <span>&nbsp;&nbsp;Max Scans Per Day: 3</span>
+            </div>
+            <div id="previousLoginLocationContainer" class="blackBoxTextGroup">
+              <span>Previous Login Location:</span>
+              <span>&nbsp;&nbsp;London, Ontario, Canada</span>
+            </div>
+            <div id="previousLoginLocationContainer" class="blackBoxTextGroup">
+              <span>24 Hour Site Stats:</span>
+              <span>&nbsp;&nbsp;Users Queued: 402</span>
+              <span>&nbsp;&nbsp;Scans Attempted: 329</span>
+              <span>&nbsp;&nbsp;Alerts Found: 243,112</span>
+              <span>&nbsp;&nbsp;Queue Auto Corrections: 12</span>
+              <span>&nbsp;&nbsp;Scan Cancels: 32</span>
+              <span>&nbsp;&nbsp;Completed Scans: 285</span>
+            </div>
+          </div>
+          <div id="scanConfigurationInputsPortion">
+            <form id="scanConfigForm">
+              <div class="formInputGroup">
+                <label for="scanSecondsLimitInput">New Scan Seconds Limit:</label>
+                <input min="0" class="scanConfigNumberInput" type="number" id="scanSecondsLimitInput" name="scanSecondsLimitInput" required>
+              </div>
+
+              <div class="formInputGroup">
+                <label for="maxScansPerDayInput">New Max Scans Per Day:</label>
+                <input min="0" class="scanConfigNumberInput" type="number" id="maxScansPerDayInput" name="maxScansPerDayInput" required>
+              </div>
+
+              <div id="scanConfigButtonsContainer" class="formInputGroup">
+                <input class="submit-button" type="submit" value="Submit">
+                <button class="cancel-button">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="motdEditorPortion">
+            <form id="scanMOTDForm">
+              <span>Message of the Day HTML Editor</span>
+              <textarea></textarea>
+
+              <div class="formInputGroup">
+                <button class="cancel-button">Revert</button>
+                <input class="submit-button" type="submit" value="Save MOTD">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="largeSectionGroup">
+        <h1 class="adminDashLargeSectionAnalyticsTitle">Analytics</h1>
+        <div id="adminDashAnalyticsSection">
+          <div id="graphViewSelectorContainer">
+            <select>
+              <option>Graph Views</option>
+              <option>Hourly Total Scans VS Last 24 Hours</option>
+              <option>View 2</option>
+              <option>View 3</option>
+              <option>View 4</option>
+            </select>
+          </div>
+          <div id="AdminAnalyticsGraphContainer"><canvas id="AdminAnalyticsGraph"></canvas></div>
+        </div>
+      </div>
+    </div>
+    <script src="../../src/js/adminDash.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+      const ctx = document.getElementById('AdminAnalyticsGraph');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+          datasets: [{
+            label: '# of Scans Performed',
+            data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+            borderWidth: 1,
+            borderColor: lineColor
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          elements: {
+            canvas: {
+                backgroundColor: '#000000' // Background color
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -7,7 +7,7 @@ let processClockNeeded = false
 
 let scanDetailsButton = document.getElementById("scanDetailsButton")
 let scanPrecentageValue = document.getElementById("scanPage-progressBar-percentage-value")
-let copiedToClipBoardNotification = document.getElementById("copiedToClipBoardNotification")
+let copiedTargetURLToClipBoardNotification = document.getElementById("copiedTargetURLToClipBoardNotification")
 let scanStatusText = document.getElementById("scanPage-scan-status")
 let scanTimeElapsedText = document.getElementById("scanPage-time-elapsed-text")
 let scanTimeLimitText = document.getElementById("scanPage-time-limit-text")
@@ -22,7 +22,6 @@ let highRiskAmountText = document.getElementById("scanPage-high-risk")
 let moderateRiskAmountText = document.getElementById("scanPage-medium-risk")
 let lowRiskAmountText = document.getElementById("scanPage-low-risk")
 let informationalRiskAmountText = document.getElementById("scanPage-informational-risk")
-let unclassifiedRiskAmountText = document.getElementById("scanPage-unclassified-risk")
 
 let backToHomeArrow = document.getElementById("backToHomeArrow")
 
@@ -46,6 +45,40 @@ var currentlyPreparingResults = false
 var currentScanTime = 0
 
 var timeLimit = -1
+
+let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
+
+async function hideCopyToClipboardNotification(){
+    await delay(2000)
+    copiedTargetToClipBoardNotification.style.opacity = "0"
+}
+
+async function handleCopyMessage(element, event){
+    console.log("handleCopyMessage")
+    console.log(element)
+    if (element == document.getElementById("scanPage-scan-target")){
+        copiedTargetToClipBoardNotification.className = "copiedToTargetURLClipBoardNotification"
+        copiedTargetToClipBoardNotification.style.left = (event.pageX + 25) + 'px'; // Subtract half of the element's width
+        copiedTargetToClipBoardNotification.style.top = (event.pageY + 25) + 'px';
+        copiedTargetToClipBoardNotification.style.opacity = "1"
+        await hideCopyToClipboardNotification()
+        return
+    }else if(element.className == "copy-confidence-level-links-button"){
+        copiedTargetToClipBoardNotification.className = "json-clipboard-copy"
+        copiedTargetToClipBoardNotification.style.left = (event.pageX - 10) + 'px'; // Subtract half of the element's width
+        copiedTargetToClipBoardNotification.style.top = (event.pageY - 25) + 'px';
+        copiedTargetToClipBoardNotification.style.opacity = "1"
+        await hideCopyToClipboardNotification()
+        return
+    }else if(element.className == "confidence-link"){
+        copiedTargetToClipBoardNotification.className = "copiedToTargetURLClipBoardNotification"
+        copiedTargetToClipBoardNotification.style.left = (event.pageX + 15) + 'px'; // Subtract half of the element's width
+        copiedTargetToClipBoardNotification.style.top = (event.pageY) + 'px';
+        copiedTargetToClipBoardNotification.style.opacity = "1"
+        await hideCopyToClipboardNotification()
+        return
+    }
+}
 
 function handleCopyButtonForConfidenceLevelJSON(button){
     let selectedAlertRef = button.getAttribute('value');
@@ -134,9 +167,9 @@ function filterDetails(){
     }
 }
 
-function cancelScan(){
+async function cancelScan(){
     console.log("Cancelling Scan")
-    fetch("http://localhost:3030/cancel-scan", {
+    await fetch("http://localhost:3030/cancel-scan", {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -173,7 +206,7 @@ function prepareScanResultsViewing(){
     filterSelect.innerHTML = `
     <option value='all'>All (${scanAlertsSummaryTotal})</option>
     <option value='high'>High (${scanAlertsSummary["High"]})</option>
-    <option value='medium'>Medium (${scanAlertsSummary["Medium"]})</option>
+    <option value='medium'>Moderate (${scanAlertsSummary["Medium"]})</option>
     <option value='low'>Low (${scanAlertsSummary["Low"]})</option>
     <option value='informational'>Informational (${scanAlertsSummary["Informational"]})</option>
     `
@@ -200,22 +233,22 @@ function prepareScanResultsViewing(){
         switch(uniqueScanAlertsListArray[i]["alertData"]["risk"]) {
             case "High":
                 alertTitleWithCircle = `<i class="fa-solid fa-circle view-details-high-risk"></i> ${uniqueScanAlertsListArray[i]["alertData"]["name"]}`;
-                alertRiskTextWithColor = `Alert Risk: <div class="view-details-high-risk">High</div>`;
+                alertRiskTextWithColor = `Alert Risk:&nbsp;<div class="view-details-high-risk">High</div>`;
                 currentRiskLevel=1
                 break;
             case "Medium":
                 alertTitleWithCircle = `<i class="fa-solid fa-circle view-details-med-risk"></i> ${uniqueScanAlertsListArray[i]["alertData"]["name"]}`;
-                alertRiskTextWithColor = `Alert Risk: <div class="view-details-med-risk">Medium</div>`;
+                alertRiskTextWithColor = `Alert Risk:&nbsp;<div class="view-details-med-risk">Moderate</div>`;
                 currentRiskLevel=2
                 break;
             case "Low":
                 alertTitleWithCircle = `<i class="fa-solid fa-circle view-details-low-risk"></i> ${uniqueScanAlertsListArray[i]["alertData"]["name"]}`;
-                alertRiskTextWithColor = `Alert Risk: <div class="view-details-low-risk">Low</div>`;
+                alertRiskTextWithColor = `Alert Risk:&nbsp;<div class="view-details-low-risk">Low</div>`;
                 currentRiskLevel=3
                 break;
             case "Informational":
                 alertTitleWithCircle = `<i class="fa-solid fa-circle view-details-info-risk"></i> ${uniqueScanAlertsListArray[i]["alertData"]["name"]}`;
-                alertRiskTextWithColor = `Alert Risk: <div class="view-details-info-risk">Informational</div>`;
+                alertRiskTextWithColor = `Alert Risk:&nbsp;<div class="view-details-info-risk">Informational</div>`;
                 currentRiskLevel=4
                 break;
         }
@@ -237,7 +270,7 @@ function prepareScanResultsViewing(){
             if(alertReferencesArray[reference] == ""){
                 continue
             }
-            alertReferencesInnerHTML += `<div class="view-details-reference"><a href="https://${alertReferencesArray[reference]}" target="_blank">https://${alertReferencesArray[reference]}</a></div>`
+            alertReferencesInnerHTML += `<div class="view-details-reference"><span><a href="https://${alertReferencesArray[reference]}" target="_blank">https://${alertReferencesArray[reference]}</a></span></div>`
         }
 
         // Organize Confidence Levels
@@ -249,13 +282,13 @@ function prepareScanResultsViewing(){
         let lowConfidenceLinksInnerHTML = ""
 
         currentHighConfidenceLinks.forEach(highConfidenceLink => {
-            highConfidenceLinksInnerHTML += `<div>${highConfidenceLink}</div>`
+            highConfidenceLinksInnerHTML += `<div><span class="confidence-link">${highConfidenceLink}</span></div>`
         });
-        currentMediumConfidenceLinks.forEach(highConfidenceLink => {
-            mediumConfidenceLinksInnerHTML += `<div>${highConfidenceLink}</div>`
+        currentMediumConfidenceLinks.forEach(medConfidenceLink => {
+            mediumConfidenceLinksInnerHTML += `<div><span class="confidence-link">${medConfidenceLink}</span></div>`
         });
-        currentLowConfidenceLinks.forEach(highConfidenceLink => {
-            lowConfidenceLinksInnerHTML += `<div>${highConfidenceLink}</div>`
+        currentLowConfidenceLinks.forEach(lowConfidenceLink => {
+            lowConfidenceLinksInnerHTML += `<div><span class="confidence-link">${lowConfidenceLink}</span></div>`
         });
 
         let otherInfo = uniqueScanAlertsListArray[i]["alertData"]["other"]
@@ -268,12 +301,23 @@ function prepareScanResultsViewing(){
         if (otherInfo == ""){
             otherInfo = "N/A"
         }
+
+        if (highConfidenceLinksInnerHTML == ""){
+            highConfidenceLinksInnerHTML = "None found..."
+        }
+        if (mediumConfidenceLinksInnerHTML == ""){
+            mediumConfidenceLinksInnerHTML = "None found..."
+        }
+        if (lowConfidenceLinksInnerHTML == ""){
+            lowConfidenceLinksInnerHTML = "None found..."
+        }
+
         let newSectionInnerHTML = `
         <div class="view-details-issue-container" value="${currentRiskLevel}">
             <div class="view-details-issue-title">${alertTitleWithCircle}</div>
             <div class="view-details-issue-subtitles">
-                <div class="view-details-issue-subtitle">Alert Reference ID: <div class="alert-reference-id">${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}</div></div>
-                <div class="view-details-issue-subtitle"><a href="../../public/html/vulnerabilityDictPage.html#${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}" target="_blank">Link to Dictionary</a></div>
+                <div class="view-details-issue-subtitle">Alert Reference ID:&nbsp;<div class="alert-reference-id">${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}</div></div>
+                <div class="view-details-issue-subtitle"><a class="dictionaryRef" href="../../public/html/vulnerabilityDictPage.html#${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}" target="_blank">Link to Dictionary&nbsp;<i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
                 <div class="view-details-issue-subtitle">${alertRiskTextWithColor}</div>
             </div>
             <div class="view-details-issue-details-container">
@@ -301,19 +345,28 @@ function prepareScanResultsViewing(){
                     <div class="view-details-issue-detail-title">Other Information</div>
                     <div class="view-details-issue-detail-content">${otherInfo}</div>
                 </div>
+                <div class="json-clipboard-copy">(Copied to Clipboard)</div>
                 <button class="copy-confidence-level-links-button" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
-                <div class="view-details-issue-detail">
-                    <div class="view-details-issue-detail-title">High Confidence Links:</div>
-                    <div class="view-details-issue-confidence-links-container">${highConfidenceLinksInnerHTML}</div>
-                </div>
-                <div class="view-details-issue-detail">
-                    <div class="view-details-issue-detail-title">Medium Confidence Links:</div>
-                    <div class="view-details-issue-confidence-links-container">${mediumConfidenceLinksInnerHTML}</div>
-                </div>
-                <div class="view-details-issue-detail">
-                    <div class="view-details-issue-detail-title">Low Confidence Links:</div>
-                    <div class="view-details-issue-confidence-links-container">${lowConfidenceLinksInnerHTML}</div>
-                </div>
+                <div class="view-details-issue-detail-confidence">
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links: (${currentHighConfidenceLinks.length})</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                ${highConfidenceLinksInnerHTML}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Moderate</span> Confidence Links: (${currentMediumConfidenceLinks.length})</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                ${mediumConfidenceLinksInnerHTML}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-low-risk">Low</span> Confidence Links: (${currentLowConfidenceLinks.length})</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                ${lowConfidenceLinksInnerHTML}
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
         `
@@ -327,15 +380,36 @@ function prepareScanResultsViewing(){
     }
     issueSectionContainer.innerHTML += scanAlertsSectionInnerHTML
 
-    sortDetails();
-
     let copyConfidenceLevelLinksButtons = document.querySelectorAll(".copy-confidence-level-links-button")
     copyConfidenceLevelLinksButtons.forEach(button => {
-        button.addEventListener('click', ()=>{
+        button.addEventListener('click', (event)=>{
+            handleCopyMessage(button, event)
             handleCopyButtonForConfidenceLevelJSON(button)
         });
     });
-    
+
+    let generatedConfidenceLevelLinks = document.querySelectorAll(".confidence-link")
+    generatedConfidenceLevelLinks.forEach(link => {
+        link.addEventListener('click', (event)=>{
+            handleCopyMessage(link, event)
+            // Get the text from the paragraph element
+            var urlToCopy = link.innerText;
+            
+            // Copy the selected text to the clipboard
+            navigator.clipboard.writeText(urlToCopy)
+            .then(function() {
+            console.log('Text copied to clipboard: ' + urlToCopy);
+            })
+            .catch(function(err) {
+            console.error('Could not copy text: ', err);
+            });
+        });
+    });
+
+    sortDetails();
+
+    // Scroll to the findings header
+    document.getElementById("findings-heading").scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function secondsToMinutesAndSeconds(seconds){
@@ -380,13 +454,8 @@ async function preparingResultsTextMovingFunction(){
     currentlyPreparingResults = false
 }
 
-async function hideCopyToClipboardNotification(){
-    await delay(2000)
-    copiedToClipBoardNotification.style.opacity = "0"
-}
-scanTargetURL.addEventListener("click", ()=>{
-    copiedToClipBoardNotification.style.opacity = "1"
-    hideCopyToClipboardNotification()
+scanTargetURL.addEventListener("click", (event)=>{
+    handleCopyMessage(event.target, event)
 
     // Get the text from the paragraph element
     var urlToCopy = scanTargetURL.innerText;
@@ -478,7 +547,6 @@ async function waitForScanToFinish(){
             moderateRiskAmountText.innerText = alertSummaryData['Medium'];
             lowRiskAmountText.innerText = alertSummaryData['Low'];
             informationalRiskAmountText.innerText = alertSummaryData['Informational'];
-            unclassifiedRiskAmountText.innerText = "0";
             viewDetailsButton.style.opacity = "1"
             viewDetailsButton.disabled = false
             viewDetailsButton.style.cursor = "pointer"
@@ -519,7 +587,6 @@ async function checkScanProgress(){
             moderateRiskAmountText.innerText = alertSummaryData['Medium'];
             lowRiskAmountText.innerText = alertSummaryData['Low'];
             informationalRiskAmountText.innerText = alertSummaryData['Informational'];
-            unclassifiedRiskAmountText.innerText = "0";
             scanTargetURL.innerText = scanResultsData['currentScanTargetURL']
             scanStatusText.innerHTML = "Scanning"
             if (scanResultsData['scanProgress'] == "100"){
@@ -692,10 +759,17 @@ viewDetailsButton.addEventListener("click", prepareScanResultsViewing)
 
 filterSelect.addEventListener("input", filterDetails)
 
-backToHomeArrow.addEventListener("click", ()=>{
-    cancelScan()
-    sessionStorage.removeItem('scanid');
-    sessionStorage.removeItem('scanhash');
+backToHomeArrow.addEventListener("click", async ()=>{
+    if (waitingForScanToFinish == false){
+        sessionStorage.removeItem('scanid');
+        sessionStorage.removeItem('scanhash');
 
-    window.location.href = '../../public/html/index.html';
+        window.location.href = '../../public/html/index.html';
+    }else{
+        await cancelScan()
+        sessionStorage.removeItem('scanid');
+        sessionStorage.removeItem('scanhash');
+
+        window.location.href = '../../public/html/index.html';
+    }
 })

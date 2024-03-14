@@ -32,7 +32,6 @@
                 <div id="scanPage-scan-target-container">
                     <div id="scanPage-scan-target-text">Scan Target:</div>
                     <div id="scanPage-scan-target"></div>
-                    <div id="copiedToClipBoardNotification">(Copied to Clipboard)</div>
                 </div>
             </div>
             <div id="scanPage-progressBar-container">
@@ -148,10 +147,6 @@
                         <p>Informational Risk:&nbsp</p>
                         <p id="scanPage-informational-risk">-</p>
                     </div>
-                    <div class="scanPage-risk-container">
-                        <p>Unclassified Risk:&nbsp</p>
-                        <p id="scanPage-unclassified-risk">-</p>
-                    </div>
                 </div>
             </div>
             <div id="scanPage-view-details-container">
@@ -160,16 +155,18 @@
         </div>
     </div>
 
+    <div id="copiedTargetToClipBoardNotification" class="copiedToTargetURLClipBoardNotification">(Copied to Clipboard)</div>
+
     <div id="scanDetailsSectionContainer">
         <div id="findingsAndFilterButton">
-            <div class="scan-details-h1">Findings</div>
+            <div class="scan-details-h1" id="findings-heading">Findings <button id="exportToPDFButton">Export to PDF&nbsp;<i class="fa-solid fa-print"></i></button></div>
 
             <div id="FilterButtonWithLabelContainer">
                 <div>FILTER BY RISK LEVEL</div>
                 <select id="filterSelect">
                     <option>All</option>
                     <option>High</option>
-                    <option>Medium</option>
+                    <option>Moderate</option>
                     <option>Low</option>
                     <option>Informational</option>
                 </select>
@@ -201,56 +198,58 @@
                     <div class="view-details-issue-detail">
                         <div class="view-details-issue-detail-title">Reference</div>
                         <div class="view-details-issue-detail-content">
-                            <div class="view-details-reference">https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy</div>
-                            <div class="view-details-reference">https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</div>
-                            <div class="view-details-reference">https://www.w3.org/TR/CSP/\nhttps://w3c.github.io/webappsec-csp/\nhttps://web.dev/articles/csp</div>
-                            <div class="view-details-reference">https://caniuse.com/#feat=contentsecuritypolicy\nhttps://content-security-policy.com/</div>
+                            <div class="view-details-reference"><span><a>https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy</a></span></div>
+                            <div class="view-details-reference"><span><a>https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</a></span></div>
+                            <div class="view-details-reference"><span><a>https://www.w3.org/TR/CSP/\nhttps://w3c.github.io/webappsec-csp/\nhttps://web.dev/articles/csp</a></span></div>
+                            <div class="view-details-reference"><span><a>https://caniuse.com/#feat=contentsecuritypolicy\nhttps://content-security-policy.com/</a></span></div>
                         </div>
                     </div>
                     <div class="view-details-issue-detail">
                         <div class="view-details-issue-detail-title">Other Information</div>
                         <div class="view-details-issue-detail-content">The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</div>
                     </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">High Confidence Links:</div>
-                        <div class="view-details-issue-confidence-links-container">
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
+                    <div class="view-details-issue-detail-confidence">
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links:</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Medium Confidence Links:</div>
-                        <div class="view-details-issue-confidence-links-container">
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Medium</span> Confidence Links:</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Low Confidence Links:</div>
-                        <div class="view-details-issue-confidence-links-container">
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
-                            <div>https://www.link1.com</div>
+                        <div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-low-risk">Low</span> Confidence Links:</div>
+                            <div class="view-details-issue-confidence-links-container">
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                                <a>https://www.link1.com</a>
+                            </div>
                         </div>
                     </div>
                 </div>
