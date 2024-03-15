@@ -735,8 +735,10 @@ async function processScan(){
             attemptScan()
             return
         }else{
-            alert("Your queue position was invalid...")
-            window.location.href = '../../public/html/accessDenied.html';
+            if (data['siteSettingsChanged'] == "false"){
+                alert("Your queue position was invalid...")
+                window.location.href = '../../public/html/accessDenied.html';
+            }
         }
     })
     .catch(error => {

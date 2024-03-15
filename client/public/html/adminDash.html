@@ -16,8 +16,8 @@
             <span id="WelcomeAdminText">Welcome Admin!</span>
             <div id="currentConfigurationsContainer" class="blackBoxTextGroup">
               <span>Current Configurations:</span>
-              <span>&nbsp;&nbsp;Scan Seconds Limit: 120</span>
-              <span>&nbsp;&nbsp;Max Scans Per Day: 3</span>
+              <span id="scanSecondsLimitText">&nbsp;&nbsp;Scan Seconds Limit: 120</span>
+              <span id="maxScansPerDayText">&nbsp;&nbsp;Max Scans Per Day: 3</span>
             </div>
             <div id="previousLoginLocationContainer" class="blackBoxTextGroup">
               <span>Previous Login Location:</span>
@@ -32,22 +32,28 @@
               <span>&nbsp;&nbsp;Scan Cancels: 32</span>
               <span>&nbsp;&nbsp;Completed Scans: 285</span>
             </div>
+            <button id="siteStatsRefreshButton" class="submit-button">Refresh Stats</button>
           </div>
           <div id="scanConfigurationInputsPortion">
             <form id="scanConfigForm">
               <div class="formInputGroup">
                 <label for="scanSecondsLimitInput">New Scan Seconds Limit:</label>
-                <input min="0" class="scanConfigNumberInput" type="number" id="scanSecondsLimitInput" name="scanSecondsLimitInput" required>
+                <input min="0" class="scanConfigNumberInput" type="number" id="scanSecondsLimitInput" name="scanSecondsLimitInput">
               </div>
 
               <div class="formInputGroup">
                 <label for="maxScansPerDayInput">New Max Scans Per Day:</label>
-                <input min="0" class="scanConfigNumberInput" type="number" id="maxScansPerDayInput" name="maxScansPerDayInput" required>
+                <input min="0" class="scanConfigNumberInput" type="number" id="maxScansPerDayInput" name="maxScansPerDayInput">
+              </div>
+
+              <div class="formInputGroup">
+                <label for="confirmConfigChangesInput">Confirm Changes: </label>
+                <input type="checkbox" id="confirmConfigChangesInput" name="confirmConfigChangesInput" required>
               </div>
 
               <div id="scanConfigButtonsContainer" class="formInputGroup">
-                <input class="submit-button" type="submit" value="Submit">
-                <button class="cancel-button">Cancel</button>
+                <input id="scanConfigurationSubmitButton" class="submit-button" type="submit" value="Submit" disabled>
+                <button id="scanConfigurationCancelButton" class="cancel-button" disabled>Cancel</button>
               </div>
             </form>
           </div>
@@ -55,11 +61,16 @@
           <div id="motdEditorPortion">
             <form id="scanMOTDForm">
               <span>Message of the Day HTML Editor</span>
-              <textarea></textarea>
+              <textarea id="motdEditorTextArea"></textarea>
 
               <div class="formInputGroup">
-                <button class="cancel-button">Revert</button>
-                <input class="submit-button" type="submit" value="Save MOTD">
+                <label for="confirmMOTDChangesInput">Confirm Changes: </label>
+                <input type="checkbox" id="confirmMOTDChangesInput" name="confirmMOTDChangesInput" required>
+              </div>
+
+              <div class="formInputGroup">
+                <button id="motdEditorRevertButton" class="cancel-button" disabled>Revert</button>
+                <input id="motdEditorSubmitButton" class="submit-button" type="submit" value="Save MOTD" disabled>
               </div>
             </form>
           </div>

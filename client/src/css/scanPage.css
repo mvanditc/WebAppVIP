@@ -382,6 +382,7 @@ body {
     width: max-content;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 90%;
 }
 .confidence-link:hover{
     color: var(--blue-text);

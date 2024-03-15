@@ -2,6 +2,8 @@ let indexDataForm = document.getElementById("bottom-container")
 let indexDataSubmit = document.getElementById("search-button")
 let indexDataInput = document.getElementById("search-input")
 
+let motdSpace = document.getElementById("motdSpace")
+
 let queuePositionClockNeeded = false
 let queuePositionClockRunning = false
 
@@ -75,6 +77,24 @@ indexDataForm.addEventListener("submit", (event)=>{
         queuePositionCheckClock()
 
       }
+  })
+  .catch(error => {
+      console.error('Fetch error:', error.message);
+  });
+})
+
+document.addEventListener("DOMContentLoaded", (event)=>{
+  fetch("http://localhost:3030/get-site-motd")
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      };
+
+      return response.json();
+  })
+  .then(data => {
+      console.log('Site MOTD data from the backend:', data);
+      motdSpace.innerHTML = data["motd"]
   })
   .catch(error => {
       console.error('Fetch error:', error.message);

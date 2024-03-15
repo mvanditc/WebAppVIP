@@ -77,6 +77,10 @@ body {
 .cancel-button:hover{
   cursor: pointer;
 }
+.cancel-button:disabled{
+  background-color: #b58c8c;
+  cursor: default;
+}
 .submit-button{
   color: white;
   background-color: var(--background-color);
@@ -87,6 +91,10 @@ body {
 }
 .submit-button:hover{
   cursor: pointer;
+}
+.submit-button:disabled{
+  background-color: #cea9ff;
+  cursor: default;
 }
 .scanConfigNumberInput {
   background-color: black;
@@ -132,6 +140,10 @@ body {
   height: 500px;
   margin-bottom: 10px;
 }
+#scanMOTDForm .formInputGroup{
+  margin-bottom: 10px;
+}
+
 .largeSectionGroup{
   display: flex;
   flex-direction: column;

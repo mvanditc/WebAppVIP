@@ -54,10 +54,11 @@ let adminCredentials = {
 
 let adminManagedVariables = {
   "scanTimeLimit": "120", // in Seconds
-  "maxScansPerDay": "3"
+  "maxScansPerDay": "3",
+  "siteMOTDHTML": `<p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>`
 }
-const timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
-const maxScanAmount = parseInt(adminManagedVariables["maxScanAmount"])
+let timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
+let maxScanAmount = parseInt(adminManagedVariables["maxScansPerDay"])
 
 var currentScanTime = 0
 
@@ -78,6 +79,8 @@ var waitingForScanToFinish = false
 var userCancelled = false
 
 var checkingIfUserIsDisconnected = false
+
+var siteSettingsChanged = false
 
 var historyOfScanRequests = {} //{scanID: {"hash": hashedData, "targeturl": "www.example.com", "statusOfProcess": status, "zapID": id}} is an example of 1 entry
 const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete", "cancelled"]
@@ -100,8 +103,111 @@ app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
 });
 
+app.get('/get-site-motd', (req, res) => {
+  res.json({"motd": adminManagedVariables["siteMOTDHTML"]});
+});
+
 app.get('/getusers', (req, res) => {
   res.send(adminCredentials);
+});
+
+app.put('/change-site-motd', (req, res) => {
+  console.log("/change-site-motd")
+  const requestData = req.body;
+  let valueForSiteMOTD = requestData["valueForSiteMOTD"];
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+
+            adminManagedVariables["siteMOTDHTML"] = valueForSiteMOTD
+            console.log("Site MOTD Changed...")
+
+            res.json({"status": 'success'})
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
+app.put('/change-site-configuration', (req, res) => {
+  console.log("/change-site-configuration")
+  const requestData = req.body;
+  let valueForScanSeconds = requestData["valueForScanSeconds"];
+  let valueForScanPerDay = requestData["valueForScanPerDay"];
+
+  if (valueForScanSeconds == "null"){
+    valueForScanSeconds = adminManagedVariables["scanTimeLimit"]
+  }
+  if (valueForScanPerDay == "null"){
+    valueForScanPerDay = adminManagedVariables["maxScansPerDay"]
+  }
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+            siteSettingsChanged = true
+            console.log(requestData["valueForScanSeconds"])
+            console.log(requestData["valueForScanPerDay"])
+            console.log(valueForScanSeconds)
+            console.log(valueForScanPerDay)
+            siteSettingsChangedClock(valueForScanSeconds, valueForScanPerDay)
+
+            res.json({"status": 'success'})
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
+app.put('/get-site-configurations-for-admin', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+            res.json({
+              "status": 'success',
+              "siteSettings": {
+                "scanSecondsLimit": timeLimit,
+                "maxScansPerDay": maxScanAmount
+              }
+            });
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
 });
 
 app.put('/attempt-authentication', (req, res) => {
@@ -310,7 +416,7 @@ app.put('/process-queued-scan-if-next', (req, res) => {
   let targetScanIDHash = requestData["hash"];
 
   try{
-    if (isScanning == false && checkingIfUserIsDisconnected == false){
+    if (isScanning == false && checkingIfUserIsDisconnected == false && siteSettingsChanged == false){
       const scanIDScanPosition = (queue.indexOf(targetScanID)).toString();
       // If scan is next in queue and credentials match, then process request
       if (scanIDScanPosition == "0"){
@@ -331,7 +437,10 @@ app.put('/process-queued-scan-if-next', (req, res) => {
         res.json({ "status": "not ready" });
       }
     }else{
-      res.json({ "status": "scan tool busy" });
+      res.json({
+        "status": "scan tool busy",
+        "siteSettingsChanged": siteSettingsChanged
+    });
     }
   }catch(error){
     console.error('An error occurred:', error.message);
@@ -675,6 +784,30 @@ async function checkIfUserDisconnectedFromScanner(){
   }
   checkingIfUserIsDisconnected = false
   return
+}
+
+async function siteSettingsChangedClock(newScanSecondsValue, newMaxScansPerDayValue){
+  console.log("siteSettingsChangedClock Initialized")
+  while (true){
+    console.log("siteSettingsChangedClock Check")
+    if (isScanning == false && waitingForScanToFinish == false){
+      adminManagedVariables["scanTimeLimit"] = newScanSecondsValue
+      adminManagedVariables["maxScansPerDay"] = newMaxScansPerDayValue
+
+      console.log(newScanSecondsValue)
+      console.log(typeof newScanSecondsValue)
+      console.log(newMaxScansPerDayValue)
+      console.log(typeof newMaxScansPerDayValue)
+      console.log(adminManagedVariables)
+
+      timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
+      maxScanAmount = parseInt(adminManagedVariables["maxScansPerDay"])
+      console.log("Site Settings Changed")
+      siteSettingsChanged = false
+      return true
+    }
+    await delay(10000);
+  }
 }
 
 // Delay Function used for Timing
