@@ -167,6 +167,7 @@
     </div>
 
     <div id="copiedTargetToClipBoardNotification" class="copiedToTargetURLClipBoardNotification">(Copied to Clipboard)</div>
+    <div id="helpMessagePopup">Confidence levels are assigned to links to indicate the risk of a vulnerability being present at the given link. <br/><br/>The Higher the confidence, the higher the chance of the vulnerability being present.</div>
 
     <div id="scanDetailsSectionContainer">
         <div id="findingsAndFilterButton">
@@ -184,87 +185,7 @@
             </div>
         </div>
         <div id="issueSectionContainer">
-            <div class="view-details-issue-container">
-                <div class="view-details-issue-title"><i class="fa-solid fa-circle view-details-med-risk"></i> Issue Title</div>
-                <div class="view-details-issue-subtitles">
-                    <div class="view-details-issue-subtitle">Alert Reference ID: <div class="alert-reference-id">10038-1</div></div>
-                    <div class="view-details-issue-subtitle">Alert Risk: <div class="view-details-med-risk">Medium</div></div>
-                </div>
-                <div class="view-details-issue-details-container">
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Description</div>
-                        <div class="view-details-issue-detail-content">The page includes one or more script files from a third-party domain.</div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Actionable Steps</div>
-                        <div class="view-details-issue-detail-content">Ensure JavaScript source files are loaded from only trusted sources, and the sources can't be controlled by end users of the application.</div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Tags</div>
-                        <div class="view-details-issue-detail-content">
-                            <div class="view-details-tag">OWASP_2021_A01</div>
-                            <div class="view-details-tag">OWASP_2017_A05</div>
-                        </div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Reference</div>
-                        <div class="view-details-issue-detail-content">
-                            <div class="view-details-reference"><span><a>https://developer.mozilla.org/en-US/docs/Web/Security/CSP/Introducing_Content_Security_Policy</a></span></div>
-                            <div class="view-details-reference"><span><a>https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html</a></span></div>
-                            <div class="view-details-reference"><span><a>https://www.w3.org/TR/CSP/\nhttps://w3c.github.io/webappsec-csp/\nhttps://web.dev/articles/csp</a></span></div>
-                            <div class="view-details-reference"><span><a>https://caniuse.com/#feat=contentsecuritypolicy\nhttps://content-security-policy.com/</a></span></div>
-                        </div>
-                    </div>
-                    <div class="view-details-issue-detail">
-                        <div class="view-details-issue-detail-title">Other Information</div>
-                        <div class="view-details-issue-detail-content">The CORS misconfiguration on the web server permits cross-domain read requests from arbitrary third party domains, using unauthenticated APIs on this domain. Web browser implementations do not permit arbitrary third parties to read the response from authenticated APIs, however. This reduces the risk somewhat. This misconfiguration could be used by an attacker to access data that is available in an unauthenticated manner, but which uses some other form of security, such as IP address white-listing.</div>
-                    </div>
-                    <div class="view-details-issue-detail-confidence">
-                        <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links:</div>
-                            <div class="view-details-issue-confidence-links-container">
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Medium</span> Confidence Links:</div>
-                            <div class="view-details-issue-confidence-links-container">
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-low-risk">Low</span> Confidence Links:</div>
-                            <div class="view-details-issue-confidence-links-container">
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                                <a>https://www.link1.com</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 

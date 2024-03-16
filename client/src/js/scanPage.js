@@ -32,6 +32,9 @@ let issueSectionContainer = document.getElementById("issueSectionContainer")
 
 let filterSelect = document.getElementById("filterSelect")
 
+let helpMessagePopup = document.getElementById("helpMessagePopup")
+helpMessagePopup.style.opacity = "0"
+
 let highRiskAmountText = document.getElementById("scanPage-high-risk")
 let moderateRiskAmountText = document.getElementById("scanPage-medium-risk")
 let lowRiskAmountText = document.getElementById("scanPage-low-risk")
@@ -61,6 +64,20 @@ var timeLimit = -1
 var scanEndedEarly = false
 
 let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
+
+async function handleHelpMarkerClick(helpValue, event){
+    let helpMessage = ""
+    if (helpValue == "confidence-links"){
+        helpMessage = "Confidence levels are assigned to links to indicate the risk of a vulnerability being present at the given link.<br/><br/>The Higher the confidence, the higher the chance of the vulnerability being present."
+    }
+
+    helpMessagePopup.innerHTML = helpMessage
+    helpMessagePopup.style.left = (event.pageX + 25) + 'px'; // Subtract half of the element's width
+    helpMessagePopup.style.top = (event.pageY + 25) + 'px';
+    helpMessagePopup.style.opacity = "1"
+    await hideHelpMessagePopup()
+
+}
 
 function exportDataToPDF(){
     let confidenceLinkContainers = document.querySelectorAll(".view-details-issue-confidence-links-container")
@@ -105,6 +122,11 @@ function exportDataToJSON(data){
 async function hideCopyToClipboardNotification(){
     await delay(2000)
     copiedTargetToClipBoardNotification.style.opacity = "0"
+}
+
+async function hideHelpMessagePopup(){
+    await delay(7000)
+    helpMessagePopup.style.opacity = "0"
 }
 
 async function handleCopyMessage(element, event){
@@ -433,16 +455,17 @@ function prepareScanResultsViewing(){
                     <div class="view-details-issue-detail-content">${otherInfo}</div>
                 </div>
                 <div class="json-clipboard-copy">(Copied to Clipboard)</div>
+                <div value="confidence-links" class="help-marker">What are confidence links?</div>
                 <button class="copy-confidence-level-links-button" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
                 <div class="view-details-issue-detail-confidence">
                         <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links: (${currentHighConfidenceLinks.length})</div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links: (${currentHighConfidenceLinks.length}) </div>
                             <div class="view-details-issue-confidence-links-container">
                                 ${highConfidenceLinksInnerHTML}
                             </div>
                         </div>
                         <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Moderate</span> Confidence Links: (${currentMediumConfidenceLinks.length})</div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Moderate</span> Confidence Links: (${currentMediumConfidenceLinks.length}</div>
                             <div class="view-details-issue-confidence-links-container">
                                 ${mediumConfidenceLinksInnerHTML}
                             </div>
@@ -490,6 +513,13 @@ function prepareScanResultsViewing(){
             .catch(function(err) {
             console.error('Could not copy text: ', err);
             });
+        });
+    });
+
+    let helpMarkers = document.querySelectorAll(".help-marker")
+    helpMarkers.forEach(marker => {
+        marker.addEventListener('click', (event)=>{
+            handleHelpMarkerClick(marker.getAttribute("value"), event)
         });
     });
 
