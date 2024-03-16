@@ -1,6 +1,10 @@
 @import './global.css';
 @import './navbar.css';
 
+@page {
+    background: initial; /* Set background graphics option as default */
+}
+
 body {
     background-color: var(--background-color);
     color: white;
@@ -377,15 +381,25 @@ body {
 .view-details-issue-confidence-links-container{
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     color: #d0d0d0;;
     margin-left: 5px;
+    cursor: default;
+    overflow: hidden;
+    overflow-y: scroll; /* Ensure that text overflow is hidden */
+    max-height: 300px; /* Set initial height */
+    transition: max-height 0.3s ease; /* Add smooth transition effect */
+}
+.view-details-issue-confidence-links-container.expanded {
+  max-height: none; /* Allow the text to expand to its full height */
+  overflow: hidden; /* Hide scroll bar */
+  
 }
 .view-details-issue-confidence-links-container div span{
     width: max-content;
     overflow: hidden;
-    text-overflow: ellipsis;
     width: 90%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 .confidence-link:hover{
     color: var(--blue-text);
@@ -404,7 +418,6 @@ body {
     padding: 5px;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
     width: 90%;
 }
 .view-details-issue-detail-confidence-title{
@@ -435,7 +448,16 @@ body {
     margin-bottom: 10px;
     color: var(--blue-text);
 }
-#exportToPDFButton{
+#exportAllToPDFButton{
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 20px;
+    width: max-content;
+    margin-bottom: 10px;
+}
+#exportAllToJSONButton{
     padding: 10px 20px;
     border-radius: 5px;
     background-color: white;

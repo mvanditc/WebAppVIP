@@ -20,6 +20,11 @@ let scanTimeLimitMessageText = document.getElementById("scanPage-time-limit-mess
 let viewDetailsButton = document.getElementById("scanDetailsButton");
 let endScanEarlyButton = document.getElementById("endScanEarlyButton")
 
+let findingsAndFilterButton = document.getElementById("findingsAndFilterButton")
+
+let exportAllToJSONButton = document.getElementById("exportAllToJSONButton")
+let exportAllToPDFButton = document.getElementById("exportAllToPDFButton")
+
 viewDetailsButton.style.display="none"
 endScanEarlyButton.style.display="none"
 
@@ -56,6 +61,46 @@ var timeLimit = -1
 var scanEndedEarly = false
 
 let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
+
+function exportDataToPDF(){
+    let confidenceLinkContainers = document.querySelectorAll(".view-details-issue-confidence-links-container")
+    let copyConfidenceLinksJSONButtons = document.querySelectorAll(".copy-confidence-level-links-button")
+    confidenceLinkContainers.forEach(container => {
+        container.classList.toggle("expanded")
+    });
+    copyConfidenceLinksJSONButtons.forEach(button => {
+        button.style.display = "none"
+    });
+    findingsAndFilterButton.style.display = "none"
+    backToHomeArrow.style.display = "none"
+    window.print();
+    confidenceLinkContainers.forEach(container => {
+        container.classList.toggle("expanded")
+    });
+    copyConfidenceLinksJSONButtons.forEach(button => {
+        button.style.display = ""
+    });
+    findingsAndFilterButton.style.display = ""
+    backToHomeArrow.style.display = ""
+    
+}
+
+function exportDataToJSON(data){
+    // Convert JSON data to a string
+    var jsonString = JSON.stringify(data, null, 2);
+
+    // Create a blob containing the JSON string
+    var blob = new Blob([jsonString], { type: 'application/json' });
+
+    // Create a URL for the blob
+    var url = URL.createObjectURL(blob);
+
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+
+    // Revoke the URL to release resources
+    URL.revokeObjectURL(url);
+}
 
 async function hideCopyToClipboardNotification(){
     await delay(2000)
@@ -599,6 +644,12 @@ async function waitForScanToFinish(){
             viewDetailsButton.style.opacity = "1"
             viewDetailsButton.disabled = false
             viewDetailsButton.style.cursor = "pointer"
+            exportAllToJSONButton.addEventListener("click", ()=>{
+                exportDataToJSON(scanResultsData)
+            })
+            exportAllToPDFButton.addEventListener("click", ()=>{
+                exportDataToPDF()
+            })
         }
         scanFinishedRequestSent = false
     })
