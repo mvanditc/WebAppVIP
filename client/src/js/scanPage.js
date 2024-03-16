@@ -5,6 +5,12 @@ let progressCheckingClockNeeded = false
 
 let processClockNeeded = false
 
+let scanLeaveConfirmationContainer = document.getElementById("scanLeaveConfirmationContainer")
+let scanLeaveConfirmationSubmit = document.getElementById("scanLeaveConfirmationSubmit")
+let scanLeaveConfirmationCancel = document.getElementById("scanLeaveConfirmationCancel")
+
+scanLeaveConfirmationContainer.style.display = "none"
+
 let scanDetailsButton = document.getElementById("scanDetailsButton")
 let scanPrecentageValue = document.getElementById("scanPage-progressBar-percentage-value")
 let copiedTargetURLToClipBoardNotification = document.getElementById("copiedTargetURLToClipBoardNotification")
@@ -34,8 +40,6 @@ console.log(progressBarBlocks)
 let scanTargetURL = document.getElementById("scanPage-scan-target")
 
 let scanResultsData = {}
-
-let waitingForScanToFinish = true
 
 var scanFinishedResponseReceived = false
 var scanFinishedRequestSent = false
@@ -697,6 +701,7 @@ function attemptScan(){
     .then(data => {
         console.log('Scan Attempted:', data);
         if (data['status'] == "success"){
+            waitingForScanToFinish = true
             scanStatusText.innerHTML = "Scan Started"
             timeLimit = data['timeLimit']
 
@@ -761,17 +766,24 @@ viewDetailsButton.addEventListener("click", prepareScanResultsViewing)
 
 filterSelect.addEventListener("input", filterDetails)
 
-backToHomeArrow.addEventListener("click", async ()=>{
-    if (waitingForScanToFinish == false){
-        sessionStorage.removeItem('scanid');
-        sessionStorage.removeItem('scanhash');
-
-        window.location.href = '../../public/html/index.html';
-    }else{
+scanLeaveConfirmationSubmit.addEventListener("click", async ()=>{
+    if (waitingForScanToFinish == true){
         await cancelScan()
         sessionStorage.removeItem('scanid');
         sessionStorage.removeItem('scanhash');
 
         window.location.href = '../../public/html/index.html';
+    }else{
+        sessionStorage.removeItem('scanid');
+        sessionStorage.removeItem('scanhash');
+
+        window.location.href = '../../public/html/index.html';
     }
+})
+
+scanLeaveConfirmationCancel.addEventListener("click", ()=>{
+    scanLeaveConfirmationContainer.style.display = "none"
+})
+backToHomeArrow.addEventListener("click", async ()=>{
+    scanLeaveConfirmationContainer.style.display = ""
 })

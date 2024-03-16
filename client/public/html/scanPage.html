@@ -24,6 +24,16 @@
 </head>
 
 <body>
+    <div id="scanLeaveConfirmationContainer">
+        <div id="scanLeaveConfirmationForm">
+            <div>Results will be&nbsp;<span>lost</span>, are you sure?</div>
+            <div>
+                <button id="scanLeaveConfirmationSubmit">Yes</button>
+                <button id="scanLeaveConfirmationCancel">No</button>
+            </div>
+        </div>
+    </div>
+
     <!--  HTML CODE FOR BODY  -->
     <div id="scanPage-main-container">
         <div id="scanPage-container">
@@ -159,7 +169,7 @@
 
     <div id="scanDetailsSectionContainer">
         <div id="findingsAndFilterButton">
-            <div class="scan-details-h1" id="findings-heading">Findings <button id="exportToPDFButton">Export to PDF&nbsp;<i class="fa-solid fa-print"></i></button></div>
+            <div class="scan-details-h1" id="findings-heading">Findings <button id="exportToPDFButton">Export to PDF&nbsp;<i class="fa-solid fa-print"></i></button><button id="exportToPDFButton">Export to JSON&nbsp;<i class="fa-solid fa-code"></i></button></div>
 
             <div id="FilterButtonWithLabelContainer">
                 <div>FILTER BY RISK LEVEL</div>

@@ -442,6 +442,75 @@ body {
     margin-bottom: 10px;
 }
 
+#scanLeaveConfirmationContainer{
+    position: absolute;
+    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(17, 17, 17, 0.89);
+    z-index: 1999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#scanLeaveConfirmationForm{
+    display: flex;
+    flex-direction: column;
+    margin-top: -15%;
+    background-color: black;
+    font-family: "font1";
+    font-size: 26px;
+    padding: 35px 15px;
+    border-radius: 5px;
+}
+#scanLeaveConfirmationForm div{
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+#scanLeaveConfirmationForm div span{
+    text-decoration: underline;
+}
+#scanLeaveConfirmationSubmit{
+    font-family: 'font1';
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--navbar-color);
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 45%;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+#scanLeaveConfirmationSubmit:hover{
+    background-color: #6f00de;
+}
+#scanLeaveConfirmationCancel{
+    font-family: 'font1';
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #a94343;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 45%;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+}
+#scanLeaveConfirmationCancel:hover{
+    background-color: #e85e5e;
+}
+
 
 @media screen and (max-width: 656px) {
     .progress-bar-block {

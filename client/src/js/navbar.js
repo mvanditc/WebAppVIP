@@ -4,6 +4,8 @@ navbarContainer = document.getElementById("navbarContainer");
 scanNavbarButton = document.getElementById("scanNavbarbutton");
 aboutUsNavbarbutton = document.getElementById("aboutUsNavbarbutton");
 
+let navbarLogo = document.getElementById("navbarLogo")
+
 navbarShowing = -1
 resourcesNavbarbutton = document.getElementById("resourcesNavbarbutton");
 navbarChevron = document.getElementById("navbarChevron")
@@ -28,13 +30,19 @@ techUsedHamburgbutton = document.getElementById("techUsedHamburgbutton");
 vulnerabilityDictHamburgbutton = document.getElementById("vulnerabilityDictHamburgbutton");
 
 // Preseting the Navbar/Hamburger visibility
-if (window.innerWidth < 780){
+if (window.innerWidth < 900){
+    if(window.innerWidth < 351){
+        navbarLogo.src = "../assets/navbar-logo-short.png"
+    }else{
+        navbarLogo.src = "../assets/navbar-logo.png"
+    }
     navbarContainer.style.display = "none";
     hamburgerContainer.style.display = "flex";
     hamburgShowing = 1
     navbarShowing = -1
 }
 else{
+    navbarLogo.src = "../assets/navbar-logo.png"
     navbarContainer.style.display = "flex";
     hamburgerContainer.style.display = "none";
     navbarShowing = 1
@@ -43,7 +51,12 @@ else{
 
 // Window resize listener that controls navbar and hamburger visibility.
 window.addEventListener("resize", ()=>{
-    if (window.innerWidth < 780){
+    if (window.innerWidth < 900){
+        if(window.innerWidth < 351){
+            navbarLogo.src = "../assets/navbar-logo-short.png"
+        }else{
+            navbarLogo.src = "../assets/navbar-logo.png"
+        }
         navbarContainer.style.display = "none";
         navbarListContainer.style.display = "none"
         hamburgerContainer.style.display = "flex";
@@ -55,6 +68,7 @@ window.addEventListener("resize", ()=>{
         resourcesNavbarbutton.style.backgroundColor = ""
     }
     else{
+        navbarLogo.src = "../assets/navbar-logo.png"
         navbarContainer.style.display = "flex";
         hamburgerContainer.style.display = "none";
         hamburgerTopLevelList.style.display = "none"

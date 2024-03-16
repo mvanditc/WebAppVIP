@@ -87,6 +87,18 @@ const scanHistoryProcesses = ["false", "waiting", "done", "broken", "incomplete"
 
 let confidenceLevelReturnData = {};
 
+// The following dictionary variables represent data stored in the backend:
+let scanAttemptsForEachUser = {}
+
+let allScanAttemptsMade = {
+	"timestamp": {
+		"targetURL": "url",
+		"scanStatus": "status",
+		"totalAlertsFound": "number",
+		"timeElapsed": "number"
+	}
+}
+
 // Initializing ExpressJS Application
 const app = express();
 const port = 3030;
@@ -101,6 +113,10 @@ app.use(bodyParser.json());
 // Defining ExpressJS Routes
 app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
+});
+
+app.get('/user-scans-data', (req, res) => {
+  res.json(scanAttemptsForEachUser);
 });
 
 app.get('/get-site-motd', (req, res) => {
@@ -265,7 +281,7 @@ app.put('/attempt-login', (req, res) => {
       }
 
   }catch(error){
-    console.error('An error occurred:', error.message);
+    console.error('attempt login error occured:', error.message);
     res.json({"status": 'fail'});
   }
 });
@@ -296,14 +312,6 @@ app.get('/view-queue', (req, res) => {
 
 app.put('/add-scan-to-queue', (req, res) => {
   console.log("/add-scan-to-queue")
-  const ipAddress = req.ip;
-  const host = req.hostname;
-  console.log(ipAddress)
-  console.log(host)
-
-  const requestData = req.body;
-  let scanTargetURL = requestData["url"];
-
   let currentTimestamp = Date.now()
   currentTimestamp = currentTimestamp.toString()
 
@@ -314,46 +322,88 @@ app.put('/add-scan-to-queue', (req, res) => {
 
   let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
 
-  let hashForNewRequestHistoryEntry = {
-    "hash": scanHash,
-    "targetURL": scanTargetURL,
-    "statusOfProcess": "false",
-    "zapID": "-1"
+  var userHasEnoughScans = false
+
+  const requestData = req.body;
+  let scanTargetURL = requestData["url"];
+  let givenUserID = requestData["userid"];
+
+  let functionResponse = doesUserHaveSufficientDaysLeft(givenUserID, scanHash)
+  let userNeedsNewID = false
+  let newUserID = ""
+  userHasEnoughScans = functionResponse[0]
+
+  let userScansLeft = functionResponse[2]
+
+  console.log(functionResponse)
+
+  if (functionResponse[1] != false){
+    userNeedsNewID = true
+    newUserID = functionResponse[1]
   }
 
-  try{
-    // Logic for Entering Request Into Scan Request History
-    if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
-      // This code finds a new index for the entry
-      while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
-        currentTimestamp = (Date.now()).toString()
+  if (userHasEnoughScans){
+    try{
+  
+      let hashForNewRequestHistoryEntry = {
+        "hash": scanHash,
+        "targetURL": scanTargetURL,
+        "statusOfProcess": "false",
+        "zapID": "-1"
       }
-      historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-      queue.push(currentTimestamp)
-      res.json({
-        "status": "success",
-        "scanID": currentTimestamp,
-        "hash": scanHash
-      });
-    }else {
-      historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-      queue.push(currentTimestamp)
-      res.json({
-        "status": "success",
-        "scanID": currentTimestamp,
-        "hash": scanHash
-      });
+  
+      // Logic for Entering Request Into Scan Request History
+      if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
+        // This code finds a new index for the entry
+        while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
+          currentTimestamp = (Date.now()).toString()
+        }
+        historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+        queue.push(currentTimestamp)
+
+        if (userNeedsNewID){
+          res.json({
+            "status": "success",
+            "scanID": currentTimestamp,
+            "hash": scanHash,
+            "userID": newUserID,
+            "scansLeft": userScansLeft
+          });
+        }else{
+          res.json({
+            "status": "success",
+            "scanID": currentTimestamp,
+            "hash": scanHash,
+            "userID": "false",
+            "scansLeft": userScansLeft
+          });
+        }
+      }else {
+        historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+        queue.push(currentTimestamp)
+        res.json({
+          "status": "success",
+          "scanID": currentTimestamp,
+          "hash": scanHash,
+          "userID": newUserID,
+          "scansLeft": userScansLeft
+        });
+      }
+    }catch{
+      res.json({ "status": "fail" });
     }
-  }catch{
-    res.json({ "status": "fail" });
+  }else{
+    res.json({ "status": "max scans" });
   }
 
 });
 
 app.put('/remove-scan-from-queue', (req, res) => {
+  console.log("/remove-scan-from-queue")
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
+  let requestingUserID = requestData["userid"]
 
   try{
     if (queue.includes(targetScanID)){
@@ -365,6 +415,7 @@ app.put('/remove-scan-from-queue', (req, res) => {
 
       if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash){
         queue.splice(scanIDScanPosition, 1);
+        scanAttemptsForEachUser[requestingUserID][targetScanIDHash] = "cancelled"
         res.json({"status": "success"});
       }else{
         res.json({ "status": "invalid scan id" });
@@ -373,7 +424,7 @@ app.put('/remove-scan-from-queue', (req, res) => {
       res.json({ "status": "not found" });
     }
   }catch(error){
-    console.error('An error occurred:', error.message);
+    console.error('removing scan from queue error occurred:', error.message);
     res.json({ "status": "fail" });
   }
 });
@@ -404,7 +455,7 @@ app.get('/get-scan-queue-position', (req, res) => {
       res.json({ "status": "fail" });
     }
   }catch(error){
-    console.error('An error occurred:', error.message);
+    console.error('getting scan queue position error occurred:', error.message);
     res.json({ "status": "fail" });
   }
 });
@@ -443,7 +494,7 @@ app.put('/process-queued-scan-if-next', (req, res) => {
     });
     }
   }catch(error){
-    console.error('An error occurred:', error.message);
+    console.error('queue processing error occurred:', error.message);
     res.json({ "status": "fail" });
   }
 });
@@ -494,68 +545,72 @@ app.put('/get-scan-progress', async (req, res) => {
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
 
-  let zapID = historyOfScanRequests[targetScanID]["zapID"]
-  let storedScanHash = historyOfScanRequests[targetScanID]["hash"]
-  let storedStatusOfProcess = historyOfScanRequests[targetScanID]["statusOfProcess"]
+  try{
+    let zapID = historyOfScanRequests[targetScanID]["zapID"]
+    let storedScanHash = historyOfScanRequests[targetScanID]["hash"]
+    let storedStatusOfProcess = historyOfScanRequests[targetScanID]["statusOfProcess"]
 
-  try {
-    //if requesting user's hash is valid and the current scan has the statusOfProcess library value set to the zapID
-    if (storedScanHash == targetScanIDHash && storedStatusOfProcess == zapID){
-
-      const zapResponse = await getScanProgress(zapID);
-      const zapAlertSummaryResponse = await getAlertSummary();
-
-      if (zapResponse.data.status == "100"){
-        if (historyOfScanRequests[targetScanID]["statusOfProcess"] != "incomplete" && historyOfScanRequests[targetScanID]["statusOfProcess"] != "broken"){
-          historyOfScanRequests[targetScanID]["statusOfProcess"] = "done"
-          
-          scanningTimerNeeded = false
-          waitForScanToFinishClock()
-
-          res.json({ 
-            "status": "success",
-            "timeElapsed": currentScanTime.toString(),
-            "timeLimit": timeLimit,
-            "scanProgress": zapResponse.data.status,
-            "alertSummary": zapAlertSummaryResponse.data,
-            "currentScanTargetURL": currentScanTargetURL
-          });
-        }  
-      }else{
-        if (historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
-
-          res.json({ 
-            "status": "waiting for finish",
-            "timeElapsed": currentScanTime.toString(),
-            "timeLimit": timeLimit,
-            "alertSummary": zapAlertSummaryResponse.data,
-            "currentScanTargetURL": currentScanTargetURL
-          });
-        }else if(historyOfScanRequests[targetScanID]["statusOfProcess"] == "broken"){
-          res.json({ 
-            "status": "scan broken"
-          });
+    try {
+      //if requesting user's hash is valid and the current scan has the statusOfProcess library value set to the zapID
+      if (storedScanHash == targetScanIDHash && storedStatusOfProcess == zapID){
+  
+        const zapResponse = await getScanProgress(zapID);
+        const zapAlertSummaryResponse = await getAlertSummary();
+  
+        if (zapResponse.data.status == "100"){
+          if (historyOfScanRequests[targetScanID]["statusOfProcess"] != "incomplete" && historyOfScanRequests[targetScanID]["statusOfProcess"] != "broken"){
+            historyOfScanRequests[targetScanID]["statusOfProcess"] = "done"
+            
+            scanningTimerNeeded = false
+            waitForScanToFinishClock()
+  
+            res.json({ 
+              "status": "success",
+              "timeElapsed": currentScanTime.toString(),
+              "timeLimit": timeLimit,
+              "scanProgress": zapResponse.data.status,
+              "alertSummary": zapAlertSummaryResponse.data,
+              "currentScanTargetURL": currentScanTargetURL
+            });
+          }  
         }else{
-          res.json({ 
-            "status": "success",
-            "timeElapsed": currentScanTime.toString(),
-            "timeLimit": timeLimit,
-            "scanProgress": zapResponse.data.status,
-            "alertSummary": zapAlertSummaryResponse.data,
-            "currentScanTargetURL": currentScanTargetURL
-          });
+          if (historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
+  
+            res.json({ 
+              "status": "waiting for finish",
+              "timeElapsed": currentScanTime.toString(),
+              "timeLimit": timeLimit,
+              "alertSummary": zapAlertSummaryResponse.data,
+              "currentScanTargetURL": currentScanTargetURL
+            });
+          }else if(historyOfScanRequests[targetScanID]["statusOfProcess"] == "broken"){
+            res.json({ 
+              "status": "scan broken"
+            });
+          }else{
+            res.json({ 
+              "status": "success",
+              "timeElapsed": currentScanTime.toString(),
+              "timeLimit": timeLimit,
+              "scanProgress": zapResponse.data.status,
+              "alertSummary": zapAlertSummaryResponse.data,
+              "currentScanTargetURL": currentScanTargetURL
+            });
+          }
         }
+      }else if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash && historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
+        res.json({ 
+          "status": "waiting for finish"
+        });
+      }else{
+        res.json({ "status": "invalid scan id" });
       }
-    }else if (historyOfScanRequests[targetScanID]["hash"] == targetScanIDHash && historyOfScanRequests[targetScanID]["statusOfProcess"] == "incomplete"){
-      res.json({ 
-        "status": "waiting for finish"
-      });
-    }else{
-      res.json({ "status": "invalid scan id" });
     }
-  }
-  catch (error) {
-    console.error('Error initiating spider scan:', error);
+    catch (error) {
+      console.error('Error initiating spider scan:', error);
+      res.json({ "status": "fail" });
+    }
+  }catch{
     res.json({ "status": "fail" });
   }
 });
@@ -565,7 +620,6 @@ app.put('/wait-for-scan-to-finish', async (req, res) => {
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
-  let zapID = historyOfScanRequests[targetScanID]["zapID"]
 
   if (historyOfScanRequests[currentScanID]["hash"] == targetScanIDHash){
     try {
@@ -615,23 +669,27 @@ app.put('/cancel-scan', async (req, res) => {
   const requestData = req.body;
   let targetScanID = requestData["scanid"];
   let targetScanIDHash = requestData["hash"];
-  let zapID = historyOfScanRequests[targetScanID]["zapID"]
 
+  try{
+    let zapID = historyOfScanRequests[targetScanID]["zapID"]
 
-  try {
-    if(targetScanIDHash == historyOfScanRequests[targetScanID]["hash"]){
-      console.log("Scan Set to Cancelled")
-      historyOfScanRequests[targetScanID]["statusOfProcess"] = "cancelled"
-      if (targetScanIDHash == historyOfScanRequests[currentScanID]["hash"]){
-        userCancelled = true
+    try {
+      if(targetScanIDHash == historyOfScanRequests[targetScanID]["hash"]){
+        console.log("Scan Set to Cancelled")
+        historyOfScanRequests[targetScanID]["statusOfProcess"] = "cancelled"
+        if (targetScanIDHash == historyOfScanRequests[currentScanID]["hash"]){
+          userCancelled = true
+        }
+        res.json({ "status": "success" });
+      }else{
+        res.json({ "status": "fail" });
       }
-      res.json({ "status": "success" });
-    }else{
+    }
+    catch (error) {
+      console.error('Error initiating spider scan:', error);
       res.json({ "status": "fail" });
     }
-  }
-  catch (error) {
-    console.error('Error initiating spider scan:', error);
+  }catch{
     res.json({ "status": "fail" });
   }
 });
@@ -979,14 +1037,68 @@ function populate_confidenceLevelReturnData(scanResults){
             confidenceLevelReturnData[alert.alertRef].lowConfidence.push(alert.url);
       }
   })
-} 
+}
 
-// Allow Backend to Listen for Requests
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+function getCurrentDate(){
+  var currentDate = new Date();
+
+  var currentYear = currentDate.getFullYear();
+  var currentMonth = currentDate.getMonth() + 1; // Months are zero-based, so January is 0, February is 1, etc.
+  var currentDay = currentDate.getDate();
+
+  // Formatting month and day to have leading zeros if needed
+  currentMonth = currentMonth < 10 ? '0' + currentMonth : currentMonth;
+  currentDay = currentDay < 10 ? '0' + currentDay : currentDay;
+
+  // Output in yy/mm/dd format
+  var formattedDate = currentYear.toString().substr(-2) + '/' + currentMonth + '/' + currentDay;
+  return formattedDate
+}
+
+function doesUserHaveSufficientDaysLeft(givenUserID, scanHash){
+  let currentDate = getCurrentDate();
+  let currentTimestamp = (Date.now()).toString()
+
+  if (givenUserID == "empty" || !scanAttemptsForEachUser.hasOwnProperty(givenUserID)){
+    let newUserID = applySHA256(currentTimestamp)
+    scanAttemptsForEachUser[newUserID] = {[scanHash]: currentDate}
+    return [true, newUserID, 1]
+
+  }else{
+    if (scanAttemptsForEachUser.hasOwnProperty(givenUserID)) {
+      let scansLeft = parseInt(adminManagedVariables["maxScansPerDay"])
+
+      var keys = Object.keys(scanAttemptsForEachUser[givenUserID]);
+      for (var i = keys.length - 1; i >= 0; i--) {
+        if (scanAttemptsForEachUser[givenUserID][keys[i]] == currentDate){
+          scansLeft-=1
+        }
+        if (scansLeft <= 0){
+          console.log("Scan Limit Exceeded")
+          return [false, false, scansLeft]
+        }
+        console.log(scansLeft)
+      }
+      scanAttemptsForEachUser[givenUserID][scanHash] = currentDate
+      return [true, false, scansLeft]
+    }
+    return [false, false, 0]
+  }
+}
+
+async function prepareZAPForServer(){
+  // Stop All ZAP Scans
+  const alertSummaryResponse = await axios.get(`http://localhost:8080/JSON/spider/action/stopAllScans/?apikey=${zapAPIKey}`);
+  
+  // Allow Backend to Listen for Requests
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+
+  return alertSummaryResponse;
+}
+prepareZAPForServer()
 
 queueFlowCorrectionClock();
-
 //////////////////////////////////////////////////////
 //Backend Code End

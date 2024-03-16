@@ -55,9 +55,10 @@
 }
 
 .navbar-logo {
-    height: 80%;
+    height: 110%;
     width: auto;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .navbar-toplevel-chevron {

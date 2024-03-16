@@ -32,7 +32,7 @@
     <!--  HTML CODE FOR THE NAV BAR  -->
     <div class="navbar">
         <div class="navbar-logo-container">
-            <a href="index.html" target="_self"><img alt="navbar-logo" src="../assets/navbar-logo.png" class="navbar-logo prevent-select"></a>
+            <a href="index.html" target="_self"><img alt="navbar-logo" id="navbarLogo" src="../assets/navbar-logo.png" class="navbar-logo prevent-select"></a>
         </div>
 
         <div id="languageSelectorButton">
@@ -276,13 +276,26 @@
             <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>            
         </div>  
     </div>
+
+    <div id="scanLimitReachedWarningDivContainer">
+        <div id="scanLimitReachedWarningDiv">SCAN LIMIT REACHED...</div>
+    </div>
     
     <!--HTML Code for Search Bar-->
-    <form id="bottom-container" class="bottom-container">
-        <label for="search-input" class="search-label">URL to Scan:</label>
-        <input type="text" id="search-input" aria-label="URL to Scan">
-        <button type="submit" id="search-button">Scan</button>
-    </form>
+    <div id="searchBarWithMessagesContainer">
+        <form id="bottom-container" class="bottom-container">
+            <label for="search-input" class="search-label">URL to Scan:</label>
+            <input type="text" id="search-input" aria-label="URL to Scan">
+            <button type="submit" id="search-button">Scan</button>
+        </form>
+        <div id="queueDetailsContainer">
+            <div id="queueStatusLabel">Queue Status:</div>
+            <div id="queueStatusDiv">Waiting...</div>
+            <div>Queue Position: <span id="queuePositionSpan">5</span></div>
+            <div>Scans Left: <span id="scansLeftSpan">3</span></div>
+            <button id="cancel-button">Cancel</button>
+        </div>
+    </div>
 
     <!--  HTML CODE FOR BODY  -->
     <script src="../../src/js/navbar.js"></script>
