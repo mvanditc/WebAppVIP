@@ -373,56 +373,79 @@ app.get('/view-queue', (req, res) => {
 
 app.put('/add-scan-to-queue', (req, res) => {
   console.log("/add-scan-to-queue")
-  let currentTimestamp = Date.now()
-  currentTimestamp = currentTimestamp.toString()
-
-  let randomNumber1 = Math.floor(Math.random() * 255);
-  let randomNumber2 = Math.floor(Math.random() * 255);
-  let randomNumber3 = Math.floor(Math.random() * 255);
-  let randomNumber4 = Math.floor(Math.random() * 255);
-
-  let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
-
-  var userHasEnoughScans = false
-
   const requestData = req.body;
   let scanTargetURL = requestData["url"];
   let givenUserID = requestData["userid"];
 
-  let functionResponse = doesUserHaveSufficientScansLeft(givenUserID, scanHash)
-  let userNeedsNewID = false
-  let newUserID = ""
-  userHasEnoughScans = functionResponse[0]
+  let isValidLinkTest = isValidLink(scanTargetURL)
+  let isUnrestrictedLinkTest = isUnrestrictedLink(scanTargetURL)
 
-  let userScansLeft = functionResponse[2]
+  if (isValidLinkTest && isUnrestrictedLinkTest){
+    let currentTimestamp = Date.now()
+    currentTimestamp = currentTimestamp.toString()
 
-  console.log(functionResponse)
+    let randomNumber1 = Math.floor(Math.random() * 255);
+    let randomNumber2 = Math.floor(Math.random() * 255);
+    let randomNumber3 = Math.floor(Math.random() * 255);
+    let randomNumber4 = Math.floor(Math.random() * 255);
 
-  if (functionResponse[1] != false){
-    userNeedsNewID = true
-    newUserID = functionResponse[1]
-  }
+    let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
 
-  if (userHasEnoughScans){
-    try{
-  
-      let hashForNewRequestHistoryEntry = {
-        "hash": scanHash,
-        "targetURL": scanTargetURL,
-        "statusOfProcess": "false",
-        "zapID": "-1"
-      }
-  
-      // Logic for Entering Request Into Scan Request History
-      if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
-        // This code finds a new index for the entry
-        while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
-          currentTimestamp = (Date.now()).toString()
+    var userHasEnoughScans = false
+
+    let functionResponse = doesUserHaveSufficientScansLeft(givenUserID, scanHash)
+    let userNeedsNewID = false
+    let newUserID = ""
+    userHasEnoughScans = functionResponse[0]
+
+    let userScansLeft = functionResponse[2]
+
+    console.log(functionResponse)
+
+    if (functionResponse[1] != false){
+      userNeedsNewID = true
+      newUserID = functionResponse[1]
+    }
+
+    if (userHasEnoughScans){
+      try{
+    
+        let hashForNewRequestHistoryEntry = {
+          "hash": scanHash,
+          "targetURL": scanTargetURL,
+          "statusOfProcess": "false",
+          "zapID": "-1"
         }
-        historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-        queue.push(currentTimestamp)
+    
+        // Logic for Entering Request Into Scan Request History
+        if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
+          // This code finds a new index for the entry
+          while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
+            currentTimestamp = (Date.now()).toString()
+          }
+          historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+          queue.push(currentTimestamp)
 
-        if (userNeedsNewID){
+          if (userNeedsNewID){
+            res.json({
+              "status": "success",
+              "scanID": currentTimestamp,
+              "hash": scanHash,
+              "userID": newUserID,
+              "scansLeft": userScansLeft
+            });
+          }else{
+            res.json({
+              "status": "success",
+              "scanID": currentTimestamp,
+              "hash": scanHash,
+              "userID": "false",
+              "scansLeft": userScansLeft
+            });
+          }
+        }else {
+          historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+          queue.push(currentTimestamp)
           res.json({
             "status": "success",
             "scanID": currentTimestamp,
@@ -430,31 +453,15 @@ app.put('/add-scan-to-queue', (req, res) => {
             "userID": newUserID,
             "scansLeft": userScansLeft
           });
-        }else{
-          res.json({
-            "status": "success",
-            "scanID": currentTimestamp,
-            "hash": scanHash,
-            "userID": "false",
-            "scansLeft": userScansLeft
-          });
         }
-      }else {
-        historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-        queue.push(currentTimestamp)
-        res.json({
-          "status": "success",
-          "scanID": currentTimestamp,
-          "hash": scanHash,
-          "userID": newUserID,
-          "scansLeft": userScansLeft
-        });
+      }catch{
+        res.json({ "status": "fail" });
       }
-    }catch{
-      res.json({ "status": "fail" });
+    }else{
+      res.json({ "status": "max scans" });
     }
   }else{
-    res.json({ "status": "max scans" });
+    res.json({ "status": "fail" });
   }
 
 });
@@ -1299,6 +1306,37 @@ function getNumberOfCompletedScansDaily(){
   }
 
   return foundScansCompleted
+}
+
+function isValidLink(str) {
+  //Check to see if link is proper and host is not localhost or 127.0.0.1
+  var urlPattern = /^https?:\/\/[^ "]+$/;
+  var urlPatternTestResults = urlPattern.test(str);
+
+  // Test the string against the URL pattern
+  return urlPatternTestResults
+}
+
+function isUnrestrictedLink(str) {
+  //Check to see if link is proper and host is not localhost or 127.0.0.1
+  let loopBackCharacters = str.substring(0, 16);
+  if (loopBackCharacters == "http://127.0.0.1" || loopBackCharacters == "http://localhost"){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 17);
+  if (loopBackCharacters == "https://127.0.0.1" || loopBackCharacters == "https://localhost"){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 11);
+  if (loopBackCharacters == "http://127."){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 12);
+  if (loopBackCharacters == "https://127."){
+    return false
+  }
+
+  return true;
 }
 
 async function prepareZAPForServer(){

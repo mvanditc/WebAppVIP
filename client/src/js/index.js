@@ -17,6 +17,12 @@ let scanLimitReachedWarningDiv = document.getElementById("scanLimitReachedWarnin
 
 scanLimitReachedWarningDiv.style.display = "none"
 
+let scanURLInvalidWarningDiv = document.getElementById("scanURLInvalidWarningDiv")
+scanURLInvalidWarningDiv.style.display = "none"
+
+let scanURLRestrictedWarningDiv = document.getElementById("scanURLRestrictedWarningDiv")
+scanURLRestrictedWarningDiv.style.display = "none"
+
 queueStatusDiv.style.display = "none"
 queueStatusLabel.style.display = "none"
 queuePositionSpan.parentElement.style.display = "none"
@@ -29,6 +35,38 @@ let queuePositionClockNeeded = false
 let queuePositionClockRunning = false
 
 let currentlyWaitingInQueue = false
+
+function isValidLink(str) {
+  // //Check to see if link is proper and host is not localhost or 127.0.0.1
+  // var urlPattern = /^https?:\/\/[^ "]+$/;
+  // var urlPatternTestResults = urlPattern.test(str);
+
+  // // Test the string against the URL pattern
+  // return urlPatternTestResults
+  return true
+}
+
+function isUnrestrictedLink(str) {
+  //Check to see if link is proper and host is not localhost or 127.0.0.1
+  let loopBackCharacters = str.substring(0, 16);
+  if (loopBackCharacters == "http://127.0.0.1" || loopBackCharacters == "http://localhost"){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 17);
+  if (loopBackCharacters == "https://127.0.0.1" || loopBackCharacters == "https://localhost"){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 11);
+  if (loopBackCharacters == "http://127."){
+    return false
+  }
+  loopBackCharacters = str.substring(0, 12);
+  if (loopBackCharacters == "https://127."){
+    return false
+  }
+
+  return true;
+}
 
 async function currentlyQueuedTextMovingFunction(){
   if (currentlyWaitingInQueue){
@@ -151,6 +189,8 @@ function getCurrentQueuePosition(){
 indexDataForm.addEventListener("submit", (event)=>{
   event.preventDefault()
 
+  let inputURL = indexDataInput.value
+
   let storedUserID = localStorage.getItem("userid")
 
   if (storedUserID == null){
@@ -159,60 +199,77 @@ indexDataForm.addEventListener("submit", (event)=>{
 
   console.log(storedUserID)
 
-  fetch("http://localhost:3030/add-scan-to-queue", {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "url": indexDataInput.value,
-        "userid": storedUserID
-      })
-  })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-      };
+  let isValidLinkTest = isValidLink(inputURL)
+  let isUnrestrictedLinkTest = isUnrestrictedLink(inputURL)
 
-      return response.json();
-  })
-  .then(data => {
-      console.log('Data from the backend:', data);
-      if (data['status'] == "success"){
-        queueDetailsContainer.style.display = ""
-        indexDataSubmit.disabled = true
-        indexDataSubmit.style.display = "none"
+  if(!isValidLinkTest){
+    scanURLInvalidWarningDiv.style.display = ""
+  }else{
+    scanURLInvalidWarningDiv.style.display = "none"
+  }
+  if(!isUnrestrictedLinkTest){
+    scanURLRestrictedWarningDiv.style.display = ""
+  }else{
+    scanURLRestrictedWarningDiv.style.display = "none"
+  }
 
-        scanQueueCancelButton.disabled = false
-        scanQueueCancelButton.style.display = ""
-        
-        let receivedScanID = data['scanID']
-        let receivedScanHash = data['hash']
 
-        sessionStorage.setItem('scanid', receivedScanID);
-        sessionStorage.setItem('scanhash', receivedScanHash);
+  if (isValidLinkTest && isUnrestrictedLinkTest){
+    fetch("http://localhost:3030/add-scan-to-queue", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "url": inputURL,
+          "userid": storedUserID
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
 
-        if (data['userID'] != "false" && data['userID'] != ""){
-          localStorage.setItem("userid", data['userID'])
+        return response.json();
+    })
+    .then(data => {
+        console.log('Data from the backend:', data);
+        if (data['status'] == "success"){
+          queueDetailsContainer.style.display = ""
+          indexDataSubmit.disabled = true
+          indexDataSubmit.style.display = "none"
+
+          scanQueueCancelButton.disabled = false
+          scanQueueCancelButton.style.display = ""
+          
+          let receivedScanID = data['scanID']
+          let receivedScanHash = data['hash']
+
+          sessionStorage.setItem('scanid', receivedScanID);
+          sessionStorage.setItem('scanhash', receivedScanHash);
+
+          if (data['userID'] != "false" && data['userID'] != ""){
+            localStorage.setItem("userid", data['userID'])
+          }
+
+          scansLeftSpan.innerText = data['scansLeft']
+          scansLeftSpan.parentElement.style.display = ""
+
+          queuePositionClockNeeded = true
+          queuePositionCheckClock()
+
+          scanQueueCancelButton.addEventListener("click", requestToLeaveQueue)
+
+        }else if(data["status"] == "max scans"){
+          scanLimitReachedWarningDiv.style.display = ""
+          scansLeftSpan.innerText = "0"
+          scansLeftSpan.parentElement.style.display = ""
         }
-
-        scansLeftSpan.innerText = data['scansLeft']
-        scansLeftSpan.parentElement.style.display = ""
-
-        queuePositionClockNeeded = true
-        queuePositionCheckClock()
-
-        scanQueueCancelButton.addEventListener("click", requestToLeaveQueue)
-
-      }else if(data["status"] == "max scans"){
-        scanLimitReachedWarningDiv.style.display = ""
-        scansLeftSpan.innerText = "0"
-        scansLeftSpan.parentElement.style.display = ""
-      }
-  })
-  .catch(error => {
-      console.error('Fetch error:', error.message);
-  });
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+    });
+  }
 })
 
 document.addEventListener("DOMContentLoaded", (event)=>{
