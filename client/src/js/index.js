@@ -17,6 +17,9 @@ let scanLimitReachedWarningDiv = document.getElementById("scanLimitReachedWarnin
 
 scanLimitReachedWarningDiv.style.display = "none"
 
+let adminModeWarningDiv = document.getElementById("adminModeWarningDiv")
+adminModeWarningDiv.style.display = "none"
+
 let scanURLInvalidWarningDiv = document.getElementById("scanURLInvalidWarningDiv")
 scanURLInvalidWarningDiv.style.display = "none"
 
@@ -215,6 +218,8 @@ indexDataForm.addEventListener("submit", (event)=>{
 
 
   if (isValidLinkTest && isUnrestrictedLinkTest){
+    let attemptedUsername = sessionStorage.getItem('username');
+    let attemptedToken = sessionStorage.getItem('loginToken');
     fetch("http://localhost:3030/add-scan-to-queue", {
         method: 'PUT',
         headers: {
@@ -222,7 +227,9 @@ indexDataForm.addEventListener("submit", (event)=>{
         },
         body: JSON.stringify({
           "url": inputURL,
-          "userid": storedUserID
+          "userid": storedUserID,
+          "username": attemptedUsername,
+          "loginToken": attemptedToken
         })
     })
     .then(response => {
@@ -264,6 +271,8 @@ indexDataForm.addEventListener("submit", (event)=>{
           scanLimitReachedWarningDiv.style.display = ""
           scansLeftSpan.innerText = "0"
           scansLeftSpan.parentElement.style.display = ""
+        }else if(data["status"] == "admin mode"){
+          adminModeWarningDiv.style.display = ""
         }
     })
     .catch(error => {

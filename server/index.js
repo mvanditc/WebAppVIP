@@ -15,6 +15,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const crypto = require('crypto');
 const fs = require('fs');
+const { request } = require('http');
 
 // Data for Vulnerability Dictionary
 let vulnerabilityDictionary = {}
@@ -49,12 +50,14 @@ function applySHA256(message) {
 let adminCredentials = {
   "username": applySHA256("admin"),
   "password": applySHA256("123123123"),
-  "loginToken": ""
+  "loginToken": "",
+  "previousLoginLocation": ""
 }
 
 let adminManagedVariables = {
   "scanTimeLimit": "20", // in Seconds
   "maxScansPerDay": "99",
+  "adminDemoMode": "true",
   "siteMOTDHTML": `<p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>`
 }
 let timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
@@ -188,12 +191,16 @@ app.put('/change-site-configuration', (req, res) => {
   const requestData = req.body;
   let valueForScanSeconds = requestData["valueForScanSeconds"];
   let valueForScanPerDay = requestData["valueForScanPerDay"];
+  let valueForDemoMode = requestData["demoMode"]
 
   if (valueForScanSeconds == "null"){
     valueForScanSeconds = adminManagedVariables["scanTimeLimit"]
   }
   if (valueForScanPerDay == "null"){
     valueForScanPerDay = adminManagedVariables["maxScansPerDay"]
+  }
+  if (valueForDemoMode == "null"){
+    valueForDemoMode = adminManagedVariables["adminDemoMode"]
   }
   let attemptedUsername = requestData["username"];
   let attemptedLoginToken = requestData["loginToken"];
@@ -207,7 +214,7 @@ app.put('/change-site-configuration', (req, res) => {
             console.log(requestData["valueForScanPerDay"])
             console.log(valueForScanSeconds)
             console.log(valueForScanPerDay)
-            siteSettingsChangedClock(valueForScanSeconds, valueForScanPerDay)
+            siteSettingsChangedClock(valueForScanSeconds, valueForScanPerDay, valueForDemoMode)
 
             res.json({"status": 'success'})
         }else{
@@ -271,7 +278,8 @@ app.put('/get-site-configurations-for-admin', (req, res) => {
               "status": 'success',
               "siteSettings": {
                 "scanSecondsLimit": timeLimit,
-                "maxScansPerDay": maxScanAmount
+                "maxScansPerDay": maxScanAmount,
+                "adminDemoMode": adminManagedVariables["adminDemoMode"]
               }
             });
         }else{
@@ -376,57 +384,189 @@ app.put('/add-scan-to-queue', (req, res) => {
   const requestData = req.body;
   let scanTargetURL = requestData["url"];
   let givenUserID = requestData["userid"];
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
 
-  let isValidLinkTest = isValidLink(scanTargetURL)
-  let isUnrestrictedLinkTest = isUnrestrictedLink(scanTargetURL)
+  let currentAdminDemoModeStatus = adminManagedVariables["adminDemoMode"]
 
-  if (isValidLinkTest && isUnrestrictedLinkTest){
-    let currentTimestamp = Date.now()
-    currentTimestamp = currentTimestamp.toString()
-
-    let randomNumber1 = Math.floor(Math.random() * 255);
-    let randomNumber2 = Math.floor(Math.random() * 255);
-    let randomNumber3 = Math.floor(Math.random() * 255);
-    let randomNumber4 = Math.floor(Math.random() * 255);
-
-    let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
-
-    var userHasEnoughScans = false
-
-    let functionResponse = doesUserHaveSufficientScansLeft(givenUserID, scanHash)
-    let userNeedsNewID = false
-    let newUserID = ""
-    userHasEnoughScans = functionResponse[0]
-
-    let userScansLeft = functionResponse[2]
-
-    console.log(functionResponse)
-
-    if (functionResponse[1] != false){
-      userNeedsNewID = true
-      newUserID = functionResponse[1]
-    }
-
-    if (userHasEnoughScans){
-      try{
+  if (currentAdminDemoModeStatus == "true"){
+    if (attemptedLoginToken != undefined && attemptedUsername != undefined){
+      if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+        try{
+            console.log(adminCredentials["loginToken"])
+            console.log(attemptedLoginToken)
+            if (adminCredentials["loginToken"] == attemptedLoginToken){
+              let isValidLinkTest = isValidLink(scanTargetURL)
+              let isUnrestrictedLinkTest = isUnrestrictedLink(scanTargetURL)
+            
+              if (isValidLinkTest && isUnrestrictedLinkTest){
+                let currentTimestamp = Date.now()
+                currentTimestamp = currentTimestamp.toString()
+            
+                let randomNumber1 = Math.floor(Math.random() * 255);
+                let randomNumber2 = Math.floor(Math.random() * 255);
+                let randomNumber3 = Math.floor(Math.random() * 255);
+                let randomNumber4 = Math.floor(Math.random() * 255);
+            
+                let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
+            
+                var userHasEnoughScans = false
+            
+                let functionResponse = doesUserHaveSufficientScansLeft(givenUserID, scanHash)
+                let userNeedsNewID = false
+                let newUserID = ""
+                userHasEnoughScans = functionResponse[0]
+            
+                let userScansLeft = functionResponse[2]
+            
+                console.log(functionResponse)
+            
+                if (functionResponse[1] != false){
+                  userNeedsNewID = true
+                  newUserID = functionResponse[1]
+                }
+            
+                if (userHasEnoughScans){
+                  try{
+                
+                    let hashForNewRequestHistoryEntry = {
+                      "hash": scanHash,
+                      "targetURL": scanTargetURL,
+                      "statusOfProcess": "false",
+                      "zapID": "-1"
+                    }
+                
+                    // Logic for Entering Request Into Scan Request History
+                    if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
+                      // This code finds a new index for the entry
+                      while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
+                        currentTimestamp = (Date.now()).toString()
+                      }
+                      historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+                      queue.push(currentTimestamp)
+            
+                      if (userNeedsNewID){
+                        res.json({
+                          "status": "success",
+                          "scanID": currentTimestamp,
+                          "hash": scanHash,
+                          "userID": newUserID,
+                          "scansLeft": userScansLeft
+                        });
+                      }else{
+                        res.json({
+                          "status": "success",
+                          "scanID": currentTimestamp,
+                          "hash": scanHash,
+                          "userID": "false",
+                          "scansLeft": userScansLeft
+                        });
+                      }
+                    }else {
+                      historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+                      queue.push(currentTimestamp)
+                      res.json({
+                        "status": "success",
+                        "scanID": currentTimestamp,
+                        "hash": scanHash,
+                        "userID": newUserID,
+                        "scansLeft": userScansLeft
+                      });
+                    }
+                  }catch{
+                    res.json({ "status": "fail" });
+                  }
+                }else{
+                  res.json({ "status": "max scans" });
+                }
+              }else{
+                res.json({ "status": "fail" });
+              }
+            }else{
+                console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+                res.json({"status": 'admin mode'});
+            }
     
-        let hashForNewRequestHistoryEntry = {
-          "hash": scanHash,
-          "targetURL": scanTargetURL,
-          "statusOfProcess": "false",
-          "zapID": "-1"
+        }catch{
+            console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+            res.json({"status": 'admin mode'});
         }
-    
-        // Logic for Entering Request Into Scan Request History
-        if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
-          // This code finds a new index for the entry
-          while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
-            currentTimestamp = (Date.now()).toString()
+      }else{
+        res.json({"status": 'admin mode'});
+      }
+    }else{
+      res.json({"status": 'admin mode'});
+    }
+  }else{
+    let isValidLinkTest = isValidLink(scanTargetURL)
+    let isUnrestrictedLinkTest = isUnrestrictedLink(scanTargetURL)
+  
+    if (isValidLinkTest && isUnrestrictedLinkTest){
+      let currentTimestamp = Date.now()
+      currentTimestamp = currentTimestamp.toString()
+  
+      let randomNumber1 = Math.floor(Math.random() * 255);
+      let randomNumber2 = Math.floor(Math.random() * 255);
+      let randomNumber3 = Math.floor(Math.random() * 255);
+      let randomNumber4 = Math.floor(Math.random() * 255);
+  
+      let scanHash = applySHA256(currentTimestamp + randomNumber1 + randomNumber2 + randomNumber3 + randomNumber4)
+  
+      var userHasEnoughScans = false
+  
+      let functionResponse = doesUserHaveSufficientScansLeft(givenUserID, scanHash)
+      let userNeedsNewID = false
+      let newUserID = ""
+      userHasEnoughScans = functionResponse[0]
+  
+      let userScansLeft = functionResponse[2]
+  
+      console.log(functionResponse)
+  
+      if (functionResponse[1] != false){
+        userNeedsNewID = true
+        newUserID = functionResponse[1]
+      }
+  
+      if (userHasEnoughScans){
+        try{
+      
+          let hashForNewRequestHistoryEntry = {
+            "hash": scanHash,
+            "targetURL": scanTargetURL,
+            "statusOfProcess": "false",
+            "zapID": "-1"
           }
-          historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-          queue.push(currentTimestamp)
-
-          if (userNeedsNewID){
+      
+          // Logic for Entering Request Into Scan Request History
+          if (historyOfScanRequests.hasOwnProperty(currentTimestamp)) {
+            // This code finds a new index for the entry
+            while (historyOfScanRequests.hasOwnProperty(currentTimestamp)){
+              currentTimestamp = (Date.now()).toString()
+            }
+            historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+            queue.push(currentTimestamp)
+  
+            if (userNeedsNewID){
+              res.json({
+                "status": "success",
+                "scanID": currentTimestamp,
+                "hash": scanHash,
+                "userID": newUserID,
+                "scansLeft": userScansLeft
+              });
+            }else{
+              res.json({
+                "status": "success",
+                "scanID": currentTimestamp,
+                "hash": scanHash,
+                "userID": "false",
+                "scansLeft": userScansLeft
+              });
+            }
+          }else {
+            historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
+            queue.push(currentTimestamp)
             res.json({
               "status": "success",
               "scanID": currentTimestamp,
@@ -434,36 +574,15 @@ app.put('/add-scan-to-queue', (req, res) => {
               "userID": newUserID,
               "scansLeft": userScansLeft
             });
-          }else{
-            res.json({
-              "status": "success",
-              "scanID": currentTimestamp,
-              "hash": scanHash,
-              "userID": "false",
-              "scansLeft": userScansLeft
-            });
           }
-        }else {
-          historyOfScanRequests[currentTimestamp] = hashForNewRequestHistoryEntry;
-          queue.push(currentTimestamp)
-          res.json({
-            "status": "success",
-            "scanID": currentTimestamp,
-            "hash": scanHash,
-            "userID": newUserID,
-            "scansLeft": userScansLeft
-          });
+        }catch{
+          res.json({ "status": "fail" });
         }
-      }catch{
-        res.json({ "status": "fail" });
+      }else{
+        res.json({ "status": "max scans" });
       }
-    }else{
-      res.json({ "status": "max scans" });
     }
-  }else{
-    res.json({ "status": "fail" });
   }
-
 });
 
 app.put('/remove-scan-from-queue', (req, res) => {
@@ -949,13 +1068,14 @@ async function checkIfUserDisconnectedFromScanner(){
   return
 }
 
-async function siteSettingsChangedClock(newScanSecondsValue, newMaxScansPerDayValue){
+async function siteSettingsChangedClock(newScanSecondsValue, newMaxScansPerDayValue, valueForDemoMode){
   console.log("siteSettingsChangedClock Initialized")
   while (true){
     console.log("siteSettingsChangedClock Check")
     if (isScanning == false && waitingForScanToFinish == false){
       adminManagedVariables["scanTimeLimit"] = newScanSecondsValue
       adminManagedVariables["maxScansPerDay"] = newMaxScansPerDayValue
+      adminManagedVariables["adminDemoMode"] = valueForDemoMode
 
       console.log(newScanSecondsValue)
       console.log(typeof newScanSecondsValue)

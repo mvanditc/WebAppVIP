@@ -2,6 +2,8 @@ let attemptedUsername = sessionStorage.getItem('username');
 let attemptedToken = sessionStorage.getItem('loginToken');
 let scanSecondsLimitText = document.getElementById("scanSecondsLimitText")
 let maxScansPerDayText = document.getElementById("maxScansPerDayText")
+let demoModeText = document.getElementById("demoModeText")
+let demoModeSelect = document.getElementById("demoModeSelect")
 
 let scanConfigForm = document.getElementById("scanConfigForm")
 let scanSecondsLimitInput = document.getElementById("scanSecondsLimitInput")
@@ -62,10 +64,11 @@ function requestToChangeServerStoredMOTD(newMOTDValue){
   });
 }
 
-function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScansPerDayInputValue){
+function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScansPerDayInputValue, demoModeInputValue){
     console.log("Requesting Server to Change Site Settings")
     let scanSecondsLimitParameter = scanSecondsLimitInputValue
     let maxScansPerDayParameter = maxScansPerDayInputValue
+    let demoModeParameter = demoModeInputValue
 
     confirmConfigChangesInput.checked = false
     scanSecondsLimitInput.value = ""
@@ -76,6 +79,9 @@ function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScan
     if (maxScansPerDayParameter == ""){
         maxScansPerDayParameter = "null"
     }
+    if (demoModeParameter == ""){
+        demoModeParameter = "null"
+    }
     fetch("http://localhost:3030/change-site-configuration", {
       method: 'PUT',
       headers: {
@@ -85,7 +91,8 @@ function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScan
           "username": attemptedUsername,
           "loginToken": attemptedToken,
           "valueForScanSeconds": scanSecondsLimitParameter,
-          "valueForScanPerDay": maxScansPerDayParameter
+          "valueForScanPerDay": maxScansPerDayParameter,
+          "demoMode": demoModeParameter
       })
   })
   .then(response => {
@@ -99,7 +106,7 @@ function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScan
       console.log('Authentication data from the backend:', data);
       if (data["status"] == "success"){
         alert("Settings Change Request Sent...")
-        refreshSiteConfigurations()
+        location.reload()
       }else{
         alert("UNSUCCESSFUL STATUS: ", data["status"])
       }
@@ -111,41 +118,6 @@ function requestToChangeServerConfigurations(scanSecondsLimitInputValue, maxScan
 
 }
 
-function refreshSiteConfigurations(){
-    console.log("Refreshing Site Configurations")
-    fetch("http://localhost:3030/get-site-configurations-for-admin", {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-          "username": attemptedUsername,
-          "loginToken": attemptedToken
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-      };
-
-      return response.json();
-     })
-    .then(data => {
-      console.log('Server configurations from the backend:', data);
-      let scanSecondsLimitValue = data["siteSettings"]["scanSecondsLimit"]
-      let maxScansPerDayValue = data["siteSettings"]["maxScansPerDay"]
-
-      scanSecondsLimitText.innerHTML = "&nbsp;&nbsp;Scan Seconds Limit: " + scanSecondsLimitValue
-      maxScansPerDayText.innerHTML = "&nbsp;&nbsp;Max Scans Per Day: " + maxScansPerDayValue
-
-      scanSecondsLimitInput.placeholder = parseInt(scanSecondsLimitValue)
-      maxScansPerDayInput.placeholder = parseInt(maxScansPerDayValue)
-  })
-  .catch(error => {
-      console.error('Fetch error:', error.message);
-      window.location.href = '../../public/html/accessDenied.html';
-  });
-}
 
 function populateMOTDEditorContent(){
     fetch("http://localhost:3030/get-site-motd")
@@ -245,15 +217,31 @@ function populateSiteConfigurations(){
       console.log('Server configurations from the backend:', data);
       let scanSecondsLimitValue = data["siteSettings"]["scanSecondsLimit"]
       let maxScansPerDayValue = data["siteSettings"]["maxScansPerDay"]
+      let adminDemoModeValue = data["siteSettings"]["adminDemoMode"]
 
       scanSecondsLimitText.innerHTML = "&nbsp;&nbsp;Scan Seconds Limit: " + scanSecondsLimitValue
       maxScansPerDayText.innerHTML = "&nbsp;&nbsp;Max Scans Per Day: " + maxScansPerDayValue
+      demoModeText.innerHTML = "&nbsp;&nbsp;Demo Mode Status: " + adminDemoModeValue
 
       scanSecondsLimitInput.placeholder = parseInt(scanSecondsLimitValue)
       maxScansPerDayInput.placeholder = parseInt(maxScansPerDayValue)
+      demoModeSelect.value = adminDemoModeValue
 
+      demoModeSelect.addEventListener("input", ()=>{
+        if (maxScansPerDayInput.value != "" || scanSecondsLimitInput.value != "" || demoModeSelect.value != adminDemoModeValue){
+            scanConfigurationCancelButton.disabled = false
+            if (confirmConfigChangesInput.checked == true){
+                scanConfigurationSubmitButton.disabled = false
+            }else{
+                scanConfigurationSubmitButton.disabled = true
+            }
+        }else{
+            scanConfigurationSubmitButton.disabled = true
+            scanConfigurationCancelButton.disabled = true
+        } 
+      })
       scanSecondsLimitInput.addEventListener("input", ()=>{
-        if (scanSecondsLimitInput.value != "" || maxScansPerDayInput.value != ""){
+        if (scanSecondsLimitInput.value != "" || maxScansPerDayInput.value != "" || demoModeSelect.value != adminDemoModeValue){
             scanConfigurationCancelButton.disabled = false
             if (confirmConfigChangesInput.checked == true){
                 scanConfigurationSubmitButton.disabled = false
@@ -266,7 +254,7 @@ function populateSiteConfigurations(){
         }
       })
       maxScansPerDayInput.addEventListener("input", ()=>{
-        if (maxScansPerDayInput.value != "" || scanSecondsLimitInput.value != ""){
+        if (maxScansPerDayInput.value != "" || scanSecondsLimitInput.value != "" || demoModeSelect.value != adminDemoModeValue){
             scanConfigurationCancelButton.disabled = false
             if (confirmConfigChangesInput.checked == true){
                 scanConfigurationSubmitButton.disabled = false
@@ -279,7 +267,7 @@ function populateSiteConfigurations(){
         }  
       })
       confirmConfigChangesInput.addEventListener("input", ()=>{
-        if (maxScansPerDayInput.value != "" || scanSecondsLimitInput.value != ""){
+        if (maxScansPerDayInput.value != "" || scanSecondsLimitInput.value != "" || demoModeSelect.value != adminDemoModeValue){
             scanConfigurationCancelButton.disabled = false
             if (confirmConfigChangesInput.checked == true){
                 scanConfigurationSubmitButton.disabled = false
@@ -293,7 +281,7 @@ function populateSiteConfigurations(){
       })
       scanConfigurationSubmitButton.addEventListener("click", (event)=>{
         event.preventDefault()
-        requestToChangeServerConfigurations(scanSecondsLimitInput.value, maxScansPerDayInput.value)
+        requestToChangeServerConfigurations(scanSecondsLimitInput.value, maxScansPerDayInput.value, demoModeSelect.value)
       })
       scanConfigurationCancelButton.addEventListener("click", ()=>{
         scanConfigurationSubmitButton.disabled = true
@@ -301,9 +289,9 @@ function populateSiteConfigurations(){
         maxScansPerDayInput.value = ""
         scanSecondsLimitInput.value = ""
         confirmConfigChangesInput.checked = false
+        demoModeSelect.value = adminDemoModeValue
       })
       siteStatsRefreshButton.addEventListener("click", ()=>{
-        refreshSiteConfigurations()
         refreshSiteDailyStats()
       })
 

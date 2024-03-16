@@ -18,6 +18,7 @@
               <span>Current Configurations:</span>
               <span id="scanSecondsLimitText">&nbsp;&nbsp;Scan Seconds Limit: 120</span>
               <span id="maxScansPerDayText">&nbsp;&nbsp;Max Scans Per Day: 3</span>
+              <span id="demoModeText">&nbsp;&nbsp;Demo Mode Status: false</span>
             </div>
             <div id="previousLoginLocationContainer" class="blackBoxTextGroup">
               <span>Previous Login Location:</span>
@@ -44,6 +45,14 @@
               <div class="formInputGroup">
                 <label for="maxScansPerDayInput">New Max Scans Per Day:</label>
                 <input min="0" class="scanConfigNumberInput" type="number" id="maxScansPerDayInput" name="maxScansPerDayInput">
+              </div>
+
+              <div class="formInputGroup">
+                <label for="demoModeSelect">Demo Mode Status:</label>
+                <select id="demoModeSelect">
+                  <option value="true">true</option>
+                  <option value="false">false</option>
+                </select>
               </div>
 
               <div class="formInputGroup">
