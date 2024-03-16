@@ -277,6 +277,7 @@ body {
     display: flex;
     font-size: 30px;
     margin-bottom: 1em;
+    flex-wrap: wrap;
 }
 #FilterButtonWithLabelContainer{
     display: flex;
@@ -327,6 +328,8 @@ body {
 .view-details-issue-detail-content{
     display: flex;
     flex-direction: column;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 .view-details-issue-subtitles{
     display: flex;
@@ -510,6 +513,19 @@ body {
 #scanLeaveConfirmationCancel:hover{
     background-color: #e85e5e;
 }
+#endScanEarlyButton{
+    font-family: 'font1';
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--navbar-color);
+    color: white;
+    cursor: pointer;
+    width: 45%;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
 
 
 @media screen and (max-width: 656px) {
@@ -548,6 +564,12 @@ body {
 @media screen and (max-width: 500px) {
     #scanPage-container {
         font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 584px) {
+    #findingsAndFilterButton {
+        margin-left: 0px;
     }
 }
 

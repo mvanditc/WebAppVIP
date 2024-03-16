@@ -23,6 +23,7 @@ queuePositionSpan.parentElement.style.display = "none"
 scansLeftSpan.parentElement.style.display = "none"
 
 let motdSpace = document.getElementById("motdSpace")
+let totalVulnerabilitiesCounter = document.getElementById("totalVulnerabilitiesCounter")
 
 let queuePositionClockNeeded = false
 let queuePositionClockRunning = false
@@ -106,10 +107,22 @@ function requestToLeaveQueue(){
 }
 
 function getCurrentQueuePosition(){
-  const storedScanID = sessionStorage.getItem('scanid');
-  const storedScanHash = sessionStorage.getItem('scanhash');
+  let storedScanID = sessionStorage.getItem('scanid');
+  let storedScanHash = sessionStorage.getItem('scanhash');
+  let storedUserID = localStorage.getItem("userid")
 
-  fetch(`http://localhost:3030/get-scan-queue-position?scanid=${storedScanID}`)
+
+  fetch(`http://localhost:3030/get-scan-queue-position`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "scanid": storedScanID,
+      "hash": storedScanHash,
+      "userid": storedUserID
+    })
+  })
   .then(response => {
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -122,6 +135,7 @@ function getCurrentQueuePosition(){
 
       if (data["status"] == "success"){
         currentlyQueuedTextMovingFunction()
+        scansLeftSpan.innerText = data['scansLeft']
         queuePositionSpan.innerText = data["position"]
         queuePositionSpan.parentElement.style.display = ""
         if (data["position"] == "0" && data["isScanning"] == false && data['checkingIfUserIsDisconnected'] == false){
@@ -213,6 +227,22 @@ document.addEventListener("DOMContentLoaded", (event)=>{
   .then(data => {
       console.log('Site MOTD data from the backend:', data);
       motdSpace.innerHTML = data["motd"]
+  })
+  .catch(error => {
+      console.error('Fetch error:', error.message);
+  });
+
+  fetch("http://localhost:3030/get-total-alerts-found")
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      };
+
+      return response.json();
+  })
+  .then(data => {
+      console.log('Total Alerts Found data from the backend:', data);
+      totalVulnerabilitiesCounter.innerText = data["stat"]
   })
   .catch(error => {
       console.error('Fetch error:', error.message);

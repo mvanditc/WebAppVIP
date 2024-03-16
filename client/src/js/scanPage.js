@@ -11,7 +11,6 @@ let scanLeaveConfirmationCancel = document.getElementById("scanLeaveConfirmation
 
 scanLeaveConfirmationContainer.style.display = "none"
 
-let scanDetailsButton = document.getElementById("scanDetailsButton")
 let scanPrecentageValue = document.getElementById("scanPage-progressBar-percentage-value")
 let copiedTargetURLToClipBoardNotification = document.getElementById("copiedTargetURLToClipBoardNotification")
 let scanStatusText = document.getElementById("scanPage-scan-status")
@@ -19,6 +18,10 @@ let scanTimeElapsedText = document.getElementById("scanPage-time-elapsed-text")
 let scanTimeLimitText = document.getElementById("scanPage-time-limit-text")
 let scanTimeLimitMessageText = document.getElementById("scanPage-time-limit-message")
 let viewDetailsButton = document.getElementById("scanDetailsButton");
+let endScanEarlyButton = document.getElementById("endScanEarlyButton")
+
+viewDetailsButton.style.display="none"
+endScanEarlyButton.style.display="none"
 
 let issueSectionContainer = document.getElementById("issueSectionContainer")
 
@@ -49,6 +52,8 @@ var currentlyPreparingResults = false
 var currentScanTime = 0
 
 var timeLimit = -1
+
+var scanEndedEarly = false
 
 let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
 
@@ -169,6 +174,39 @@ function filterDetails(){
             div.style.display = ""
         });
     }
+}
+
+async function stopScanEarly(){
+    scanEndedEarly = true
+    console.log("Stopping Scan Early")
+    await fetch("http://localhost:3030/stop-current-scan-early", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "scanid": storedScanID,
+            "hash": storedScanHash
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+    })
+    .then(data => {
+        if (data["status"] == "success"){
+            endScanEarlyButton.style.display = "none"
+            scanTimeLimitMessageText.innerHTML = "Scan was ended early..."
+            progressCheckingClockNeeded = false
+            scanWaitingToFinishClock()
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+    });
 }
 
 async function cancelScan(){
@@ -494,7 +532,10 @@ function updateProgressValues(scanPercentString, timeElapsed, timeLimit){
         scanPrecentageValue.innerHTML = scanPercentString + "%"
     }
 
-    scanTimeElapsedText.innerHTML = "Time Elapsed: " + secondsToMinutesAndSeconds(timeElapsed)
+    console.log("535")
+    if (!scanEndedEarly){
+        scanTimeElapsedText.innerHTML = "Time Elapsed: " + secondsToMinutesAndSeconds(timeElapsed)
+    }
 
     let numberOfBlocks = Math.floor(scanPercentInt * 25);
 
@@ -540,10 +581,12 @@ async function waitForScanToFinish(){
         return response.json();
     })
     .then(data => {
+        endScanEarlyButton.style.display = "none"
         preparingResultsTextMovingFunction()
         console.log('Waiting for Scan to Finish:', data);
         scanResultsData = data
         if (scanResultsData["status"] == "success"){
+            scanTimeElapsedText.innerHTML = "Time Elapsed: " + secondsToMinutesAndSeconds(parseInt(scanResultsData["timeElapsed"]))
             waitingForScanToFinish = false
             scanStatusText.innerHTML = "Scan Finished"
             let alertSummaryData = scanResultsData['alertSummary']['alertsSummary']
@@ -551,6 +594,8 @@ async function waitForScanToFinish(){
             moderateRiskAmountText.innerText = alertSummaryData['Medium'];
             lowRiskAmountText.innerText = alertSummaryData['Low'];
             informationalRiskAmountText.innerText = alertSummaryData['Informational'];
+            endScanEarlyButton.style.display="none"
+            viewDetailsButton.style.display=""
             viewDetailsButton.style.opacity = "1"
             viewDetailsButton.disabled = false
             viewDetailsButton.style.cursor = "pointer"
@@ -584,33 +629,36 @@ async function checkScanProgress(){
         console.log('Scan Progress:', data);
         scanResultsData = data
         currentScanTime = parseInt(scanResultsData['timeElapsed'])
-        if (scanResultsData['status'] == "success"){
-            updateProgressValues(scanResultsData['scanProgress'], parseInt(scanResultsData['timeElapsed']), scanResultsData['timeLimit'])
-            let alertSummaryData = scanResultsData['alertSummary']['alertsSummary']
-            highRiskAmountText.innerText = alertSummaryData['High'];
-            moderateRiskAmountText.innerText = alertSummaryData['Medium'];
-            lowRiskAmountText.innerText = alertSummaryData['Low'];
-            informationalRiskAmountText.innerText = alertSummaryData['Informational'];
-            scanTargetURL.innerText = scanResultsData['currentScanTargetURL']
-            scanStatusText.innerHTML = "Scanning"
-            if (scanResultsData['scanProgress'] == "100"){
+        if (!scanEndedEarly){
+            if (scanResultsData['status'] == "success"){
+                updateProgressValues(scanResultsData['scanProgress'], parseInt(scanResultsData['timeElapsed']), scanResultsData['timeLimit'])
+                let alertSummaryData = scanResultsData['alertSummary']['alertsSummary']
+                highRiskAmountText.innerText = alertSummaryData['High'];
+                moderateRiskAmountText.innerText = alertSummaryData['Medium'];
+                lowRiskAmountText.innerText = alertSummaryData['Low'];
+                informationalRiskAmountText.innerText = alertSummaryData['Informational'];
+                scanTargetURL.innerText = scanResultsData['currentScanTargetURL']
+                scanStatusText.innerHTML = "Scanning"
+                if (scanResultsData['scanProgress'] == "100"){
+                    progressCheckingClockNeeded = false
+                    scanWaitingToFinishClock()
+                }else if ((scanResultsData['timeElapsed'] / parseInt(scanResultsData['timeLimit'])) >= 1){
+                    progressCheckingClockNeeded = false
+                    scanWaitingToFinishClock()
+                }
+                if((scanResultsData['timeElapsed'] / parseInt(scanResultsData['timeLimit'])) >= 1){
+                    scanStatusText.innerHTML = "Time Limit Exceeded"
+                    scanTimeLimitMessageText.innerHTML = "Time limit exceeded, results incomplete..."
+                }
+            }else if(scanResultsData['status'] == "waiting for finish"){
+                preparingResultsTextMovingFunction()
+                endScanEarlyButton.style.display = "none"
+                console.log(`scanResultsData['status'] == "waiting to finish"`)
                 progressCheckingClockNeeded = false
                 scanWaitingToFinishClock()
-            }else if ((scanResultsData['timeElapsed'] / parseInt(scanResultsData['timeLimit'])) >= 1){
+            }else{
                 progressCheckingClockNeeded = false
-                scanWaitingToFinishClock()
             }
-            if((scanResultsData['timeElapsed'] / parseInt(scanResultsData['timeLimit'])) >= 1){
-                scanStatusText.innerHTML = "Time Limit Exceeded"
-                scanTimeLimitMessageText.innerHTML = "Time limit exceeded, results incomplete..."
-            }
-        }else if(scanResultsData['status'] == "waiting for finish"){
-            preparingResultsTextMovingFunction()
-            console.log(`scanResultsData['status'] == "waiting to finish"`)
-            progressCheckingClockNeeded = false
-            scanWaitingToFinishClock()
-        }else{
-            progressCheckingClockNeeded = false
         }
     })
     .catch(error => {
@@ -638,14 +686,19 @@ async function scanTimeElapsedClock() {
         if (timeLimit != -1){
             await delay(1000);
             currentScanTime += 1
-            scanTimeElapsedText.innerHTML = "Time Elapsed: " + secondsToMinutesAndSeconds(currentScanTime)
-
-            if((currentScanTime / timeLimit) >= 1){
-                scanStatusText.innerHTML = "Scan Stopped"
-                scanTimeLimitMessageText.innerHTML = "Time limit exceeded, results incomplete..."
-                await delay(2000);
-                preparingResultsTextMovingFunction()
+            if (scanEndedEarly){
                 break
+            }else{
+                scanTimeElapsedText.innerHTML = "Time Elapsed: " + secondsToMinutesAndSeconds(currentScanTime)
+
+                if((currentScanTime / timeLimit) >= 1){
+                    scanStatusText.innerHTML = "Scan Stopped"
+                    scanTimeLimitMessageText.innerHTML = "Time limit exceeded, results incomplete..."
+                    await delay(2000);
+                    preparingResultsTextMovingFunction()
+                    endScanEarlyButton.style.display = "none"
+                    break
+                }
             }
         }
     }
@@ -708,6 +761,10 @@ function attemptScan(){
             scanTimeLimitText.innerHTML = "Time Limit: " + secondsToMinutesAndSeconds(timeLimit)
             scanTimeElapsedClock()
             scanProgressCheckingClock()
+            endScanEarlyButton.style.display=""
+            endScanEarlyButton.addEventListener("click", async ()=>{
+                await stopScanEarly()
+            })
         }
     })
     .catch(error => {
@@ -767,13 +824,20 @@ viewDetailsButton.addEventListener("click", prepareScanResultsViewing)
 filterSelect.addEventListener("input", filterDetails)
 
 scanLeaveConfirmationSubmit.addEventListener("click", async ()=>{
-    if (waitingForScanToFinish == true){
-        await cancelScan()
-        sessionStorage.removeItem('scanid');
-        sessionStorage.removeItem('scanhash');
-
-        window.location.href = '../../public/html/index.html';
-    }else{
+    try{
+        if (waitingForScanToFinish == true){
+            await cancelScan()
+            sessionStorage.removeItem('scanid');
+            sessionStorage.removeItem('scanhash');
+    
+            window.location.href = '../../public/html/index.html';
+        }else{
+            sessionStorage.removeItem('scanid');
+            sessionStorage.removeItem('scanhash');
+    
+            window.location.href = '../../public/html/index.html';
+        }
+    }catch{
         sessionStorage.removeItem('scanid');
         sessionStorage.removeItem('scanhash');
 

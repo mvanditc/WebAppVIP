@@ -10,14 +10,15 @@ let confirmConfigChangesInput = document.getElementById("confirmConfigChangesInp
 let scanConfigurationSubmitButton = document.getElementById("scanConfigurationSubmitButton")
 let scanConfigurationCancelButton = document.getElementById("scanConfigurationCancelButton")
 
+let dailySiteStatsContainer = document.getElementById("dailySiteStatsContainer")
+let siteStatsRefreshButton = document.getElementById("siteStatsRefreshButton")
+
 let scanMOTDForm = document.getElementById("scanMOTDForm")
 let motdEditorRevertButton = document.getElementById("motdEditorRevertButton")
 let motdEditorSubmitButton = document.getElementById("motdEditorSubmitButton")
 let motdEditorTextArea = document.getElementById("motdEditorTextArea")
 let confirmMOTDChangesInput = document.getElementById("confirmMOTDChangesInput")
 let storedMOTD = ""
-
-let siteStatsRefreshButton = document.getElementById("siteStatsRefreshButton")
 
 function requestToChangeServerStoredMOTD(newMOTDValue){
     console.log("Requesting Server to Change Site MOTD")
@@ -301,7 +302,10 @@ function populateSiteConfigurations(){
         scanSecondsLimitInput.value = ""
         confirmConfigChangesInput.checked = false
       })
-      siteStatsRefreshButton.addEventListener("click", refreshSiteConfigurations)
+      siteStatsRefreshButton.addEventListener("click", ()=>{
+        refreshSiteConfigurations()
+        refreshSiteDailyStats()
+      })
 
 
   })
@@ -309,6 +313,45 @@ function populateSiteConfigurations(){
       console.error('Fetch error:', error.message);
       window.location.href = '../../public/html/accessDenied.html';
   });
+}
+
+function refreshSiteDailyStats(){
+    console.log("Refreshing Daily Site Stats")
+    fetch("http://localhost:3030/get-site-daily-stats-as-admin", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          "username": attemptedUsername,
+          "loginToken": attemptedToken
+      })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+    })
+    .then(data => {  
+        console.log(data)
+        let dailySiteStats = data["dailyStats"]
+        dailySiteStatsContainer.innerHTML = `
+        <span>24 Hour Site Stats:</span>
+        <span>&nbsp;&nbsp;Users Queued: ${dailySiteStats["usersQueued"]}</span>
+        <span>&nbsp;&nbsp;Scans Attempted: ${dailySiteStats["scansAttempted"]}</span>
+        <span>&nbsp;&nbsp;Alerts Found: ${dailySiteStats["alertsFound"]}</span>
+        <span>&nbsp;&nbsp;Queue Auto Corrections: ${dailySiteStats["queueAutoCorrections"]}</span>
+        <span>&nbsp;&nbsp;Scan Cancels: ${dailySiteStats["scanCancels"]}</span>
+        <span>&nbsp;&nbsp;Completed Scans: ${dailySiteStats["completedScans"]}</span>
+        `
+
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+        window.location.href = '../../public/html/accessDenied.html';
+    });
 }
 
 document.addEventListener("DOMContentLoaded", (event)=>{
@@ -338,6 +381,7 @@ document.addEventListener("DOMContentLoaded", (event)=>{
             alert("Welcome Admin!")
             populateSiteConfigurations()
             populateMOTDEditorContent()
+            refreshSiteDailyStats()
       }
   })
   .catch(error => {
