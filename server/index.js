@@ -57,7 +57,7 @@ let adminCredentials = {
 let adminManagedVariables = {
   "scanTimeLimit": "20", // in Seconds
   "maxScansPerDay": "99",
-  "adminDemoMode": "true",
+  "adminDemoMode": "false",
   "siteMOTDHTML": `<p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>`
 }
 let timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
@@ -976,7 +976,7 @@ async function queueFlowCorrectionClock(){
 async function queueFlowCorrection() {
   queueCorrectionNeeded = true
   queueCorrectionCounting = true
-  let timeToDequeue = 20;
+  let timeToDequeue = 15;
   let counter = 0;
 
   while (counter <= timeToDequeue) {
@@ -1040,7 +1040,7 @@ async function checkIfUserDisconnectedFromScanner(){
   if (isScanning == true){
     console.log("checkIfUserDisconnectedFromScanner")
     checkingIfUserIsDisconnected = true
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 15; i++) {
       if (userCancelled){
         console.log("userCancelled == true")
         await clearAlertsForNewScan()

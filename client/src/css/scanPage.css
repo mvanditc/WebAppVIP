@@ -26,14 +26,18 @@ body {
     width: 96%;
 }
 
+#backToHomeArrowContainer{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+}
+
 #backToHomeArrow{
     background-color: rgb(128, 0, 0);
     border: 2px solid black;
     border-radius: 10px;
     z-index: 999;
     position: absolute;
-    margin-left: -56px;
-    margin-top: -70px;
     cursor: pointer;
 }
 #backToHomeArrow i {
@@ -72,10 +76,12 @@ body {
     flex-direction: column;
     align-items: flex-start;
     margin-right: 5px;
-    max-width: 60vw;
+    width: 90%;
 }
-#scanPage-scan-target-container div{
+
+#scanPage-scan-target-container div {
     margin: 5px 0px;
+    width: 90%;
 }
 
 #scanPage-scan-target-text {
@@ -490,10 +496,8 @@ body {
     padding: 35px 15px;
     border-radius: 5px;
 }
-#scanLeaveConfirmationForm div{
-    margin-bottom: 40px;
+#scanLeaveConfirmationForm div {
     display: flex;
-    flex-direction: row;
     justify-content: space-around;
 }
 #scanLeaveConfirmationForm div span{
@@ -671,9 +675,7 @@ body {
 }
 
 @media screen and (max-width: 1000px) {
-    #scanPage-scan-target-container {
-        max-width: 40%;
-    }
+    
 }
 
 @media screen and (max-height: 866px) {
@@ -757,6 +759,17 @@ body {
         font-size: 24px;
         transform: rotate(180deg);
         margin: 6px 14px;
+    }
+}
+
+@media screen and (max-height: 400px) {
+    #scanPage-main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 30vh 0px;
+        width: 96%;
     }
 }
 

@@ -63,6 +63,8 @@ var timeLimit = -1
 
 var scanEndedEarly = false
 
+var hideMessageHiding = false
+
 let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
 
 async function handleHelpMarkerClick(helpValue, event){
@@ -125,7 +127,17 @@ async function hideCopyToClipboardNotification(){
 }
 
 async function hideHelpMessagePopup(){
+    if(hideMessageHiding){
+        helpMessagePopup.style.opacity = "0"
+        hideMessageHiding = false
+        return
+    }
+    hideMessageHiding = true
     await delay(7000)
+    if(!hideMessageHiding){
+        return
+    }
+    hideMessageHiding = false
     helpMessagePopup.style.opacity = "0"
 }
 
@@ -456,7 +468,7 @@ function prepareScanResultsViewing(){
                 </div>
                 <div class="json-clipboard-copy">(Copied to Clipboard)</div>
                 <div value="confidence-links" class="help-marker">What are confidence links?</div>
-                <button class="copy-confidence-level-links-button" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
+                <button class="copy-confidence-level-links-button prevent-select" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
                 <div class="view-details-issue-detail-confidence">
                         <div>
                             <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links: (${currentHighConfidenceLinks.length}) </div>
@@ -877,6 +889,16 @@ async function processScan(){
             processClockNeeded = false
             attemptScan()
             return
+        }else if(data['status'] == "scan tool busy"){
+            console.log(`data['status'] == "scan tool busy"`)
+            scanProgressCheckingClock()
+            endScanEarlyButton.style.display=""
+            endScanEarlyButton.addEventListener("click", async ()=>{
+                await stopScanEarly()
+            })
+        }else if (data['status'] == "not found"){
+            alert("Scan ID not found...")
+            window.location.href = '../../public/html/index.html';
         }else{
             if (data['siteSettingsChanged'] == "false"){
                 alert("Your queue position was invalid...")
@@ -929,6 +951,8 @@ scanLeaveConfirmationSubmit.addEventListener("click", async ()=>{
 scanLeaveConfirmationCancel.addEventListener("click", ()=>{
     scanLeaveConfirmationContainer.style.display = "none"
 })
+
 backToHomeArrow.addEventListener("click", async ()=>{
+    console.log("clicked arrow")
     scanLeaveConfirmationContainer.style.display = ""
 })

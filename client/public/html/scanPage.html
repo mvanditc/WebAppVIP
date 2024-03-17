@@ -26,10 +26,10 @@
 <body>
     <div id="scanLeaveConfirmationContainer">
         <div id="scanLeaveConfirmationForm">
-            <div>Results will be&nbsp;<span>lost</span>, are you sure?</div>
+            <div class="prevent-select">Results will be&nbsp;<span>lost</span>, are you sure?</div>
             <div>
-                <button id="scanLeaveConfirmationSubmit">Yes</button>
-                <button id="scanLeaveConfirmationCancel">No</button>
+                <button id="scanLeaveConfirmationSubmit" class="prevent-select">Yes</button>
+                <button id="scanLeaveConfirmationCancel" class="prevent-select">No</button>
             </div>
         </div>
     </div>
@@ -37,7 +37,9 @@
     <!--  HTML CODE FOR BODY  -->
     <div id="scanPage-main-container">
         <div id="scanPage-container">
-            <div id="backToHomeArrow"><i class="fa-sharp fa-solid fa-right-from-bracket"></i></div>
+            <div id="backToHomeArrowContainer">
+                <div id="backToHomeArrow"><i class="fa-sharp fa-solid fa-right-from-bracket"></i></div>
+            </div>
             <div id="scanPage-initial-container">
                 <div id="scanPage-scan-target-container">
                     <div id="scanPage-scan-target-text">Scan Target:</div>
