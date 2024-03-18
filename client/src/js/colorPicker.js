@@ -136,6 +136,13 @@ function changeToRegularColors(){
   colorRectangles[13].style.backgroundColor = "#8123E1";
   colorRectangles[14].style.backgroundColor = "#605DF8";
   colorRectangles[15].style.backgroundColor = "#89B8FF";
+  colorRectangles[16].style.backgroundColor = "#000000";
+  colorRectangles[17].style.backgroundColor = "#9747FF";
+  colorRectangles[18].style.backgroundColor = "#7400e7";
+  colorRectangles[19].style.backgroundColor = "#cea9ff";
+  colorRectangles[20].style.backgroundColor = "#C04E4E";
+  colorRectangles[21].style.backgroundColor = "#963e3e";
+  colorRectangles[22].style.backgroundColor = "#b58c8c";
   //Change Page
   document.documentElement.style.setProperty('--background-color', colorRectangles[0].style.backgroundColor);
   document.documentElement.style.setProperty('--secondary-color', colorRectangles[1].style.backgroundColor);
@@ -153,12 +160,21 @@ function changeToRegularColors(){
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', colorRectangles[13].style.backgroundColor);
   document.documentElement.style.setProperty('--navbar-list-button-color', colorRectangles[14].style.backgroundColor);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', colorRectangles[15].style.backgroundColor);  
+  document.documentElement.style.setProperty('--tertiary-color', colorRectangles[16].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button', colorRectangles[17].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-hover', colorRectangles[18].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-disabled', colorRectangles[19].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button', colorRectangles[20].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-hover', colorRectangles[21].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', colorRectangles[22].style.backgroundColor);  
   // Change RGB
   var regularColors = [
     [151, 71, 255], [255, 255, 255], [30, 30, 30], [255, 255, 255],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
     [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
-    [88, 0, 178], [129, 35, 225], [96, 93, 248], [137, 184, 255]
+    [88, 0, 178], [129, 35, 225], [96, 93, 248], [137, 184, 255],
+    [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
+    [192, 78, 78], [150, 62, 62], [181, 140, 140]
   ];
   colorRectangles.forEach(function(rectangle, index) {
     rectangle.style.backgroundColor = `rgb(${regularColors[index].join(", ")})`;
@@ -185,6 +201,13 @@ function changeToLightColors(){
   colorRectangles[13].style.backgroundColor = "#9C5ADF";
   colorRectangles[14].style.backgroundColor = "#605DF8";
   colorRectangles[15].style.backgroundColor = "#89B8FF";
+  colorRectangles[16].style.backgroundColor = "#000000";
+  colorRectangles[17].style.backgroundColor = "#9747FF";
+  colorRectangles[18].style.backgroundColor = "#7400e7";
+  colorRectangles[19].style.backgroundColor = "#cea9ff";
+  colorRectangles[20].style.backgroundColor = "#C04E4E";
+  colorRectangles[21].style.backgroundColor = "#963e3e";
+  colorRectangles[22].style.backgroundColor = "#b58c8c";
   //Change Page
   document.documentElement.style.setProperty('--background-color', colorRectangles[0].style.backgroundColor);
   document.documentElement.style.setProperty('--secondary-color', colorRectangles[1].style.backgroundColor);
@@ -202,12 +225,21 @@ function changeToLightColors(){
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', colorRectangles[13].style.backgroundColor);
   document.documentElement.style.setProperty('--navbar-list-button-color', colorRectangles[14].style.backgroundColor);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', colorRectangles[15].style.backgroundColor);
+  document.documentElement.style.setProperty('--tertiary-color', colorRectangles[16].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button', colorRectangles[17].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-hover', colorRectangles[18].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-disabled', colorRectangles[19].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button', colorRectangles[20].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-hover', colorRectangles[21].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', colorRectangles[22].style.backgroundColor);  
   // Change RGB
   var lightColors = [
     [228, 207, 254], [255, 255, 255], [30, 30, 30], [30, 30, 30],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
     [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
-    [215, 176, 255], [156, 90, 223], [96, 93, 248], [137, 184, 255]
+    [215, 176, 255], [156, 90, 223], [96, 93, 248], [137, 184, 255],
+    [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
+    [192, 78, 78], [150, 62, 62], [181, 140, 140]
   ];
   colorRectangles.forEach(function(rectangle, index) {
     rectangle.style.backgroundColor = `rgb(${lightColors[index].join(", ")})`;
@@ -234,6 +266,13 @@ function changeToDarkColors() {
   colorRectangles[13].style.backgroundColor = "#676767";
   colorRectangles[14].style.backgroundColor = "#878787";
   colorRectangles[15].style.backgroundColor = "#B4B4B4";
+  colorRectangles[16].style.backgroundColor = "#000000";
+  colorRectangles[17].style.backgroundColor = "#9747FF";
+  colorRectangles[18].style.backgroundColor = "#7400e7";
+  colorRectangles[19].style.backgroundColor = "#cea9ff";
+  colorRectangles[20].style.backgroundColor = "#C04E4E";
+  colorRectangles[21].style.backgroundColor = "#963e3e";
+  colorRectangles[22].style.backgroundColor = "#b58c8c";
   //Change the page
   document.documentElement.style.setProperty('--background-color', colorRectangles[0].style.backgroundColor);
   document.documentElement.style.setProperty('--secondary-color', colorRectangles[1].style.backgroundColor);
@@ -251,12 +290,21 @@ function changeToDarkColors() {
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', colorRectangles[13].style.backgroundColor);
   document.documentElement.style.setProperty('--navbar-list-button-color', colorRectangles[14].style.backgroundColor);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', colorRectangles[15].style.backgroundColor);
+  document.documentElement.style.setProperty('--tertiary-color', colorRectangles[16].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button', colorRectangles[17].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-hover', colorRectangles[18].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-disabled', colorRectangles[19].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button', colorRectangles[20].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-hover', colorRectangles[21].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', colorRectangles[22].style.backgroundColor);  
   // Change RGB
   var darkColors = [
     [51, 51, 51], [81, 81, 81], [184, 184, 184], [30, 30, 30],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
     [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
-    [20, 20, 20], [103, 103, 103], [135, 135, 135], [180, 180, 180]
+    [20, 20, 20], [103, 103, 103], [135, 135, 135], [180, 180, 180],
+    [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
+    [192, 78, 78], [150, 62, 62], [181, 140, 140]
   ];
   colorRectangles.forEach(function(rectangle, index) {
     rectangle.style.backgroundColor = `rgb(${darkColors[index].join(", ")})`;
@@ -283,6 +331,13 @@ function changeToTerminalColors() {
   colorRectangles[13].style.backgroundColor = "#000000";
   colorRectangles[14].style.backgroundColor = "#2B2B2B";
   colorRectangles[15].style.backgroundColor = "#565656";
+  colorRectangles[16].style.backgroundColor = "#000000";
+  colorRectangles[17].style.backgroundColor = "#9747FF";
+  colorRectangles[18].style.backgroundColor = "#7400e7";
+  colorRectangles[19].style.backgroundColor = "#cea9ff";
+  colorRectangles[20].style.backgroundColor = "#C04E4E";
+  colorRectangles[21].style.backgroundColor = "#963e3e";
+  colorRectangles[22].style.backgroundColor = "#b58c8c";
 
   document.documentElement.style.setProperty('--background-color', colorRectangles[0].style.backgroundColor);
   document.documentElement.style.setProperty('--secondary-color', colorRectangles[1].style.backgroundColor);
@@ -300,12 +355,22 @@ function changeToTerminalColors() {
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', colorRectangles[13].style.backgroundColor);
   document.documentElement.style.setProperty('--navbar-list-button-color', colorRectangles[14].style.backgroundColor);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', colorRectangles[15].style.backgroundColor);
+  document.documentElement.style.setProperty('--tertiary-color', colorRectangles[16].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button', colorRectangles[17].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-hover', colorRectangles[18].style.backgroundColor);  
+  document.documentElement.style.setProperty('--submit-button-disabled', colorRectangles[19].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button', colorRectangles[20].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-hover', colorRectangles[21].style.backgroundColor);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', colorRectangles[22].style.backgroundColor);  
+
   // Change RGB
   var terminalColors = [
     [0, 0, 0], [20, 20, 20], [37, 140, 0], [37, 140, 0],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
     [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
-    [20, 20, 20], [0, 0, 0], [43, 43, 43], [86, 86, 86]
+    [20, 20, 20], [0, 0, 0], [43, 43, 43], [86, 86, 86],
+    [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
+    [192, 78, 78], [150, 62, 62], [181, 140, 140]
   ];
   colorRectangles.forEach(function(rectangle, index) {
     rectangle.style.backgroundColor = `rgb(${terminalColors[index].join(", ")})`;
@@ -336,7 +401,14 @@ function changeToCustom1Colors(){
       currentSavedCustomPresets["custom1Button"]["--navbar-color"],
       currentSavedCustomPresets["custom1Button"]["--selected-navbar-toplevel-button-color"], 
       currentSavedCustomPresets["custom1Button"]["--navbar-list-button-color"],
-      currentSavedCustomPresets["custom1Button"]["--selected-navbar-list-button-color"], 
+      currentSavedCustomPresets["custom1Button"]["--selected-navbar-list-button-color"],
+      currentSavedCustomPresets["custom1Button"]["--tertiary-color"], 
+      currentSavedCustomPresets["custom1Button"]["--submit-button"], 
+      currentSavedCustomPresets["custom1Button"]["--submit-button-hover"], 
+      currentSavedCustomPresets["custom1Button"]["--submit-button-disabled"], 
+      currentSavedCustomPresets["custom1Button"]["--cancel-button"], 
+      currentSavedCustomPresets["custom1Button"]["--cancel-button-hover"], 
+      currentSavedCustomPresets["custom1Button"]["--cancel-button-disabled"], 
     ];
   }else{
     var hexCodes = [
@@ -356,6 +428,13 @@ function changeToCustom1Colors(){
       customPresetValues["custom1Button"]["--selected-navbar-toplevel-button-color"], 
       customPresetValues["custom1Button"]["--navbar-list-button-color"],
       customPresetValues["custom1Button"]["--selected-navbar-list-button-color"], 
+      customPresetValues["custom1Button"]["--tertiary-color"], 
+      customPresetValues["custom1Button"]["--submit-button"], 
+      customPresetValues["custom1Button"]["--submit-button-hover"], 
+      customPresetValues["custom1Button"]["--submit-button-disabled"], 
+      customPresetValues["custom1Button"]["--cancel-button"], 
+      customPresetValues["custom1Button"]["--cancel-button-hover"], 
+      customPresetValues["custom1Button"]["--cancel-button-disabled"], 
     ];
   }
 
@@ -376,6 +455,13 @@ function changeToCustom1Colors(){
   colorRectangles[13].style.backgroundColor = hexCodes[13];
   colorRectangles[14].style.backgroundColor = hexCodes[14];
   colorRectangles[15].style.backgroundColor = hexCodes[15];
+  colorRectangles[16].style.backgroundColor = hexCodes[16];
+  colorRectangles[17].style.backgroundColor = hexCodes[17];
+  colorRectangles[18].style.backgroundColor = hexCodes[18];
+  colorRectangles[19].style.backgroundColor = hexCodes[19];
+  colorRectangles[20].style.backgroundColor = hexCodes[20];
+  colorRectangles[21].style.backgroundColor = hexCodes[21];
+  colorRectangles[22].style.backgroundColor = hexCodes[22];
 
   //Change Page
   document.documentElement.style.setProperty('--background-color', hexCodes[0]);
@@ -394,6 +480,13 @@ function changeToCustom1Colors(){
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', hexCodes[13]);
   document.documentElement.style.setProperty('--navbar-list-button-color', hexCodes[14]);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', hexCodes[15]);
+  document.documentElement.style.setProperty('--tertiary-color', hexCodes[16]);  
+  document.documentElement.style.setProperty('--submit-button', hexCodes[17]);  
+  document.documentElement.style.setProperty('--submit-button-hover', hexCodes[18]);  
+  document.documentElement.style.setProperty('--submit-button-disabled', hexCodes[19]);  
+  document.documentElement.style.setProperty('--cancel-button', hexCodes[20]);  
+  document.documentElement.style.setProperty('--cancel-button-hover', hexCodes[21]);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', hexCodes[22]);  
 
   // Change RGB
   var lightColors = [
@@ -412,7 +505,14 @@ function changeToCustom1Colors(){
     hex2rgb(hexCodes[12]),
     hex2rgb(hexCodes[13]),
     hex2rgb(hexCodes[14]),
-    hex2rgb(hexCodes[15])
+    hex2rgb(hexCodes[15]),
+    hex2rgb(hexCodes[16]),
+    hex2rgb(hexCodes[17]),
+    hex2rgb(hexCodes[18]),
+    hex2rgb(hexCodes[19]),
+    hex2rgb(hexCodes[20]),
+    hex2rgb(hexCodes[21]),
+    hex2rgb(hexCodes[22])
   ];
 
   colorRectangles.forEach(function(rectangle, index) {
@@ -447,6 +547,13 @@ function changeToCustom2Colors(){
       currentSavedCustomPresets["custom2Button"]["--selected-navbar-toplevel-button-color"], 
       currentSavedCustomPresets["custom2Button"]["--navbar-list-button-color"],
       currentSavedCustomPresets["custom2Button"]["--selected-navbar-list-button-color"], 
+      currentSavedCustomPresets["custom2Button"]["--tertiary-color"], 
+      currentSavedCustomPresets["custom2Button"]["--submit-button"], 
+      currentSavedCustomPresets["custom2Button"]["--submit-button-hover"], 
+      currentSavedCustomPresets["custom2Button"]["--submit-button-disabled"], 
+      currentSavedCustomPresets["custom2Button"]["--cancel-button"], 
+      currentSavedCustomPresets["custom2Button"]["--cancel-button-hover"], 
+      currentSavedCustomPresets["custom2Button"]["--cancel-button-disabled"], 
     ];
   }else{
     var hexCodes = [
@@ -466,6 +573,13 @@ function changeToCustom2Colors(){
       customPresetValues["custom2Button"]["--selected-navbar-toplevel-button-color"], 
       customPresetValues["custom2Button"]["--navbar-list-button-color"],
       customPresetValues["custom2Button"]["--selected-navbar-list-button-color"], 
+      customPresetValues["custom2Button"]["--tertiary-color"], 
+      customPresetValues["custom2Button"]["--submit-button"], 
+      customPresetValues["custom2Button"]["--submit-button-hover"], 
+      customPresetValues["custom2Button"]["--submit-button-disabled"], 
+      customPresetValues["custom2Button"]["--cancel-button"], 
+      customPresetValues["custom2Button"]["--cancel-button-hover"], 
+      customPresetValues["custom2Button"]["--cancel-button-disabled"], 
     ];
   }
 
@@ -486,6 +600,13 @@ function changeToCustom2Colors(){
     currentSavedCustomPresets["custom2Button"]["--selected-navbar-toplevel-button-color"], 
     currentSavedCustomPresets["custom2Button"]["--navbar-list-button-color"],
     currentSavedCustomPresets["custom2Button"]["--selected-navbar-list-button-color"], 
+    currentSavedCustomPresets["custom2Button"]["--tertiary-color"], 
+    currentSavedCustomPresets["custom2Button"]["--submit-button"], 
+    currentSavedCustomPresets["custom2Button"]["--submit-button-hover"], 
+    currentSavedCustomPresets["custom2Button"]["--submit-button-disabled"], 
+    currentSavedCustomPresets["custom2Button"]["--cancel-button"], 
+    currentSavedCustomPresets["custom2Button"]["--cancel-button-hover"], 
+    currentSavedCustomPresets["custom2Button"]["--cancel-button-disabled"], 
   ];
 
   // Change the color of rectangles to their light color
@@ -505,6 +626,13 @@ function changeToCustom2Colors(){
   colorRectangles[13].style.backgroundColor = hexCodes[13];
   colorRectangles[14].style.backgroundColor = hexCodes[14];
   colorRectangles[15].style.backgroundColor = hexCodes[15];
+  colorRectangles[16].style.backgroundColor = hexCodes[16];
+  colorRectangles[17].style.backgroundColor = hexCodes[17];
+  colorRectangles[18].style.backgroundColor = hexCodes[18];
+  colorRectangles[19].style.backgroundColor = hexCodes[19];
+  colorRectangles[20].style.backgroundColor = hexCodes[20];
+  colorRectangles[21].style.backgroundColor = hexCodes[21];
+  colorRectangles[22].style.backgroundColor = hexCodes[22];
 
   //Change Page
   document.documentElement.style.setProperty('--background-color', hexCodes[0]);
@@ -523,6 +651,13 @@ function changeToCustom2Colors(){
   document.documentElement.style.setProperty('--selected-navbar-toplevel-button-color', hexCodes[13]);
   document.documentElement.style.setProperty('--navbar-list-button-color', hexCodes[14]);
   document.documentElement.style.setProperty('--selected-navbar-list-button-color', hexCodes[15]);
+  document.documentElement.style.setProperty('--tertiary-color', hexCodes[16]);  
+  document.documentElement.style.setProperty('--submit-button', hexCodes[17]);  
+  document.documentElement.style.setProperty('--submit-button-hover', hexCodes[18]);  
+  document.documentElement.style.setProperty('--submit-button-disabled', hexCodes[19]);  
+  document.documentElement.style.setProperty('--cancel-button', hexCodes[20]);  
+  document.documentElement.style.setProperty('--cancel-button-hover', hexCodes[21]);  
+  document.documentElement.style.setProperty('--cancel-button-disabled', hexCodes[22]);  
 
   // Change RGB
   var lightColors = [
@@ -541,7 +676,14 @@ function changeToCustom2Colors(){
     hex2rgb(hexCodes[12]),
     hex2rgb(hexCodes[13]),
     hex2rgb(hexCodes[14]),
-    hex2rgb(hexCodes[15])
+    hex2rgb(hexCodes[15]),
+    hex2rgb(hexCodes[16]),
+    hex2rgb(hexCodes[17]),
+    hex2rgb(hexCodes[18]),
+    hex2rgb(hexCodes[19]),
+    hex2rgb(hexCodes[20]),
+    hex2rgb(hexCodes[21]),
+    hex2rgb(hexCodes[22])
   ];
 
   colorRectangles.forEach(function(rectangle, index) {
@@ -579,7 +721,14 @@ function handleLoadingColorPresets() {
           "--navbar-color" : "#5800B2",
           "--selected-navbar-toplevel-button-color" : "#8123E1",
           "--navbar-list-button-color" : "#605DF8",
-          "--selected-navbar-list-button-color" : "#89B8FF"
+          "--selected-navbar-list-button-color" : "#89B8FF",
+          "--tertiary-color": "#000000",
+          "--submit-button": "#9747FF",
+          "--submit-button-hover": "#7400e7",
+          "--submit-button-disabled": "#cea9ff",
+          "--cancel-button": "#C04E4E",
+          "--cancel-button-hover": "#963e3e",
+          "--cancel-button-disabled": "#b58c8c"
         },
         custom2Button : {
           "--background-color" : "#000000",
@@ -597,7 +746,14 @@ function handleLoadingColorPresets() {
           "--navbar-color" : "#5800B2",
           "--selected-navbar-toplevel-button-color" : "#8123E1",
           "--navbar-list-button-color" : "#605DF8",
-          "--selected-navbar-list-button-color" : "#89B8FF"
+          "--selected-navbar-list-button-color" : "#89B8FF",
+          "--tertiary-color": "#000000",
+          "--submit-button": "#9747FF",
+          "--submit-button-hover": "#7400e7",
+          "--submit-button-disabled": "#cea9ff",
+          "--cancel-button": "#C04E4E",
+          "--cancel-button-hover": "#963e3e",
+          "--cancel-button-disabled": "#b58c8c"
         }
       }
     }
@@ -839,6 +995,48 @@ document.querySelectorAll('input[type="color"]').forEach(function(input, index) 
       }else if (currentPresetBeingCustomized == 2){
         customPresetValues["custom2Button"]["--selected-navbar-list-button-color"] = color;
       }
+    }else if (index == 16){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--tertiary-color"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--tertiary-color"] = color;
+      }
+    }else if (index == 17){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--submit-button"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--submit-button"] = color;
+      }
+    }else if (index == 18){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--submit-button-hover"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--submit-button-hover"] = color;
+      }
+    }else if (index == 19){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--submit-button-disabled"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--submit-button-disabled"] = color;
+      }
+    }else if (index == 20){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--cancel-button"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--cancel-button"] = color;
+      }
+    }else if (index == 21){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--cancel-button-hover"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--cancel-button-hover"] = color;
+      }
+    }else if (index == 22){
+      if (currentPresetBeingCustomized == 1){
+        customPresetValues["custom1Button"]["--cancel-button-disabled"] = color;
+      }else if (currentPresetBeingCustomized == 2){
+        customPresetValues["custom2Button"]["--cancel-button-disabled"] = color;
+      }
     }
   });
 });
@@ -873,7 +1071,14 @@ function updateColors(color, index) {
     "--navbar-color",
     "--selected-navbar-toplevel-button-color",
     "--navbar-list-button-color",
-    "--selected-navbar-list-button-color"
+    "--selected-navbar-list-button-color",
+    "--tertiary-color",
+    "--submit-button",
+    "--submit-button-hover",
+    "--submit-button-disabled",
+    "--cancel-button",
+    "--cancel-button-hover",
+    "--cancel-button-disabled",
   ];
 
   document.documentElement.style.setProperty(cssVariables[index], color);

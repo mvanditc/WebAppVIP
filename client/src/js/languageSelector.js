@@ -28,7 +28,10 @@ languageSelectorModal.style.display = "none"
 
 languageSelectorButton.addEventListener("click", openLanguageSelectorModal)
 
-languageSelectorCancelButton.addEventListener("click", closeLanguageSelectorModal)
+languageSelectorCancelButton.addEventListener("click", ()=>{
+    disableApplyButton()
+    closeLanguageSelectorModal()
+})
 
 languageSelectorApplyButton.addEventListener("click", ()=>{
     applyTranslation()

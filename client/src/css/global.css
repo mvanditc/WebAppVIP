@@ -13,9 +13,10 @@
     /* Main Colors */
     --background-color: #9747FF;
     --secondary-color: #FFFFFF;
-    --text-color: #333333;
+    --tertiary-color: #000000;
 
     --all-risk: #89B8FF;
+    --info-risk: #0074CC;
     --low-risk: #FFD600;
     --moderate-risk: #FF6F1E;
     --high-risk: #FF2626;
@@ -34,6 +35,18 @@
     --selected-navbar-toplevel-button-color: #8123E1;
     --navbar-list-button-color: #605DF8;
     --selected-navbar-list-button-color: #89B8FF;
+
+    /* Button Colors */
+    --submit-button: #9747FF;
+    --submit-button-hover: #7400e7;
+    --submit-button-disabled: #cea9ff;
+
+    --cancel-button: #C04E4E;
+    --cancel-button-hover: #963e3e;
+    --cancel-button-disabled: #b58c8c;
+
+    /* Modal Faded Background Color */
+    --modal-faded-background-color: rgba(17, 17, 17, 0.89);
 }
 
 /* Used to disable selection of text (Used for buttons). */

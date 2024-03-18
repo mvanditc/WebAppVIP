@@ -468,7 +468,7 @@ function prepareScanResultsViewing(){
                 </div>
                 <div class="json-clipboard-copy">(Copied to Clipboard)</div>
                 <div value="confidence-links" class="help-marker">What are confidence links?</div>
-                <button class="copy-confidence-level-links-button prevent-select" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
+                <button class="copy-confidence-level-links-button" value="${uniqueScanAlertsListArray[i]["alertData"]["alertRef"]}">Copy Confidence Level Links JSON</button>
                 <div class="view-details-issue-detail-confidence">
                         <div>
                             <div class="view-details-issue-detail-confidence-title"><span class="view-details-high-risk">High</span> Confidence Links: (${currentHighConfidenceLinks.length}) </div>
@@ -477,7 +477,7 @@ function prepareScanResultsViewing(){
                             </div>
                         </div>
                         <div>
-                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Moderate</span> Confidence Links: (${currentMediumConfidenceLinks.length}</div>
+                            <div class="view-details-issue-detail-confidence-title"><span class="view-details-med-risk">Moderate</span> Confidence Links: (${currentMediumConfidenceLinks.length})</div>
                             <div class="view-details-issue-confidence-links-container">
                                 ${mediumConfidenceLinksInnerHTML}
                             </div>

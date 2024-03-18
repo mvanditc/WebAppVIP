@@ -23,18 +23,18 @@
   height: 100%;
   display: flex;
   position: absolute;
-  background-color: rgba(65, 65, 65, 0.3);
+  background-color: var(--modal-faded-background-color);
   justify-content: center;
   z-index: 999;
   align-items: flex-start;
-  color: black;
+  color: var(--black-text);
 }
 
 #languageSelectorContent{
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: var(--secondary-color);
   padding: 15px 15px 5px 15px;
   margin-top: 10%;
   
@@ -58,32 +58,32 @@
 #languageBottomButtonsContainer button{
   padding: 15px;
   border-radius: 8px;
-  border: 0px solid black;
+  border: 0px solid var(--tertiary-color);
   transition: background-color 0.3s, color 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: white;
+  color: var(--white-text);;
   font-size: 1.5em;
 }
 
 #languageSelectorCancelButton{
   margin: 10px 5px;
-  background-color: #ff4d4d;
+  background-color: var(--cancel-button);
   cursor: pointer;
 }
 #languageSelectorApplyButton{
   margin: 10px 5px;
 }
 .enabledApply{
-  background-color: #4caf50;
-  color: white;
+  background-color: var(--navbar-color);
+  color: var(--white-text);
   cursor: pointer;
 }
 .disabledApply{
-  background-color: #7e9b7f;
-  color: #4b554c;
+  background-color: var(--submit-button-disabled);
+  color: var(--grey-color);
   cursor: default;
 }
 

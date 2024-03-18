@@ -3,7 +3,7 @@
 
 body {
   background-color: var(--background-color);
-  color: white;
+  color: var(--white-text);
   margin: 0;
   padding: 0;
   display: flex;
@@ -26,10 +26,10 @@ body {
   margin-bottom: 5px;
 }
 .adminDashLargeSection {
-  background-color: white;
+  background-color: var(--secondary-color);
   margin: auto;
   margin-bottom: 10px;
-  color: black;
+  color: var(--black-text);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -39,8 +39,8 @@ body {
   width: 90%;
 }
 #configAndStatusBlackBox {
-  background-color: black;
-  color: white;
+  background-color: var(--tertiary-color);
+  color: var(--white-text);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -58,7 +58,7 @@ body {
   margin: 5px 0px;
 }
 #WelcomeAdminText {
-  color: black;
+  color: var(--black-text);
   font-size: 32px;
   margin-top: -55px;
   padding-bottom: 10px;
@@ -67,8 +67,8 @@ body {
   padding: 0px 60px;
 }
 .cancel-button{
-  color: white;
-  background-color: #C04E4E;
+  color: var(--white-text);
+  background-color: var(--cancel-button);
   border-radius: 12px;
   border: none;
   padding: 10px 15px;
@@ -79,11 +79,11 @@ body {
   cursor: pointer;
 }
 .cancel-button:disabled{
-  background-color: #b58c8c;
+  background-color: var(--cancel-button-disabled);
   cursor: default;
 }
 .submit-button{
-  color: white;
+  color: var(--white-text);
   background-color: var(--background-color);
   border-radius: 12px;
   border: none;
@@ -94,19 +94,19 @@ body {
   cursor: pointer;
 }
 .submit-button:disabled{
-  background-color: #cea9ff;
+  background-color: var(--submit-button-disabled);
   cursor: default;
 }
 .scanConfigNumberInput {
-  background-color: black;
-  color: white;
+  background-color: var(--tertiary-color);
+  color: var(--white-text);
   border-radius: 2px;
   padding: 17px 17px;
   width: max-content;
 }
 #demoModeSelect{
-  background-color: black;
-  color: white;
+  background-color: var(--tertiary-color);
+  color: var(--white-text);
   border-radius: 2px;
   padding: 17px 17px;
   width: max-content;
@@ -140,8 +140,8 @@ body {
   margin-top: -50px;
 }
 #scanMOTDForm textarea{
-  background-color: black;
-  color: white;
+  background-color: var(--tertiary-color);
+  color: var(--white-text);
   resize: none;
   overflow-y: scroll;
   width: 100%;
@@ -165,10 +165,10 @@ body {
   width: 800px;
 }
 #adminDashAnalyticsSection{
-  background-color: white;
+  background-color: var(--secondary-color);
   margin: auto;
   margin-bottom: 64px;
-  color: black;
+  color: var(--black-text);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -184,8 +184,8 @@ body {
 #graphViewSelectorContainer select {
   border: none;
   font-size: 20px;
-  background-color: grey;
-  color: white;
+  background-color: var(--grey-color);
+  color: var(--white-text);
   font-family: 'font1';
   padding: 18px 10px;
 }
@@ -202,7 +202,7 @@ body {
   overflow-y: hidden;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(17, 17, 17, 0.89);
+  background-color: var(--modal-faded-background-color);
   z-index: 1999;
   display: flex;
   align-items: center;
