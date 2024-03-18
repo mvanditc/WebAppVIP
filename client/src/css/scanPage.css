@@ -476,7 +476,7 @@ body {
 }
 
 #scanLeaveConfirmationContainer{
-    position: absolute;
+    position: fixed;
     overflow: hidden;
     overflow-x: hidden;
     overflow-y: hidden;

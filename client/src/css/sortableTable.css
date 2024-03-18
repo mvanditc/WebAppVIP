@@ -32,7 +32,8 @@ table.sortable th button {
   margin: 1px;
   font-size: 80%;
   font-weight: bold;
-  background-color: yellowgreen;
+  background-color: var(--submit-button);
+  color: var(--white-text);
   border: none;
   display: inline;
   right: 0;
@@ -87,7 +88,7 @@ table.sortable th button:focus,
 table.sortable th button:hover {
   padding: 2px;
   border: 2px solid currentcolor;
-  background-color: #e5f4ff;
+  background-color: var(--submit-button-hover);
 }
 
 table.sortable th button:focus span,

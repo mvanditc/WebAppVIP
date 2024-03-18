@@ -896,9 +896,6 @@ async function processScan(){
             endScanEarlyButton.addEventListener("click", async ()=>{
                 await stopScanEarly()
             })
-        }else if (data['status'] == "not found"){
-            alert("Scan ID not found...")
-            window.location.href = '../../public/html/index.html';
         }else{
             if (data['siteSettingsChanged'] == "false"){
                 alert("Your queue position was invalid...")

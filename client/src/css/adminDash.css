@@ -37,6 +37,7 @@ body {
   padding: 60px 18px;
   border-radius: 5px;
   width: 90%;
+  justify-content: space-around;
 }
 #configAndStatusBlackBox {
   background-color: var(--tertiary-color);
@@ -45,8 +46,8 @@ body {
   flex-direction: column;
   align-items: flex-start;
   padding: 10px;
-  width: 17%;
   border-radius: 2px;
+  margin-bottom: 50px;
 }
 .blackBoxTextGroup{
   display: flex;
@@ -77,6 +78,7 @@ body {
 }
 .cancel-button:hover{
   cursor: pointer;
+  background-color: var(--cancel-button-hover);
 }
 .cancel-button:disabled{
   background-color: var(--cancel-button-disabled);
@@ -92,6 +94,7 @@ body {
 }
 .submit-button:hover{
   cursor: pointer;
+  background-color: var(--submit-button-hover);
 }
 .submit-button:disabled{
   background-color: var(--submit-button-disabled);
@@ -120,6 +123,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-bottom: 50px;
 }
 #scanConfigForm .formInputGroup{
   margin-bottom: 10px;
@@ -129,7 +133,6 @@ body {
 }
 #motdEditorPortion {
   margin-top: 28px;
-  width: 50%;
   height: 100%;
 }
 #scanMOTDForm{
@@ -144,7 +147,7 @@ body {
   color: var(--white-text);
   resize: none;
   overflow-y: scroll;
-  width: 100%;
+  width: 500px;
   height: 500px;
   margin-bottom: 10px;
 }
@@ -159,7 +162,25 @@ body {
   width: 100%;
 }
 #graphViewSelectorContainer{
-
+  display: flex;
+  flex-direction: column;
+}
+#dataAnalyticsQueryButton{
+  margin-top: 10px;
+  color: var(--white-text);
+  background-color: var(--background-color);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+#dataAnalyticsQueryButton:hover{
+  cursor: pointer;
+  background-color: var(--submit-button-hover);
+}
+#dataAnalyticsQueryButton:disabled{
+  background-color: var(--submit-button-disabled);
+  cursor: default;
 }
 #AdminAnalyticsGraphContainer{
   width: 800px;
@@ -172,11 +193,10 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: flex-start;
   padding: 60px 18px;
   border-radius: 5px;
   width: 70%;
-  justify-content: space-between;
+  justify-content: center;
 }
 #AdminAnalyticsGraph{
 
@@ -196,7 +216,7 @@ body {
 }
 
 #userFeedbackDetailsModal{
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -207,4 +227,89 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.formInputGroupA{
+  margin-bottom: 10px;
+}
+
+#userFeedbackDetailsModalContent{
+  display: flex;
+  flex-direction: column; 
+}
+#scanLeaveConfirmationForm{
+  display: flex;
+  flex-direction: column; 
+  margin-top: 10px;
+}
+
+#scanLeaveConfirmationForm button{
+  margin-top: 10px;
+}
+
+#userFeedbackStatusChangeSelect{
+  border: none;
+  font-size: 20px;
+  background-color: var(--grey-color);
+  color: var(--white-text);
+  font-family: 'font1';
+  padding: 18px 10px;
+}
+#userFeedbackSaveStatusButton{
+
+}
+#userFeedbackCancelStatusChangeButton{
+
+}
+
+#userFeedbackCancelStatusChangeButton{
+  color: var(--white-text);
+  background-color: var(--cancel-button);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+#userFeedbackCancelStatusChangeButton:hover{
+  cursor: pointer;
+  background-color: var(--cancel-button-hover);
+}
+#userFeedbackCancelStatusChangeButton:disabled{
+  background-color: var(--cancel-button-disabled);
+  cursor: default;
+}
+#userFeedbackSaveStatusButton{
+  color: var(--white-text);
+  background-color: var(--background-color);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+#userFeedbackSaveStatusButton:hover{
+  cursor: pointer;
+  background-color: var(--submit-button-hover);
+}
+#userFeedbackSaveStatusButton:disabled{
+  background-color: var(--submit-button-disabled);
+  cursor: default;
+}
+#userFeedbackMessageText{
+  height: 200px;
+}
+.userFeedbackViewDetailsButton{
+  color: var(--white-text);
+  background-color: var(--background-color);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+.userFeedbackViewDetailsButton:hover{
+  cursor: pointer;
+  background-color: var(--submit-button-hover);
+}
+.userFeedbackViewDetailsButton:disabled{
+  background-color: var(--submit-button-disabled);
+  cursor: default;
 }

@@ -38,6 +38,10 @@ let userFeedbackSaveStatusButton = document.getElementById("userFeedbackSaveStat
 let userFeedbackCancelStatusChangeButton = document.getElementById("userFeedbackCancelStatusChangeButton")
 let userFeedbackMessageText = document.getElementById("userFeedbackMessageText")
 
+let userFeedbackDetailsModalEmail = document.getElementById("userFeedbackDetailsModalEmail")
+let userFeedbackDetailsModalDate = document.getElementById("userFeedbackDetailsModalDate")
+let userFeedbackDetailsModalStatus = document.getElementById("userFeedbackDetailsModalStatus")
+
 let userFeedbackSystem = {}
 let selectedUserFeedbackID = ""
 
@@ -422,8 +426,22 @@ function populateInitialAnalyticsViewVariables(){
         });
         selectDateSelect.innerHTML = `<option></option>`
         selectDateSelect.innerHTML += selectDateSelectInnerHTML
-
-        dataAnalyticsQueryButton.disabled = false
+        
+        
+        selectGraphSelect.addEventListener("input", ()=>{
+            if (selectGraphSelect.value == "" || selectDateSelect.value == ""){
+                dataAnalyticsQueryButton.disabled = true
+            }else{
+                dataAnalyticsQueryButton.disabled = false
+            }
+        })
+        selectDateSelect.addEventListener("input", ()=>{
+            if (selectGraphSelect.value == "" || selectDateSelect.value == ""){
+                dataAnalyticsQueryButton.disabled = true
+            }else{
+                dataAnalyticsQueryButton.disabled = false
+            }
+        })
 
     })
     .catch(error => {
@@ -457,15 +475,18 @@ function populateUserFeedbackSection(){
         let feedbackSystemTBodyInnerHTML = ""
 
         userFeedbackSystemData.forEach(row => {
-            userFeedbackSystem[row["timestamp"]] = {
-                "email": row["email"],
-                "message": row["message"],
-                "status": row["status"]
-            }
             console.log(row)
             let date = new Date(parseInt(row["timestamp"]));
 
             let readableDate = date.toLocaleString();
+
+            userFeedbackSystem[row["timestamp"]] = {
+                "email": row["email"],
+                "message": row["message"],
+                "status": row["status"],
+                "date": readableDate
+            }
+
             feedbackSystemTBodyInnerHTML += `
             <tr>
                 <td>${readableDate}</td>
@@ -512,6 +533,9 @@ function viewUserFeedbackDetails(button){
     userFeedbackMessageText.innerText = userFeedbackSystem[selectedUserFeedbackID]["message"]
     userFeedbackStatusChangeSelect.value = userFeedbackSystem[selectedUserFeedbackID]["status"]
     userFeedbackSaveStatusButton.disabled = true
+    userFeedbackDetailsModalEmail.innerText = "Email: " + userFeedbackSystem[selectedUserFeedbackID]["email"]
+    userFeedbackDetailsModalDate.innerText = "Date: " + userFeedbackSystem[selectedUserFeedbackID]["date"]
+    userFeedbackDetailsModalStatus.innerText = "Status: " + userFeedbackSystem[selectedUserFeedbackID]["status"]
 }
 
 function changeUserFeedbackStatus(){
@@ -537,6 +561,11 @@ function changeUserFeedbackStatus(){
     })
     .then(data => {  
         console.log(data)
+        if (data["status"] == "success"){
+            location.reload();
+        }else{
+            alert("There was an error...")
+        }
     })
     .catch(error => {
         console.error('Fetch error:', error.message);

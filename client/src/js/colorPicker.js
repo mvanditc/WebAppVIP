@@ -131,7 +131,7 @@ function changeToRegularColors(){
   colorRectangles[8].style.backgroundColor = "#6F2BA5";
   colorRectangles[9].style.backgroundColor = "#605DF8";
   colorRectangles[10].style.backgroundColor = "#453A00";
-  colorRectangles[11].style.backgroundColor = "#D9D9D9";
+  colorRectangles[11].style.backgroundColor = "#a7a7a7";
   colorRectangles[12].style.backgroundColor = "#5800B2";
   colorRectangles[13].style.backgroundColor = "#8123E1";
   colorRectangles[14].style.backgroundColor = "#605DF8";
@@ -171,7 +171,7 @@ function changeToRegularColors(){
   var regularColors = [
     [151, 71, 255], [255, 255, 255], [30, 30, 30], [255, 255, 255],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
-    [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
+    [111, 43, 165], [96, 93, 248], [69, 58, 0], [167, 167, 167],
     [88, 0, 178], [129, 35, 225], [96, 93, 248], [137, 184, 255],
     [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
     [192, 78, 78], [150, 62, 62], [181, 140, 140]
@@ -196,7 +196,7 @@ function changeToLightColors(){
   colorRectangles[8].style.backgroundColor = "#6F2BA5";
   colorRectangles[9].style.backgroundColor = "#605DF8";
   colorRectangles[10].style.backgroundColor = "#453A00";
-  colorRectangles[11].style.backgroundColor = "#D9D9D9";
+  colorRectangles[11].style.backgroundColor = "#a7a7a7";
   colorRectangles[12].style.backgroundColor = "#D7B0FF";
   colorRectangles[13].style.backgroundColor = "#9C5ADF";
   colorRectangles[14].style.backgroundColor = "#605DF8";
@@ -236,7 +236,7 @@ function changeToLightColors(){
   var lightColors = [
     [228, 207, 254], [255, 255, 255], [30, 30, 30], [30, 30, 30],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
-    [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
+    [111, 43, 165], [96, 93, 248], [69, 58, 0], [167, 167, 167],
     [215, 176, 255], [156, 90, 223], [96, 93, 248], [137, 184, 255],
     [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
     [192, 78, 78], [150, 62, 62], [181, 140, 140]
@@ -261,7 +261,7 @@ function changeToDarkColors() {
   colorRectangles[8].style.backgroundColor = "#6F2BA5";
   colorRectangles[9].style.backgroundColor = "#605DF8";
   colorRectangles[10].style.backgroundColor = "#453A00";
-  colorRectangles[11].style.backgroundColor = "#D9D9D9";
+  colorRectangles[11].style.backgroundColor = "#a7a7a7";
   colorRectangles[12].style.backgroundColor = "#141414";
   colorRectangles[13].style.backgroundColor = "#676767";
   colorRectangles[14].style.backgroundColor = "#878787";
@@ -301,7 +301,7 @@ function changeToDarkColors() {
   var darkColors = [
     [51, 51, 51], [81, 81, 81], [184, 184, 184], [30, 30, 30],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
-    [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
+    [111, 43, 165], [96, 93, 248], [69, 58, 0], [167, 167, 167],
     [20, 20, 20], [103, 103, 103], [135, 135, 135], [180, 180, 180],
     [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
     [192, 78, 78], [150, 62, 62], [181, 140, 140]
@@ -326,7 +326,7 @@ function changeToTerminalColors() {
   colorRectangles[8].style.backgroundColor = "#6F2BA5";
   colorRectangles[9].style.backgroundColor = "#605DF8";
   colorRectangles[10].style.backgroundColor = "#453A00";
-  colorRectangles[11].style.backgroundColor = "#D9D9D9";
+  colorRectangles[11].style.backgroundColor = "#a7a7a7";
   colorRectangles[12].style.backgroundColor = "#141414";
   colorRectangles[13].style.backgroundColor = "#000000";
   colorRectangles[14].style.backgroundColor = "#2B2B2B";
@@ -367,7 +367,7 @@ function changeToTerminalColors() {
   var terminalColors = [
     [0, 0, 0], [20, 20, 20], [37, 140, 0], [37, 140, 0],
     [137, 184, 255], [255, 214, 0], [255, 111, 30], [255, 38, 38],
-    [111, 43, 165], [96, 93, 248], [69, 58, 0], [217, 217, 217],
+    [111, 43, 165], [96, 93, 248], [69, 58, 0], [167, 167, 167],
     [20, 20, 20], [0, 0, 0], [43, 43, 43], [86, 86, 86],
     [0, 0, 0], [151, 71, 255], [116, 0, 231], [206, 169, 255],
     [192, 78, 78], [150, 62, 62], [181, 140, 140]
@@ -717,7 +717,7 @@ function handleLoadingColorPresets() {
           "--purple-text" : "#6F2BA5",
           "--blue-text" : "#605DF8",
           "--tool-close-button" : "#453A00",
-          "--grey-color" : "#D9D9D9",
+          "--grey-color" : "#a7a7a7",
           "--navbar-color" : "#5800B2",
           "--selected-navbar-toplevel-button-color" : "#8123E1",
           "--navbar-list-button-color" : "#605DF8",
@@ -742,7 +742,7 @@ function handleLoadingColorPresets() {
           "--purple-text" : "#6F2BA5",
           "--blue-text" : "#605DF8",
           "--tool-close-button" : "#453A00",
-          "--grey-color" : "#D9D9D9",
+          "--grey-color" : "#a7a7a7",
           "--navbar-color" : "#5800B2",
           "--selected-navbar-toplevel-button-color" : "#8123E1",
           "--navbar-list-button-color" : "#605DF8",

@@ -10,6 +10,9 @@
   <body>
     <div id="userFeedbackDetailsModal">
       <div id="userFeedbackDetailsModalContent">
+        <div id="userFeedbackDetailsModalEmail">Email: email@email.com</div>
+        <div id="userFeedbackDetailsModalDate">Date: 3/18/2024, 2:13:35 AM</div>
+        <div id="userFeedbackDetailsModalStatus">Status: Undealt</div>
         <textarea id="userFeedbackMessageText" readonly></textarea>
         <div id="scanLeaveConfirmationForm">
             <select id="userFeedbackStatusChangeSelect">
@@ -51,17 +54,17 @@
           </div>
           <div id="scanConfigurationInputsPortion">
             <form id="scanConfigForm">
-              <div class="formInputGroup">
+              <div class="formInputGroupA">
                 <label for="scanSecondsLimitInput">New Scan Seconds Limit:</label>
                 <input min="0" class="scanConfigNumberInput" type="number" id="scanSecondsLimitInput" name="scanSecondsLimitInput">
               </div>
 
-              <div class="formInputGroup">
+              <div class="formInputGroupA">
                 <label for="maxScansPerDayInput">New Max Scans Per Day:</label>
                 <input min="0" class="scanConfigNumberInput" type="number" id="maxScansPerDayInput" name="maxScansPerDayInput">
               </div>
 
-              <div class="formInputGroup">
+              <div class="formInputGroupA">
                 <label for="demoModeSelect">Demo Mode Status:</label>
                 <select id="demoModeSelect">
                   <option value="true">true</option>
@@ -69,12 +72,12 @@
                 </select>
               </div>
 
-              <div class="formInputGroup">
+              <div class="formInputGroupA">
                 <label for="confirmConfigChangesInput">Confirm Changes: </label>
                 <input type="checkbox" id="confirmConfigChangesInput" name="confirmConfigChangesInput" required>
               </div>
 
-              <div id="scanConfigButtonsContainer" class="formInputGroup">
+              <div id="scanConfigButtonsContainer" class="formInputGroupA">
                 <input id="scanConfigurationSubmitButton" class="submit-button" type="submit" value="Submit" disabled>
                 <button id="scanConfigurationCancelButton" class="cancel-button" disabled>Cancel</button>
               </div>
@@ -191,7 +194,7 @@
         data: {
           labels: [],
           datasets: [{
-            label: '# of Scans Performed',
+            label: '',
             data: [],
             borderWidth: 1,
             borderColor: lineColor
