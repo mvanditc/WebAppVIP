@@ -39,14 +39,31 @@ let queuePositionClockRunning = false
 
 let currentlyWaitingInQueue = false
 
-function isValidLink(str) {
-  // //Check to see if link is proper and host is not localhost or 127.0.0.1
-  // var urlPattern = /^https?:\/\/[^ "]+$/;
-  // var urlPatternTestResults = urlPattern.test(str);
+let termsOfUseWarningDiv = document.getElementById("termsOfUseWarningDiv")
+termsOfUseWarningDiv.style.display = "none"
+let termsOfUseAcceptedCheckbox = document.getElementById("termsOfUseAcceptedCheckbox")
+termsOfUseAcceptedCheckbox.addEventListener("input", ()=>{
+  if (termsOfUseAcceptedCheckbox.checked == true){
+    termsOfUseWarningDiv.style.display = "none"
+    localStorage.setItem("termsofusestatus", "true")
+    // Create a new submit event
+    const submitEvent = new Event("submit", {
+      bubbles: true,
+      cancelable: true
+    });
 
-  // // Test the string against the URL pattern
-  // return urlPatternTestResults
-  return true
+    // Dispatch the submit event
+    indexDataForm.dispatchEvent(submitEvent);
+  }
+})
+
+function isValidLink(str) {
+  //Check to see if link is proper and host is not localhost or 127.0.0.1
+  var urlPattern = /^https?:\/\/[^ "]+$/;
+  var urlPatternTestResults = urlPattern.test(str);
+
+  // Test the string against the URL pattern
+  return urlPatternTestResults
 }
 
 function isUnrestrictedLink(str) {
@@ -200,6 +217,15 @@ indexDataForm.addEventListener("submit", (event)=>{
     storedUserID = "empty"
   }
 
+  let termsOfUseStatus = localStorage.getItem("termsofusestatus")
+  if (termsOfUseStatus == null){
+    localStorage.setItem("termsofusestatus", "false")
+    termsOfUseStatus = localStorage.getItem("termsofusestatus")
+  }
+  if (termsOfUseStatus == "false"){
+    termsOfUseWarningDiv.style.display = ""
+  }
+
   console.log(storedUserID)
 
   let isValidLinkTest = isValidLink(inputURL)
@@ -217,7 +243,7 @@ indexDataForm.addEventListener("submit", (event)=>{
   }
 
 
-  if (isValidLinkTest && isUnrestrictedLinkTest){
+  if (isValidLinkTest && isUnrestrictedLinkTest && termsOfUseStatus == "true"){
     let attemptedUsername = sessionStorage.getItem('username');
     let attemptedToken = sessionStorage.getItem('loginToken');
     fetch("http://localhost:3030/add-scan-to-queue", {
