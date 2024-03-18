@@ -89,13 +89,23 @@
         <h1 class="adminDashLargeSectionAnalyticsTitle">Analytics</h1>
         <div id="adminDashAnalyticsSection">
           <div id="graphViewSelectorContainer">
-            <select>
+            <div>Select Graph Stat:</div>
+            <select id="selectGraphSelect">
               <option>Graph Views</option>
               <option>Hourly Total Scans VS Last 24 Hours</option>
               <option>View 2</option>
               <option>View 3</option>
               <option>View 4</option>
             </select>
+            <div>Select Date:</div>
+            <select id="selectDateSelect">
+              <option>03/2022</option>
+              <option>04/2022</option>
+              <option>05/2022</option>
+              <option>06/2022</option>
+              <option>07/2022</option>
+            </select>
+            <button id="dataAnalyticsQueryButton">Query</button>
           </div>
           <div id="AdminAnalyticsGraphContainer"><canvas id="AdminAnalyticsGraph"></canvas></div>
         </div>
@@ -106,15 +116,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
-      const ctx = document.getElementById('AdminAnalyticsGraph');
+      let ctx = document.getElementById('AdminAnalyticsGraph');
+      ctx.style.display="none"
+      let analyticsQueryButton = document.getElementById("dataAnalyticsQueryButton")
 
-      new Chart(ctx, {
+      let analyticsChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+          labels: [],
           datasets: [{
             label: '# of Scans Performed',
-            data: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+            data: [],
             borderWidth: 1,
             borderColor: lineColor
           }]
@@ -132,6 +144,57 @@
           }
         }
       });
+
+      function retrieveAnalyticsViewFromBackend(){
+        let selectedDate = selectDateSelect.value
+        let selectedColumn = selectGraphSelect.value
+
+        if (selectedDate != "" && selectedColumn != ""){
+            console.log("Getting Analytics View From Database")
+            fetch("http://localhost:3030/get-sql-view", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "username": attemptedUsername,
+                "loginToken": attemptedToken,
+                "date": selectedDate,
+                "column": selectedColumn
+            })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                };
+
+                return response.json();
+            })
+            .then(data => {  
+                console.log(data)
+                ctx.style.display=""
+                let view = data["view"]
+                let viewDates = []
+                let viewValues = []
+
+                view.forEach(row => {
+                  let formattedDate = (row["date"]).split("T")
+                  formattedDate = formattedDate[0]
+                  viewDates.push(formattedDate)
+                  viewValues.push(row[selectedColumn])
+                });
+
+                analyticsChart.data.datasets[0].data = viewValues;
+                analyticsChart.data.labels = viewDates;
+                analyticsChart.update();
+            })
+            .catch(error => {
+                console.error('Fetch error:', error.message);
+            });
+        }
+      }
+
+      analyticsQueryButton.addEventListener("click", retrieveAnalyticsViewFromBackend)
     </script>
   </body>
 </html>

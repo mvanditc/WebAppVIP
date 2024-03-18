@@ -22,6 +22,12 @@ let motdEditorTextArea = document.getElementById("motdEditorTextArea")
 let confirmMOTDChangesInput = document.getElementById("confirmMOTDChangesInput")
 let storedMOTD = ""
 
+let selectGraphSelect = document.getElementById("selectGraphSelect")
+let selectDateSelect = document.getElementById("selectDateSelect")
+
+let dataAnalyticsQueryButton = document.getElementById("dataAnalyticsQueryButton")
+dataAnalyticsQueryButton.disabled = true
+
 function requestToChangeServerStoredMOTD(newMOTDValue){
     console.log("Requesting Server to Change Site MOTD")
     console.log(newMOTDValue)
@@ -342,6 +348,77 @@ function refreshSiteDailyStats(){
     });
 }
 
+function populateInitialAnalyticsViewVariables(){
+    console.log("Populating Initial Analytics View Variables")
+    fetch("http://localhost:3030/get-sql-initial-data", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          "username": attemptedUsername,
+          "loginToken": attemptedToken
+      })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+    })
+    .then(data => {  
+        console.log(data)
+        let sqlFieldNames = data["columns"]
+        let fieldNamesArray = []
+        let selectGraphSelectInnerHTML = ""
+        let selectDateSelectInnerHTML = ""
+
+        let sqlDates = data["dates"] 
+        let datesArray = []
+
+        let rowInnerHTMLName = ""
+
+        sqlFieldNames.forEach(row => {
+            if (row["Field"] != "date"){
+                fieldNamesArray.push(row["Field"])
+                if (row["Field"] == "scanTotal"){
+                    rowInnerHTMLName = "Total Scans Per Day"
+                }else if (row["Field"] == "totalUsersQueued"){
+                    rowInnerHTMLName = "Total Users Queued Per Day"
+                }else if (row["Field"] == "totalScanAttempts"){
+                    rowInnerHTMLName = "Total Scan Attempts Per Day"
+                }else if (row["Field"] == "totalAlertsFound"){
+                    rowInnerHTMLName = "Total Alerts Found Per Day"
+                }else if (row["Field"] == "totalQueueAutoCorrections"){
+                    rowInnerHTMLName = "Total Queue Auto Corrections Per Day"
+                }else if (row["Field"] == "totalScanCancels"){
+                    rowInnerHTMLName = "Total Cancelled Scans Per Day"
+                }else if (row["Field"] == "totalCompletedScans"){
+                    rowInnerHTMLName = "Total Completed Scans Per Day"
+                }
+                selectGraphSelectInnerHTML += `<option value="${row["Field"]}">${rowInnerHTMLName}</option>`
+            }
+        });
+        selectGraphSelect.innerHTML = `<option></option>`
+        selectGraphSelect.innerHTML += selectGraphSelectInnerHTML
+
+        sqlDates.forEach(row => {
+            datesArray.push(row["DATE_FORMAT(date, '%Y-%m')"])
+            selectDateSelectInnerHTML += `<option value="${row["DATE_FORMAT(date, '%Y-%m')"]}">${row["DATE_FORMAT(date, '%Y-%m')"]}</option>`
+        });
+        selectDateSelect.innerHTML = `<option></option>`
+        selectDateSelect.innerHTML += selectDateSelectInnerHTML
+
+        dataAnalyticsQueryButton.disabled = false
+
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+        window.location.href = '../../public/html/accessDenied.html';
+    });
+}
+
 document.addEventListener("DOMContentLoaded", (event)=>{
   fetch("http://localhost:3030/attempt-authentication", {
       method: 'PUT',
@@ -370,6 +447,7 @@ document.addEventListener("DOMContentLoaded", (event)=>{
             populateSiteConfigurations()
             populateMOTDEditorContent()
             refreshSiteDailyStats()
+            populateInitialAnalyticsViewVariables()
       }
   })
   .catch(error => {

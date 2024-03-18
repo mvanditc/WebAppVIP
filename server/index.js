@@ -1,12 +1,3 @@
-//Preface Start
-//////////////////////////////////////////////////////
-//  Backend Server Code for Web App VIP
-//
-//  Table of Contents:
-//   -
-//////////////////////////////////////////////////////
-//Preface End
-
 //Backend Code Start
 //////////////////////////////////////////////////////
 // Requiring
@@ -15,7 +6,20 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const crypto = require('crypto');
 const fs = require('fs');
-const { request } = require('http');
+var mysql = require('mysql');
+
+// Establishing Connection with Database
+var dbConnection = mysql.createConnection({
+  host: "localhost",
+  user: "michael",
+  password: "WebAppVIPDatabase",
+  database: 'webappvip'
+});
+
+dbConnection.connect(function(err) {
+  if (err) throw err;
+  console.log("Database Connected!");
+});
 
 // Data for Vulnerability Dictionary
 let vulnerabilityDictionary = {}
@@ -109,6 +113,82 @@ app.use(bodyParser.json());
 // Defining ExpressJS Routes
 app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
+});
+
+// Defining ExpressJS Routes
+app.put('/get-sql-view', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+  let queriedDate = requestData["date"];
+  let queriedColumn = requestData["column"];
+
+  let dateParts = queriedDate.split("-");
+  let queriedYear = dateParts[0]
+  let queriedMonth = dateParts[1]
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+            let sql = `SELECT date, ${queriedColumn} FROM dailyscansanalyticsdata WHERE MONTH(date) = ${queriedMonth} AND YEAR(date) = ${queriedYear}`
+            dbConnection.query(sql, function (err, result) {
+              if (err) {
+                res.json({ "status": "fail" });
+              }
+              res.json({"view": result});
+            });
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
+app.put('/get-sql-initial-data', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+            let sql1 = "SELECT DISTINCT DATE_FORMAT(date, '%Y-%m') FROM dailyscansanalyticsdata"
+            let sql2 = "SHOW COLUMNS FROM dailyscansanalyticsdata"
+            dbConnection.query(sql1, function (err, result1) {
+              if (err) {
+                res.json({ "status": "fail" });
+              }
+              dbConnection.query(sql2, function (err, result2) {
+                if (err) {
+                  res.json({ "status": "fail" });
+                }
+                res.json({
+                  "dates": result1,
+                  "columns": result2
+                });
+              });
+            });
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
 });
 
 app.put('/stop-current-scan-early', async (req, res) => {
