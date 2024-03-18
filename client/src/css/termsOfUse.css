@@ -1,4 +1,7 @@
-@import '../css/global.css';
+@import 'global.css';
+@import 'navbar.css';
+@import 'colorPicker.css';
+@import 'languageSelector.css';
 
 body {
   background-color: var(--background-color);
@@ -9,4 +12,8 @@ body {
   flex-direction: column;
   align-items: center;
   font-family: font1;
+}
+
+#termsOfUseContainer{
+  margin: 10px 15px;
 }

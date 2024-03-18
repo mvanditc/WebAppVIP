@@ -165,6 +165,7 @@ footer p {
     border-radius: 5px;
     padding: 10px 15px;
     width: max-content;
+    margin: 10px;
 }
 footer p a{
     color: var(--white-text);
