@@ -1089,7 +1089,7 @@ CREATE TABLE `userfeedbacksystem` (
 
 INSERT INTO `userfeedbacksystem` (`timestamp`, `email`, `message`, `status`) VALUES
 ('1710742415428', 'example@email.com', 'Hello, this is my feedback, thank you.', 'Undealt'),
-('1710743815528', 'example1@email.com', 'Hello, this is my feedback, thank you.', 'Responded');
+('1710743815528', 'example1@email.com', 'Hello, this is my feedback, thank you.', 'Resolved');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

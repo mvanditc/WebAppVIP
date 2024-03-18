@@ -28,4 +28,18 @@ body {
     margin-bottom: 15px;
     margin-left: 5px;
     margin-right: 5px;
+    color: var(--black-text);
 }
+
+.submit-button{
+    color: var(--white-text);
+    background-color: var(--background-color);
+    border-radius: 12px;
+    border: none;
+    padding: 10px 15px;
+    font-size: 20px;
+  }
+  .submit-button:hover{
+    cursor: pointer;
+    background-color: var(--submit-button-hover);
+  }

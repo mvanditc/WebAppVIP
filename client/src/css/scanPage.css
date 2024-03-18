@@ -785,3 +785,25 @@ body {
     }
 }
 
+@media screen and (max-height: 520px) {
+    #scanDetailsSectionContainer {
+        margin-top: 15px;
+    }
+}
+@media screen and (max-height: 470px) {
+    #scanDetailsSectionContainer {
+        margin-top: 90px;
+    }
+}
+@media screen and (max-height: 220px) {
+    #scanDetailsSectionContainer {
+        margin-top: 140px;
+    }
+}
+@media screen and (max-height: 150px) {
+    #scanDetailsSectionContainer {
+        margin-top: 180px;
+    }
+}
+
+

@@ -24,6 +24,9 @@ body {
   font-size: 37px;
   margin-left: 104px;
   margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .adminDashLargeSection {
   background-color: var(--secondary-color);
@@ -330,6 +333,10 @@ body {
   border-radius: 5px;
   width: 70%;
   justify-content: center;
+}
+#backToHomepageButton{
+  margin-left: 10px;
+  font-size: 15px;
 }
 
 

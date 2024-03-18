@@ -42,6 +42,13 @@ let userFeedbackDetailsModalEmail = document.getElementById("userFeedbackDetails
 let userFeedbackDetailsModalDate = document.getElementById("userFeedbackDetailsModalDate")
 let userFeedbackDetailsModalStatus = document.getElementById("userFeedbackDetailsModalStatus")
 
+let backToHomepageButton = document.getElementById("backToHomepageButton")
+backToHomepageButton.addEventListener("click", ()=>{
+    sessionStorage.setItem('username', "");
+    sessionStorage.setItem('loginToken', "");
+    window.location.href = '../../public/html/index.html';
+})
+
 let userFeedbackSystem = {}
 let selectedUserFeedbackID = ""
 

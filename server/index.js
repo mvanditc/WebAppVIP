@@ -11,7 +11,7 @@ var mysql = require('mysql');
 // Establishing Connection with Database
 var dbConnection = mysql.createConnection({
   host: "localhost",
-  user: "michael",
+  user: "WebAppVIPAdmin",
   password: "WebAppVIPDatabase",
   database: 'webappvip'
 });
@@ -41,7 +41,7 @@ fs.readFile("db/vulnerabilityDictionaryData.json", 'utf8', (err, data) => {
 });
 
 // API Key to use ZAP
-const zapAPIKey = "ljhuthfiai88rg6t58ia539434"
+const zapAPIKey = "eu87gfrm715e6nekhi5236jnmb"
 
 // SHA-256 Hashing Function used for data security
 function applySHA256(message) {
