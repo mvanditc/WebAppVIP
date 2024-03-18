@@ -188,9 +188,16 @@
 }
 
 #vulnerabilityDictHamburgbutton {
-    
+
 }
 
 .current-hamburg-link {
     background-color: var(--selected-navbar-toplevel-button-color);
+}
+
+@media screen and (max-width: 260px) {
+    .navbar-logo {
+        height: 100%;
+        margin-left: 5px;
+    }
 }

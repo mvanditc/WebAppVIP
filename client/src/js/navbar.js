@@ -30,12 +30,16 @@ techUsedHamburgbutton = document.getElementById("techUsedHamburgbutton");
 vulnerabilityDictHamburgbutton = document.getElementById("vulnerabilityDictHamburgbutton");
 
 // Preseting the Navbar/Hamburger visibility
+if(window.innerWidth < 351){
+    navbarLogo.src = "../assets/navbar-logo-short.png"
+    console.log(window.innerWidth)
+    
+}else{
+    navbarLogo.src = "../assets/navbar-logo.png"
+    console.log("normal")
+    console.log(window.innerWidth)
+}
 if (window.innerWidth < 900){
-    if(window.innerWidth < 351){
-        navbarLogo.src = "../assets/navbar-logo-short.png"
-    }else{
-        navbarLogo.src = "../assets/navbar-logo.png"
-    }
     navbarContainer.style.display = "none";
     hamburgerContainer.style.display = "flex";
     hamburgShowing = 1
@@ -49,14 +53,47 @@ else{
     hamburgShowing = -1
 }
 
+window.addEventListener("orientationchange", function() {
+    if(window.innerWidth < 351){
+        navbarLogo.src = "../assets/navbar-logo-short.png"
+    }else{
+        navbarLogo.src = "../assets/navbar-logo.png"
+    }
+    if (window.innerWidth < 900){
+        navbarContainer.style.display = "none";
+        navbarListContainer.style.display = "none"
+        hamburgerContainer.style.display = "flex";
+        navbarChevron.style.transform = ""
+        hamburgShowing = 1
+        navbarShowing = -1
+        navbarListOpen = -1
+        navbarListContainer.style.display = "none"
+        resourcesNavbarbutton.style.backgroundColor = ""
+    }
+    else{
+        navbarLogo.src = "../assets/navbar-logo.png"
+        navbarContainer.style.display = "flex";
+        hamburgerContainer.style.display = "none";
+        hamburgerTopLevelList.style.display = "none"
+        hamburgSubListContainer.style.display = "none"
+        hamburgChevron.style.transform = ""
+        hamburgListOpen = -1
+        hamburgSubListOpen = -1
+        navbarShowing = 1
+        hamburgShowing = -1
+        resourcesHamburgbutton.style.backgroundColor = ""
+        hamburgerContainer.style.backgroundColor = ""
+    }
+});
+
 // Window resize listener that controls navbar and hamburger visibility.
 window.addEventListener("resize", ()=>{
+    if(window.innerWidth < 351){
+        navbarLogo.src = "../assets/navbar-logo-short.png"
+    }else{
+        navbarLogo.src = "../assets/navbar-logo.png"
+    }
     if (window.innerWidth < 900){
-        if(window.innerWidth < 351){
-            navbarLogo.src = "../assets/navbar-logo-short.png"
-        }else{
-            navbarLogo.src = "../assets/navbar-logo.png"
-        }
         navbarContainer.style.display = "none";
         navbarListContainer.style.display = "none"
         hamburgerContainer.style.display = "flex";

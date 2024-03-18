@@ -433,6 +433,7 @@ function prepareScanResultsViewing(){
             lowConfidenceLinksInnerHTML = "None found..."
         }
 
+        console.log(uniqueScanAlertsListArray[i]["alertData"]["description"])
         let newSectionInnerHTML = `
         <div class="view-details-issue-container" value="${currentRiskLevel}">
             <div class="view-details-issue-title">${alertTitleWithCircle}</div>

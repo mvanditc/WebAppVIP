@@ -23,6 +23,42 @@ body {
   padding: 10px 15px;
   border-radius: 5px;
 }
+#feedbackForm button{
+  margin-top: 10px;
+}
+
+.cancel-button{
+  color: var(--white-text);
+  background-color: var(--cancel-button);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+.cancel-button:hover{
+  cursor: pointer;
+  background-color: var(--cancel-button-hover);
+}
+.cancel-button:disabled{
+  background-color: var(--cancel-button-disabled);
+  cursor: default;
+}
+.submit-button{
+  color: var(--white-text);
+  background-color: var(--background-color);
+  border-radius: 12px;
+  border: none;
+  padding: 10px 15px;
+  font-size: 20px;
+}
+.submit-button:hover{
+  cursor: pointer;
+  background-color: var(--submit-button-hover);
+}
+.submit-button:disabled{
+  background-color: var(--submit-button-disabled);
+  cursor: default;
+}
 
 #messageTextArea{
   height: 150px;

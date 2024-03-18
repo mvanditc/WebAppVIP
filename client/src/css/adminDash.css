@@ -203,7 +203,6 @@ body {
 }
 #graphViewSelectorContainer select {
   border: none;
-  font-size: 20px;
   background-color: var(--grey-color);
   color: var(--white-text);
   font-family: 'font1';
@@ -312,4 +311,63 @@ body {
 .userFeedbackViewDetailsButton:disabled{
   background-color: var(--submit-button-disabled);
   cursor: default;
+}
+
+.adminDashLargeSectionUserFeedbackTitle{
+  font-size: 37px;
+  margin-left: 303px;
+  margin-bottom: 5px;
+}
+#adminDashFeedbackSection{
+  background-color: var(--secondary-color);
+  margin: auto;
+  margin-bottom: 64px;
+  color: var(--black-text);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 60px 18px;
+  border-radius: 5px;
+  width: 70%;
+  justify-content: center;
+}
+
+
+@media screen and (max-width: 627px) {
+  #scanMOTDForm textarea{
+    width: 90%;
+  }
+}
+@media screen and (max-width: 1400px) {
+  #AdminAnalyticsGraphContainer{
+    width: 100%;
+  }
+}
+@media screen and (max-width: 900px) {
+  .adminDashLargeSectionAnalyticsTitle {
+    font-size: 37px;
+    margin-left: 5%;
+    margin-bottom: 5px;
+  }
+  .adminDashLargeSectionUserFeedbackTitle {
+    font-size: 37px;
+    margin-left: 5%;
+    margin-bottom: 5px;
+  }
+  #adminDashFeedbackSection{
+    width: 80%;
+    overflow: scroll;
+    border: 5px solid var(--secondary-color);
+  }
+  .adminDashLargeSectionTitle{
+    font-size: 37px;
+    margin-left: 5%;
+    margin-bottom: 5px;
+  }
+  .table-wrap{
+    width: 100%;
+  }
+  #graphViewSelectorContainer{
+    width: 100%;
+  }
 }

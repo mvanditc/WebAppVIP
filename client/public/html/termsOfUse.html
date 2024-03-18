@@ -295,6 +295,8 @@
         </div>
     </div>
     <div id="termsOfUseContainer">
+      <button id="backToHomepageButton" class="cancel-button">Back to Homepage</button>
+
       <h2>Terms of Use</h2>
 
       <ol>
@@ -319,5 +321,11 @@
     <script src="../../src/js/navbar.js"></script>
     <script src="../../src/js/colorPicker.js"></script>
     <script src="../../src/js/languageSelector.js"></script>  
+    <script>
+      let backToHomepageButton = document.getElementById("backToHomepageButton")
+      backToHomepageButton.addEventListener("click", ()=>{
+        window.location.href = '../../public/html/index.html';
+      })
+    </script>
   </body>
 </html>

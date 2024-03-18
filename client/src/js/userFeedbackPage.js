@@ -1,6 +1,7 @@
 let feedbackForm = document.getElementById("feedbackForm")
 let feedbackEmailInput = document.getElementById("feedbackEmailInput")
 let messageTextArea = document.getElementById("messageTextArea")
+let cancelButton = document.getElementById("cancelButton")
 
 function sendUserFeedback(){
   console.log("Populating User Feedback Section")
@@ -25,6 +26,10 @@ function sendUserFeedback(){
   })
   .then(data => {  
       console.log(data)
+      if (data["status"] == "success"){
+        alert("Thank you, response submitted successfully, redirecting to homepage...")
+        window.location.href = '../../public/html/index.html';
+      }
   })
   .catch(error => {
       console.error('Fetch error:', error.message);
@@ -36,3 +41,9 @@ feedbackForm.addEventListener("submit", (event)=>{
   event.preventDefault()
   sendUserFeedback()
 })
+
+// Add an event listener to the button
+cancelButton.addEventListener("click", (event)=> {
+  event.preventDefault();
+  window.location.href = '../../public/html/index.html';
+});
