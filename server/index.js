@@ -64,6 +64,7 @@ let adminManagedVariables = {
   "adminDemoMode": "false",
   "siteMOTDHTML": `<p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>`
 }
+
 let timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])
 let maxScanAmount = parseInt(adminManagedVariables["maxScansPerDay"])
 
@@ -115,7 +116,93 @@ app.get('/', (req, res) => {
   res.send("Backend service for Web App VIP is running...");
 });
 
-// Defining ExpressJS Routes
+app.put('/change-user-feedback-status', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  let selectedUserFeedbackID = requestData["feedbackID"]
+  let newStatusValue = requestData["newStatusValue"]
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+
+            let sql = `UPDATE userfeedbacksystem SET status = '${newStatusValue}' WHERE timestamp = '${selectedUserFeedbackID}'`
+            dbConnection.query(sql, function (err, result) {
+              if (err) {
+                console.log(err)
+                res.json({ "status": "fail" });
+              }else{
+                res.json({"status": "success"});
+              }
+            });
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
+app.put('/submit-user-feedback', (req, res) => {
+  const requestData = req.body;
+
+  let enteredEmail = requestData["email"];
+  let enteredMessage = requestData["message"];
+
+  let currentTimestamp = (Date.now()).toString()
+
+  let sql = `INSERT INTO userfeedbacksystem(timestamp, email, message, status) VALUES ('${currentTimestamp}','${enteredEmail}','${enteredMessage}','Undealt')`
+  dbConnection.query(sql, function (err, result) {
+    if (err) {
+      console.log(err)
+      res.json({ "status": "fail" });
+    }else{
+      res.json({"status": "success"});
+    }
+  });
+});
+
+app.put('/get-submitted-user-feedbacks', (req, res) => {
+  const requestData = req.body;
+
+  let attemptedUsername = requestData["username"];
+  let attemptedLoginToken = requestData["loginToken"];
+
+  if (applySHA256(attemptedUsername) == adminCredentials["username"]){
+    try{
+        if (adminCredentials["loginToken"] == attemptedLoginToken){
+            console.log("ATTEMPTING AUTHENTICATION: SUCCESS")
+
+            let sql = `SELECT * FROM userfeedbacksystem`
+            dbConnection.query(sql, function (err, result) {
+              if (err) {
+                res.json({ "status": "fail" });
+              }else{
+                res.json({"userFeedbackSystem": result});
+              }
+            });
+        }else{
+            console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
+            res.json({"status": 'fail'});
+        }
+    }catch{
+        console.log("ATTEMPTING AUTHENTICATION: User Not Found")
+        res.json({"status": 'fail'});
+    }
+  }else{
+    res.json({"status": 'fail'});
+  }
+});
+
 app.put('/get-sql-view', (req, res) => {
   const requestData = req.body;
 
@@ -136,8 +223,9 @@ app.put('/get-sql-view', (req, res) => {
             dbConnection.query(sql, function (err, result) {
               if (err) {
                 res.json({ "status": "fail" });
+              }else{
+                res.json({"view": result});
               }
-              res.json({"view": result});
             });
         }else{
             console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")
@@ -167,16 +255,17 @@ app.put('/get-sql-initial-data', (req, res) => {
             dbConnection.query(sql1, function (err, result1) {
               if (err) {
                 res.json({ "status": "fail" });
-              }
-              dbConnection.query(sql2, function (err, result2) {
-                if (err) {
-                  res.json({ "status": "fail" });
-                }
-                res.json({
-                  "dates": result1,
-                  "columns": result2
+              }else{
+                dbConnection.query(sql2, function (err, result2) {
+                  if (err) {
+                    res.json({ "status": "fail" });
+                  }
+                  res.json({
+                    "dates": result1,
+                    "columns": result2
+                  });
                 });
-              });
+              }
             });
         }else{
             console.log("ATTEMPTING AUTHENTICATION: Incorrect Credentials")

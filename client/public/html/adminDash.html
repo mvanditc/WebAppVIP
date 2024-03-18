@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="../../src/css/adminDash.css">
   </head>
   <body>
+    <div id="userFeedbackDetailsModal">
+      <div id="userFeedbackDetailsModalContent">
+        <textarea id="userFeedbackMessageText" readonly></textarea>
+        <div id="scanLeaveConfirmationForm">
+            <select id="userFeedbackStatusChangeSelect">
+              <option value="Undealt">Undealt</option>
+              <option value="Responded">Responded</option>
+            </select>
+            <button id="userFeedbackSaveStatusButton" class="prevent-select">Save</button>
+            <button id="userFeedbackCancelStatusChangeButton" class="prevent-select">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <div id="adminDashContainer">
       <div class="largeSectionGroup">
         <h1 class="adminDashLargeSectionTitle">Site Settings</h1>
@@ -86,7 +100,7 @@
         </div>
       </div>
       <div class="largeSectionGroup">
-        <h1 class="adminDashLargeSectionAnalyticsTitle">Analytics</h1>
+        <h1 class="adminDashLargeSectionAnalyticsTitle">Analytics Viewer</h1>
         <div id="adminDashAnalyticsSection">
           <div id="graphViewSelectorContainer">
             <div>Select Graph Stat:</div>
@@ -110,9 +124,61 @@
           <div id="AdminAnalyticsGraphContainer"><canvas id="AdminAnalyticsGraph"></canvas></div>
         </div>
       </div>
-    </div>
-    <script src="../../src/js/adminDash.js"></script>
 
+      <div class="largeSectionGroup">
+        <h1 class="adminDashLargeSectionAnalyticsTitle">User Feedback</h1>
+        <div id="adminDashAnalyticsSection">
+          <div class="table-wrap">
+            <table class="sortable">
+              <caption>
+                Site Statistics Over Time
+                <span class="sr-only">, column headers with buttons are sortable.</span>
+              </caption>
+              <thead id="statsTableHeader">
+                <tr>
+                  <th aria-sort="descending">
+                    <button>
+                      Date
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </th>
+                  <th>
+                    <button>
+                      Email
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </th>
+                  <th>
+                    <button>
+                      Status
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </th>
+                  <th class="no-sort">Tools</th>
+                </tr>
+              </thead>
+              <tbody id="feedbackSystemTBody">
+                <tr>
+                  <td>3/18/2024, 6:46:24 AM</td>
+                  <td>example@email.com</td>
+                  <td>Undealt</td>
+                  <td><button>Details</button></td>
+                </tr>
+                <tr>
+                  <td>3/18/2024, 6:56:24 AM</td>
+                  <td>example1@email.com</td>
+                  <td>Responded</td>
+                  <td><button>Details</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="../../src/js/adminDash.js"></script>
+    <script src="../../src/js/sortableTable.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       const lineColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');

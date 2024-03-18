@@ -28,6 +28,19 @@ let selectDateSelect = document.getElementById("selectDateSelect")
 let dataAnalyticsQueryButton = document.getElementById("dataAnalyticsQueryButton")
 dataAnalyticsQueryButton.disabled = true
 
+let feedbackSystemTBody = document.getElementById("feedbackSystemTBody")
+
+let userFeedbackDetailsModal = document.getElementById("userFeedbackDetailsModal")
+userFeedbackDetailsModal.style.display = "none"
+
+let userFeedbackStatusChangeSelect = document.getElementById("userFeedbackStatusChangeSelect")
+let userFeedbackSaveStatusButton = document.getElementById("userFeedbackSaveStatusButton")
+let userFeedbackCancelStatusChangeButton = document.getElementById("userFeedbackCancelStatusChangeButton")
+let userFeedbackMessageText = document.getElementById("userFeedbackMessageText")
+
+let userFeedbackSystem = {}
+let selectedUserFeedbackID = ""
+
 function requestToChangeServerStoredMOTD(newMOTDValue){
     console.log("Requesting Server to Change Site MOTD")
     console.log(newMOTDValue)
@@ -419,6 +432,118 @@ function populateInitialAnalyticsViewVariables(){
     });
 }
 
+function populateUserFeedbackSection(){
+    console.log("Populating User Feedback Section")
+    fetch("http://localhost:3030/get-submitted-user-feedbacks", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          "username": attemptedUsername,
+          "loginToken": attemptedToken
+      })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+    })
+    .then(data => {  
+        console.log(data)
+        let userFeedbackSystemData = data["userFeedbackSystem"]
+        let feedbackSystemTBodyInnerHTML = ""
+
+        userFeedbackSystemData.forEach(row => {
+            userFeedbackSystem[row["timestamp"]] = {
+                "email": row["email"],
+                "message": row["message"],
+                "status": row["status"]
+            }
+            console.log(row)
+            let date = new Date(parseInt(row["timestamp"]));
+
+            let readableDate = date.toLocaleString();
+            feedbackSystemTBodyInnerHTML += `
+            <tr>
+                <td>${readableDate}</td>
+                <td>${row["email"]}</td>
+                <td>${row["status"]}</td>
+                <td><button value="${row["timestamp"]}" class="userFeedbackViewDetailsButton">Details</button></td>
+            </tr>
+            `
+        });
+        feedbackSystemTBody.innerHTML = feedbackSystemTBodyInnerHTML;
+
+        let userFeedbackViewDetailsButtons = document.querySelectorAll(".userFeedbackViewDetailsButton")
+        userFeedbackViewDetailsButtons.forEach(button => {
+            button.addEventListener('click', ()=>{
+                viewUserFeedbackDetails(button)
+            });
+        });
+
+        userFeedbackCancelStatusChangeButton.addEventListener("click", ()=>{
+            userFeedbackDetailsModal.style.display = "none"
+        })
+
+        userFeedbackStatusChangeSelect.addEventListener("input", ()=>{
+            let selectedStatus = userFeedbackStatusChangeSelect.value
+            if (selectedStatus == userFeedbackSystem[selectedUserFeedbackID]["status"]){
+                userFeedbackSaveStatusButton.disabled = true
+            }else{
+                userFeedbackSaveStatusButton.disabled = false
+            }
+        })
+
+        userFeedbackSaveStatusButton.addEventListener("click", changeUserFeedbackStatus)
+
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+        window.location.href = '../../public/html/accessDenied.html';
+    });
+}
+
+function viewUserFeedbackDetails(button){
+    userFeedbackDetailsModal.style.display = ""
+    selectedUserFeedbackID = button.getAttribute("value")
+    userFeedbackMessageText.innerText = userFeedbackSystem[selectedUserFeedbackID]["message"]
+    userFeedbackStatusChangeSelect.value = userFeedbackSystem[selectedUserFeedbackID]["status"]
+    userFeedbackSaveStatusButton.disabled = true
+}
+
+function changeUserFeedbackStatus(){
+    let selectedStatus = userFeedbackStatusChangeSelect.value
+    fetch("http://localhost:3030/change-user-feedback-status", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          "username": attemptedUsername,
+          "loginToken": attemptedToken,
+          "newStatusValue": selectedStatus,
+          "feedbackID": selectedUserFeedbackID
+      })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+
+        return response.json();
+    })
+    .then(data => {  
+        console.log(data)
+    })
+    .catch(error => {
+        console.error('Fetch error:', error.message);
+        window.location.href = '../../public/html/accessDenied.html';
+    });
+}
+
 document.addEventListener("DOMContentLoaded", (event)=>{
   fetch("http://localhost:3030/attempt-authentication", {
       method: 'PUT',
@@ -443,11 +568,11 @@ document.addEventListener("DOMContentLoaded", (event)=>{
         alert("UNSUCCESSFUL STATUS: ", data["status"])
         window.location.href = '../../public/html/accessDenied.html';
       }else{
-            alert("Welcome Admin!")
             populateSiteConfigurations()
             populateMOTDEditorContent()
             refreshSiteDailyStats()
             populateInitialAnalyticsViewVariables()
+            populateUserFeedbackSection()
       }
   })
   .catch(error => {
