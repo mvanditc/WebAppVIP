@@ -1,11 +1,42 @@
 /* techUsedPage.css is used to style the techUsedPage.html file */
-
-@import './global.css';
-@import './navbar.css';
+@import 'global.css';
+@import 'navbar.css';
+@import 'colorPicker.css';
+@import 'languageSelector.css';
 
 body {
     background-color: var(--background-color);
     color: var(--white-text);;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: font1;
+  }
+  
+#techUsedContainer{
+    margin: 10px 15px;
+}
+ul{
+    list-style-type: none;
+    color: var(--black-text);
+    margin-left: -40px;
+}
+li{
+    background-color: var(--secondary-color);
+    padding: 15px;
+    margin: 10px;
+    font-size: 20px;
+}
+img{
+    height: 200px;
+    width: auto;
+}
+
+@media (max-width: 460px) {
+    img{
+        height: 100px;
+        width: auto;
+    }
 }

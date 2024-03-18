@@ -28,56 +28,319 @@
     <!--  HTML CODE FOR THE NAV BAR  -->
     <div class="navbar">
         <div class="navbar-logo-container">
-            <a href="index.html" target="_self"><img alt="navbar-logo" id="navbarLogo" src="../assets/navbar-logo.png"
-                    class="navbar-logo prevent-select"></a>
+            <a href="index.html" target="_self"><img alt="navbar-logo" id="navbarLogo" src="../assets/navbar-logo.png" class="navbar-logo prevent-select"></a>
+        </div>
+
+        <div id="languageSelectorButton">
+            <i class="fa fa-language" aria-hidden="true"></i>
         </div>
 
         <div id="hamburgerContainer" class="hamburger-container">
             <i class="fa-solid fa-bars"></i>
         </div>
         <div id="hamburgerTopLevelList" class="hamburger-toplevel-list">
-            <div id="scanHamburgbutton" class="hamburg-normal-toplevel-button prevent-select">
+            <div id="scanHamburgbutton" class="hamburg-normal-toplevel-button prevent-select current-hamburg-link">
                 Scan
             </div>
             <div id="aboutUsHamburgbutton" class="hamburg-normal-toplevel-button prevent-select">
                 About Us
             </div>
-            <div id="resourcesHamburgbutton" class="hamburg-normal-toplevel-button prevent-select current-hamburg-link">
-                <span class="hamburg-toplevel-chevron"><i id="hamburgChevron"
-                        class="fa-solid fa-chevron-left fa-xs"></i></span> Resources
+            <div id="resourcesHamburgbutton" class="hamburg-normal-toplevel-button prevent-select">
+                <span class="hamburg-toplevel-chevron"><i id="hamburgChevron" class="fa-solid fa-chevron-left fa-xs"></i></span> Resources
             </div>
             <div id="hamburgSubListContainer" class="hamburg-sublist">
-                <div id="techUsedHamburgbutton" class="hamburg-sublist-item prevent-select current-hamburg-link">
-                    Technology Used</div>
-                <div id="vulnerabilityDictHamburgbutton" class="hamburg-sublist-item prevent-select">Vulnerability
-                    Dictionary</div>
+                <div id="techUsedHamburgbutton" class="hamburg-sublist-item prevent-select">Technology Used</div>
+                <div id="vulnerabilityDictHamburgbutton" class="hamburg-sublist-item prevent-select">Vulnerability Dictionary</div>
+                <div id="siteThemePickerHamburgbutton" class="hamburg-sublist-item prevent-select">
+                    <div>Appearance <i class="fa fa-cog" aria-hidden="true"></i></div>
+                </div>
             </div>
         </div>
 
         <div id="navbarContainer" class="navbar-normal-content-container">
-            <div id="scanNavbarbutton" class="navbar-normal-toplevel-button prevent-select">
+            <div id="scanNavbarbutton" class="navbar-normal-toplevel-button prevent-select current-navbar-link">
                 Scan
             </div>
             <div id="aboutUsNavbarbutton" class="navbar-normal-toplevel-button prevent-select">
                 About Us
             </div>
-            <div id="resourcesNavbarbutton" class="navbar-normal-toplevel-button prevent-select current-navbar-link">
-                Resources <span class="navbar-toplevel-chevron"><i id="navbarChevron"
-                        class="fa-solid fa-chevron-down"></i></span>
+            <div id="resourcesNavbarbutton" class="navbar-normal-toplevel-button prevent-select">
+                Resources <span class="navbar-toplevel-chevron"><i id="navbarChevron" class="fa-solid fa-chevron-down"></i></span>
             </div>
             <div id="navbarListContainer" class="navbar-list">
-                <div id="techUsedNavbarbutton" class="navbar-list-item prevent-select current-navbar-link">Technology
-                    Used</div>
-                <div id="vulnerabilityDictNavbarbutton" class="navbar-list-item prevent-select">Vulnerability Dictionary
+                <div id="techUsedNavbarbutton" class="navbar-list-item prevent-select">Technology Used</div>
+                <div id="vulnerabilityDictNavbarbutton" class="navbar-list-item prevent-select">Vulnerability Dictionary</div>
+                <button id="siteThemePickerNavbarbutton" class="navbar-list-item prevent-select">
+                    <div>Appearance <i class="fa fa-cog" aria-hidden="true"></i></div>
+                </button>
+            </div>
+        </div>
+    </div> 
+
+    <!--Language Selector Modal Container-->
+    <div id="languageSelectorModal">
+        <div style="display: none;" id="google_translate_element"></div>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+            }
+        </script>      
+        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <div id="languageSelectorContent">
+            <div id="languageSelectInputContainer">
+                <label for="languageSelectorInput">Change Language:</label>
+
+                <select name="languageSelectorInput" id="languageSelectorInput">
+                    <option value="english">English</option>
+                    <option value="french">French</option>
+                    <option value="russian">Russian</option>
+                    <option value="arabic">Arabic</option>
+                    <option value="polish">Polish</option>
+                    <option value="mandarin">Mandarin</option>
+                </select>
+            </div>
+            <div id="languageBottomButtonsContainer">
+                <button id="languageSelectorCancelButton">Cancel</button>
+                <button id="languageSelectorApplyButton" class="disabledApply" disabled>Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!--Color Picker Modal Container-->
+    <div id="appearance-modal" class="modal">
+        <!--Modal Content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Website Appearance</h2>
+            </div>
+
+            <div class="modal-middle-section">
+                <div class="modal-subheadings">
+                    <h2>Presets</h2>
+                        <!--Preset Buttons-->
+                    <div class="preset-scroll-box">
+                        <div id="regularButton" class="preset-button regular-button">Regular</div>
+                        <div id="lightButton" class="preset-button light-button">Light Mode</div>
+                        <div id="darkButton" class="preset-button dark-button">Dark Mode</div>
+                        <div id="terminalButton" class="preset-button terminal-button">Terminal Green</div>
+                        <div id="custom1Button" class="preset-button custom1-button">Custom Slot 1</div>
+                        <div id="custom2Button" class="preset-button custom2-button">Custom Slot 2</div>
+                   </div>
                 </div>
+
+                <!--Hex Code Boxes-->
+                <div class="color-scroll-box">
+                    <div class="color-boxes">
+
+                        <!-- Background Color -->
+                        <div class="color-box">
+                            <h3>Background Color</h3>
+                            <input type="color" style="display: none;" data-index="0">
+                            <div class="color-rectangle" style="background-color: #9747FF;"></div>
+                            <p>RGB(151, 71, 255)</p>
+                        </div>
+                        <!-- Secondary Color -->
+                        <div class="color-box">
+                            <h3>Secondary Color</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #FFFFFF;"></div>
+                            <p>RGB(255, 255, 255)</p>
+                        </div>
+                        <!-- Black Text -->
+                        <div class="color-box">
+                            <h3>Black Text</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #1E1E1E;"></div>
+                            <p>RGB(30, 30, 30)</p>
+                        </div>
+                        <!-- White Text -->
+                        <div class="color-box">
+                            <h3>White Text</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #FFFFFF;"></div>
+                            <p>RGB(255, 255, 255)</p>
+                        </div>
+                        <!-- All Risk -->
+                        <div class="color-box">
+                            <h3>All Risk</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #89B8FF;"></div>
+                            <p>RGB(137, 184, 255)</p>
+                        </div>
+                        <!-- Low Risk -->
+                        <div class="color-box">
+                            <h3>Low Risk</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #FFD600;"></div>
+                            <p>RGB(255, 214, 0)</p>
+                        </div>
+                        <!-- Moderate Risk -->
+                        <div class="color-box">
+                            <h3>Moderate Risk</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #FF6F1E;"></div>
+                            <p>RGB(255, 111, 30)</p>
+                        </div>
+                        <!-- High Risk -->
+                            <div class="color-box">
+                            <h3>High Risk</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #FF2626;"></div>
+                            <p>RGB(255, 38, 38)</p>
+                        </div>
+                        <!-- Purple Text -->
+                        <div class="color-box">
+                            <h3>Purple Text</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #6F2BA5;"></div>
+                            <p>RGB(111, 43, 165)</p>
+                        </div>
+                        <!-- Blue Text -->
+                        <div class="color-box">
+                            <h3>Blue Text</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #605DF8;"></div>
+                            <p>RGB(96, 93, 248)</p>
+                        </div>
+                        <!-- Close Tool -->
+                        <div class="color-box">
+                            <h3>Close Tool</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #453A00;"></div>
+                            <p>RGB(69, 58, 0)</p>
+                        </div>
+                        <!-- Grey Color -->
+                        <div class="color-box">
+                            <h3>Grey Color</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #D9D9D9;"></div>
+                            <p>RGB(217, 217, 217)</p>
+                        </div>
+                        <!-- Navbar Color 1 -->
+                        <div class="color-box">
+                            <h3>Navbar Color 1</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #5800B2;"></div>
+                            <p>RGB(88, 0, 178)</p>
+                        </div>
+                        <!-- Navbar Select 1 -->
+                        <div class="color-box">
+                            <h3>Navbar Select 1</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #8123E1;"></div>
+                            <p>RGB(129, 35, 225)</p>
+                        </div>
+                        <!-- Navbar Color 2 -->
+                        <div class="color-box">
+                            <h3>Navbar Color 2</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #605DF8;"></div>
+                            <p>RGB(96, 93, 248)</p>
+                        </div>
+                        <!-- Navbar Select 2 -->
+                        <div class="color-box">
+                            <h3>Navbar Select 2</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #89B8FF;"></div>
+                            <p>RGB(137, 184, 255)</p>
+                        </div>
+                        <!-- Tertiary Color -->
+                        <div class="color-box">
+                            <h3>Tertiary Color</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #000000;"></div>
+                            <p>RGB(0, 0, 0)</p>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="color-box">
+                            <h3>Submit Button</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #9747FF;"></div>
+                            <p>RGB(151, 71, 255)</p>
+                        </div>
+                        <!-- Submit Button Hover -->
+                        <div class="color-box">
+                            <h3>Submit Button Hover</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #7400e7;"></div>
+                            <p>RGB(116, 0, 231)</p>
+                        </div>
+                        <!-- Submit Button Disabled -->
+                        <div class="color-box">
+                            <h3>Submit Button Disabled</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #cea9ff;"></div>
+                            <p>RGB(206, 169, 255)</p>
+                        </div>
+                        <!-- Cancel Button -->
+                        <div class="color-box">
+                            <h3>Cancel Button</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #C04E4E;"></div>
+                            <p>RGB(192, 78, 78)</p>
+                        </div>
+                        <!-- Cancel Button Hover -->
+                        <div class="color-box">
+                            <h3>Cancel Button Hover</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #963e3e;"></div>
+                            <p>RGB(150, 62, 62)</p>
+                        </div>
+                        <!-- Cancel Button Disabled -->
+                        <div class="color-box">
+                            <h3>Cancel Button Disabled</h3>
+                            <input type="color" style="display: none;">
+                            <div class="color-rectangle" style="background-color: #b58c8c;"></div>
+                            <p>RGB(181, 140, 140)</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            
+            <!--Apply/Cancel Buttons-->
+            <div class="bottom-buttons">
+                <div class="button-commit red">Cancel</div>
+                <div class="button-commit green">Apply</div>
             </div>
         </div>
     </div>
 
     <!--  HTML CODE FOR BODY  -->
-    <h1>This is the Technology Used page.</h1>
+    <div id="techUsedContainer">
+  
+        <h2>Technology Used</h2>
+  
+        <ul>
+            <li>
+                <h3>Overview:</h3>
+                <p>Frontend: HTML, CSS, JS</p>
+                <p>Backend: Node JS, OWASP ZAP</p>
+                <p>Database: MySQL</p>
+            </li>
+            <li>
+                <h3>Frontend:</h3>
+                <p>Web App VIP's frontend was built using HTML (HyperText Markup Language), CSS (Cascading Style Sheets), and JS (JavaScript). These 3 powerful languages allowed the Web App VIP team to craft a fully responsive website, allowing for the website to be viewed on almost any type of device; currently Web App VIP is accessible with regular computer monitors and a wide variety of mobile devices.</p>
+                <img src="../assets/techStack/frontendStack.png">
+            </li>
+            <li>
+                <h3>Backend:</h3>
+                <p>Most of the magic behind Web App VIP comes from the backend. The backend is where scans are conducted, and the results are returned. Web App VIP is supported using a robust queuing system capable of supporting hundreds of users at once. The queuing system was designed using trade-secret logic to handle even the worst events. The queuing logic uses avoidance, prevention, and detection strategies, making Web App VIP a fierce competitor in today’s socioeconomic climate. Web App VIP utilizes OWASP ZAP (Open Worldwide Application Security Project Zed Attack Proxy) to passively scan websites. ZAP’s passive scanning works by checking request headers sent from and to the client. ZAP also has the ability to detect unsafe code that may pose security risks for both the website user and administrator. Web App VIP uses the SHA-256 military grade one-way cipher to encrypt its data. Ensuring that if data were to ever fall into the wrong hands, it would be rendered useless, minimizing the cost of damages caused by cyber-attacks.</p>
+                <img src="../assets/techStack/backendStack.png">
+            </li>
+            <li>
+                <h3>Database:</h3>
+                <p>Although most of the data we use is ephemeral, Web App VIP has analytics tracking capabilities. Keeping tabs on your site’s usage can yield useful information, so the Web App VIP team included a Analytics Viewing feature that is located on the site’s Admin Dashboard. We designed the Analytics Viewer with the sole purpose of getting useful information across in a easily digestible format. Using our Analytics Viewer, you can stay on top of your game; giving you more time for more pressing matters.</p>
+                <img src="../assets/techStack/mySQLLogo.png">
+            </li>
+        </ul>
+      </div>
 
     <script src="../../src/js/navbar.js"></script>
+    <script src="../../src/js/colorPicker.js"></script>
+    <script src="../../src/js/languageSelector.js"></script>  
 </body>
 
 </html>

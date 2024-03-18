@@ -22,6 +22,11 @@ function openLanguageSelectorModal(){
     }else if (translationSelectionFromLocalStorage != ''){
         languageSelectorInput.value = translationSelectionFromLocalStorage
     }
+    if (languageSelectorInput.value == "" || languageSelectorInput.value == "Select Language"){
+        disableApplyButton()
+    }else{
+        enableApplyButton()
+    }
 }
 
 languageSelectorModal.style.display = "none"
@@ -29,13 +34,11 @@ languageSelectorModal.style.display = "none"
 languageSelectorButton.addEventListener("click", openLanguageSelectorModal)
 
 languageSelectorCancelButton.addEventListener("click", ()=>{
-    disableApplyButton()
     closeLanguageSelectorModal()
 })
 
 languageSelectorApplyButton.addEventListener("click", ()=>{
     applyTranslation()
-    disableApplyButton()
     closeLanguageSelectorModal()
 })
 
@@ -87,12 +90,11 @@ function disableApplyButton(){
     languageSelectorApplyButton.classList.add('disabledApply'); 
 }
 
-document.addEventListener('DOMContentLoaded', ()=> {
+document.addEventListener('DOMContentLoaded', async ()=> {
     let googleTranslateElement = document.getElementById("google_translate_element")
     while (googleTranslateElement.innerHTML = ""){
-
+        await delay(500)
     }
-    
     let translationSelectionFromLocalStorage = localStorage.getItem("selectedTranslation")
     if (translationSelectionFromLocalStorage == null){
         //
@@ -102,7 +104,17 @@ document.addEventListener('DOMContentLoaded', ()=> {
     }
 });
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 
 window.addEventListener('load', languageSelectPopulator)
-languageSelectorInput.addEventListener('change', enableApplyButton)
+languageSelectorInput.addEventListener('change', ()=>{
+    if (languageSelectorInput.value == ""){
+        disableApplyButton()
+    }else{
+        enableApplyButton()
+    }
+})
