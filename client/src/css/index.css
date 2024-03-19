@@ -69,6 +69,7 @@ flex-wrap: wrap;
     font-size: 28px;
     color: var(--white-text);
     white-space: nowrap;
+    margin-right: 5px;
 }
   
 #search-input {

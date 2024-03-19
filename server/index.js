@@ -62,7 +62,7 @@ let adminManagedVariables = {
   "scanTimeLimit": "20", // in Seconds
   "maxScansPerDay": "99",
   "adminDemoMode": "false",
-  "siteMOTDHTML": `<p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor"</p>`
+  "siteMOTDHTML": `<h2 style="color: var(--white-text)">Welcome to Web App VIP!</h2><p>Step into a safer digital world with us. Detect vulnerabilities effortlessly, fortify your online presence. Our tools are here to safeguard your digital assets. Stay ahead of threats with our comprehensive scanning capabilities. Your security is our top priority.</p>`
 }
 
 let timeLimit = parseInt(adminManagedVariables["scanTimeLimit"])

@@ -22,7 +22,7 @@ function openLanguageSelectorModal(){
     }else if (translationSelectionFromLocalStorage != ''){
         languageSelectorInput.value = translationSelectionFromLocalStorage
     }
-    if (languageSelectorInput.value == "" || languageSelectorInput.value == "Select Language"){
+    if (languageSelectorInput.value != "" || languageSelectorInput.value == "Select Language"){
         disableApplyButton()
     }else{
         enableApplyButton()
