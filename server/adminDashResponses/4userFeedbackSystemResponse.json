@@ -1,0 +1,34 @@
+{
+    "userFeedbackSystem": [
+        {
+            "timestamp": "1710742415428",
+            "email": "example@email.com",
+            "message": "Hello, this is my feedback, thank you.",
+            "status": "Undealt"
+        },
+        {
+            "timestamp": "1710742415528",
+            "email": "example1@email.com",
+            "message": "Hello, this is my feedback, thank you.",
+            "status": "Resolved"
+        },
+        {
+            "timestamp": "1710745444822",
+            "email": "email@example.com",
+            "message": "This is a pretty cool site.",
+            "status": "Undealt"
+        },
+        {
+            "timestamp": "1710783138698",
+            "email": "hi@email.com",
+            "message": "This is a message",
+            "status": "Undealt"
+        },
+        {
+            "timestamp": "1710783220269",
+            "email": "email@yoyo.com",
+            "message": "sadsad213213",
+            "status": "Undealt"
+        }
+    ]
+}

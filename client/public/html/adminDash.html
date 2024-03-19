@@ -305,7 +305,7 @@
               <option value="Undealt">Undealt</option>
               <option value="Resolved">Resolved</option>
             </select>
-            <button id="userFeedbackSaveStatusButton" class="prevent-select">Save</button>
+            <button id="userFeedbackSaveStatusButton" class="prevent-select" disabled>Save</button>
             <button id="userFeedbackCancelStatusChangeButton" class="prevent-select">Cancel</button>
         </div>
       </div>
@@ -393,20 +393,12 @@
         <div id="adminDashAnalyticsSection">
           <div id="graphViewSelectorContainer">
             <div>Select Graph Stat:</div>
-            <select id="selectGraphSelect">
-              <option>Graph Views</option>
-              <option>Hourly Total Scans VS Last 24 Hours</option>
-              <option>View 2</option>
-              <option>View 3</option>
-              <option>View 4</option>
+            <select id="selectGraphSelect" disabled>
+              <option>Total Alerts Found Per Day</option>
             </select>
             <div>Select Date:</div>
-            <select id="selectDateSelect">
-              <option>03/2022</option>
-              <option>04/2022</option>
-              <option>05/2022</option>
-              <option>06/2022</option>
-              <option>07/2022</option>
+            <select id="selectDateSelect" disabled>
+              <option>2022-02</option>
             </select>
             <button id="dataAnalyticsQueryButton">Query</button>
           </div>
@@ -484,7 +476,7 @@
         data: {
           labels: [],
           datasets: [{
-            label: '',
+            label: 'Total Scans Found Per Day',
             data: [],
             borderWidth: 1,
             borderColor: lineColor
@@ -505,52 +497,35 @@
       });
 
       function retrieveAnalyticsViewFromBackend(){
-        let selectedDate = selectDateSelect.value
-        let selectedColumn = selectGraphSelect.value
+        fetch("../../../server/adminDashResponses/5totalScansPerDay202202.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            };
 
-        if (selectedDate != "" && selectedColumn != ""){
-            console.log("Getting Analytics View From Database")
-            fetch("http://localhost:3030/get-sql-view", {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "username": attemptedUsername,
-                "loginToken": attemptedToken,
-                "date": selectedDate,
-                "column": selectedColumn
-            })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                };
+            return response.json();
+        })
+        .then(data => {  
+            console.log(data)
+            ctx.style.display=""
+            let view = data["view"]
+            let viewDates = []
+            let viewValues = []
 
-                return response.json();
-            })
-            .then(data => {  
-                console.log(data)
-                ctx.style.display=""
-                let view = data["view"]
-                let viewDates = []
-                let viewValues = []
-
-                view.forEach(row => {
-                  let formattedDate = (row["date"]).split("T")
-                  formattedDate = formattedDate[0]
-                  viewDates.push(formattedDate)
-                  viewValues.push(row[selectedColumn])
-                });
-
-                analyticsChart.data.datasets[0].data = viewValues;
-                analyticsChart.data.labels = viewDates;
-                analyticsChart.update();
-            })
-            .catch(error => {
-                console.error('Fetch error:', error.message);
+            view.forEach(row => {
+              let formattedDate = (row["date"]).split("T")
+              formattedDate = formattedDate[0]
+              viewDates.push(formattedDate)
+              viewValues.push(row["scanTotal"])
             });
-        }
+
+            analyticsChart.data.datasets[0].data = viewValues;
+            analyticsChart.data.labels = viewDates;
+            analyticsChart.update();
+        })
+        .catch(error => {
+            console.error('Fetch error:', error.message);
+        });
       }
 
       analyticsQueryButton.addEventListener("click", retrieveAnalyticsViewFromBackend)

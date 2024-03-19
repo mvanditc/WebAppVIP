@@ -9,16 +9,7 @@ loginForm.addEventListener("submit", (event)=>{
     let attemptedUsername = loginUsernameInput.value
     let attemptedPassword = loginPasswordInput.value
 
-    fetch("http://localhost:3030/attempt-login", {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "username": attemptedUsername,
-            "password": attemptedPassword
-        })
-    })
+    fetch("../../../server/adminLoginResponses/1loginSuccess.json")
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);

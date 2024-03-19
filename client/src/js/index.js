@@ -170,17 +170,7 @@ function getCurrentQueuePosition(){
   let storedUserID = localStorage.getItem("userid")
 
 
-  fetch(`http://localhost:3030/get-scan-queue-position`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      "scanid": storedScanID,
-      "hash": storedScanHash,
-      "userid": storedUserID
-    })
-  })
+  fetch(`../../../server/indexResponses/4checkQueueProgressResponse.json`)
   .then(response => {
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -246,18 +236,7 @@ indexDataForm.addEventListener("submit", (event)=>{
   if (isValidLinkTest && isUnrestrictedLinkTest && termsOfUseStatus == "true"){
     let attemptedUsername = sessionStorage.getItem('username');
     let attemptedToken = sessionStorage.getItem('loginToken');
-    fetch("http://localhost:3030/add-scan-to-queue", {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          "url": inputURL,
-          "userid": storedUserID,
-          "username": attemptedUsername,
-          "loginToken": attemptedToken
-        })
-    })
+    fetch("../../../server/indexResponses/3addToQueueResponse.json")
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -308,7 +287,7 @@ indexDataForm.addEventListener("submit", (event)=>{
 })
 
 document.addEventListener("DOMContentLoaded", (event)=>{
-  fetch("http://localhost:3030/get-site-motd")
+  fetch("../../../server/indexResponses/1motdResponse.json")
   .then(response => {
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -324,7 +303,7 @@ document.addEventListener("DOMContentLoaded", (event)=>{
       console.error('Fetch error:', error.message);
   });
 
-  fetch("http://localhost:3030/get-total-alerts-found")
+  fetch("../../../server/indexResponses/2totalAlertsResponse.json")
   .then(response => {
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

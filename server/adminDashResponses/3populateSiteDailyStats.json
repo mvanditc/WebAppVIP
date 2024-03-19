@@ -1,0 +1,11 @@
+{
+    "status": "success",
+    "dailyStats": {
+        "usersQueued": 0,
+        "scansAttempted": 0,
+        "alertsFound": 0,
+        "queueAutoCorrections": 0,
+        "scanCancels": 0,
+        "completedScans": 0
+    }
+}

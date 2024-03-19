@@ -1,0 +1,15 @@
+{
+    "status": "success",
+    "timeElapsed": "1",
+    "timeLimit": 20,
+    "scanProgress": "49",
+    "alertSummary": {
+        "alertsSummary": {
+            "High": 0,
+            "Low": 0,
+            "Medium": 0,
+            "Informational": 0
+        }
+    },
+    "currentScanTargetURL": "https://www.basicwebsiteexample.com/"
+}

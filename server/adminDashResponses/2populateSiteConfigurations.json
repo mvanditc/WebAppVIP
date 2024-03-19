@@ -1,0 +1,8 @@
+{
+    "status": "success",
+    "siteSettings": {
+        "scanSecondsLimit": 20,
+        "maxScansPerDay": 3,
+        "adminDemoMode": "false"
+    }
+}

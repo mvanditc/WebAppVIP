@@ -7,16 +7,7 @@ function sendUserFeedback(){
   console.log("Populating User Feedback Section")
   let enteredEmail = feedbackEmailInput.value
   let enteredMessage = messageTextArea.value
-  fetch("http://localhost:3030/submit-user-feedback", {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        "email": enteredEmail,
-        "message": enteredMessage
-    })
-  })
+  fetch("../../../server/feedBackPageResponses/1submitFeedbackSuccessfulResponse.json")
   .then(response => {
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
