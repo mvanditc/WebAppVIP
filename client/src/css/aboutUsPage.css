@@ -81,7 +81,12 @@ body {
 .school-span{
     color: var(--purple-text);
 }
-
+.box-top-links{
+    font-size: 40px;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-evenly;
+}
 
 @media (max-width: 1100px) {
     .mission-statement-content{
