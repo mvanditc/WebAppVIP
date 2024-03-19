@@ -67,6 +67,14 @@ var hideMessageHiding = false
 
 let copiedTargetToClipBoardNotification = document.getElementById("copiedTargetToClipBoardNotification")
 
+let scanProgressResponses = ["3scanProgress1.json", "4scanProgress2.json", "5scanProgress3.json", "6scanProgress4.json"]
+
+let scanProgressResponseCounter = 0
+
+let waitForScanToFinishResponses = ["7waitForScanToFinish1.json", "8waitForScanToFinish2.json", "9waitForScanToFinish3.json", "10waitForScanToFinish4.json", "finalResponse.json"]
+
+let waitForScanToFinishResponseCounter = 0
+
 async function handleHelpMarkerClick(helpValue, event){
     let helpMessage = ""
     if (helpValue == "confidence-links"){
@@ -255,64 +263,8 @@ function filterDetails(){
     }
 }
 
-async function stopScanEarly(){
-    scanEndedEarly = true
-    console.log("Stopping Scan Early")
-    await fetch("http://localhost:3030/stop-current-scan-early", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        };
-
-        return response.json();
-    })
-    .then(data => {
-        if (data["status"] == "success"){
-            endScanEarlyButton.style.display = "none"
-            scanTimeLimitMessageText.innerHTML = "Scan was ended early..."
-            progressCheckingClockNeeded = false
-            scanWaitingToFinishClock()
-        }
-    })
-    .catch(error => {
-        console.error('Fetch error:', error.message);
-    });
-}
-
 async function cancelScan(){
     console.log("Cancelling Scan")
-    await fetch("http://localhost:3030/cancel-scan", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        };
-
-        return response.json();
-    })
-    .then(data => {
-
-    })
-    .catch(error => {
-        console.error('Fetch error:', error.message);
-    });
 }
 
 function prepareScanResultsViewing(){
@@ -651,16 +603,7 @@ async function waitForScanToFinish(){
         scanFinishedRequestSent = true
         console.log("waitForScanToFinish")
     }
-    await fetch("http://localhost:3030/wait-for-scan-to-finish", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
+    await fetch("../../../server/scanResponses/" + waitForScanToFinishResponses[waitForScanToFinishResponseCounter])
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -695,6 +638,7 @@ async function waitForScanToFinish(){
             })
         }
         scanFinishedRequestSent = false
+        waitForScanToFinishResponseCounter += 1
     })
     .catch(error => {
         console.error('Fetch error:', error.message);
@@ -702,16 +646,7 @@ async function waitForScanToFinish(){
 }
 
 async function checkScanProgress(){
-    await fetch("http://localhost:3030/get-scan-progress", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
+    await fetch("../../../server/scanResponses/" + scanProgressResponses[scanProgressResponseCounter])
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -744,6 +679,7 @@ async function checkScanProgress(){
                     scanStatusText.innerHTML = "Time Limit Exceeded"
                     scanTimeLimitMessageText.innerHTML = "Time limit exceeded, results incomplete..."
                 }
+                scanProgressResponseCounter+=1
             }else if(scanResultsData['status'] == "waiting for finish"){
                 preparingResultsTextMovingFunction()
                 endScanEarlyButton.style.display = "none"
@@ -828,16 +764,7 @@ function delay(ms) {
 
 function attemptScan(){
     scanStatusText.innerHTML = "Attempting Scan"
-    fetch("http://localhost:3030/attempt-scan", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
+    fetch("../../../server/scanResponses/2scanAttempt1.json")
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -856,9 +783,6 @@ function attemptScan(){
             scanTimeElapsedClock()
             scanProgressCheckingClock()
             endScanEarlyButton.style.display=""
-            endScanEarlyButton.addEventListener("click", async ()=>{
-                await stopScanEarly()
-            })
         }
     })
     .catch(error => {
@@ -867,16 +791,7 @@ function attemptScan(){
 }
 
 async function processScan(){
-    await fetch("http://localhost:3030/process-queued-scan-if-next", {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "scanid": storedScanID,
-            "hash": storedScanHash
-        })
-    })
+    await fetch("../../../server/scanResponses/1process1.json")
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -890,18 +805,6 @@ async function processScan(){
             processClockNeeded = false
             attemptScan()
             return
-        }else if(data['status'] == "scan tool busy"){
-            console.log(`data['status'] == "scan tool busy"`)
-            scanProgressCheckingClock()
-            endScanEarlyButton.style.display=""
-            endScanEarlyButton.addEventListener("click", async ()=>{
-                await stopScanEarly()
-            })
-        }else{
-            if (data['siteSettingsChanged'] == "false"){
-                alert("Your queue position was invalid...")
-                window.location.href = '../../public/html/accessDenied.html';
-            }
         }
     })
     .catch(error => {

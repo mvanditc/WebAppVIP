@@ -187,6 +187,7 @@ function getCurrentQueuePosition(){
         queuePositionSpan.innerText = data["position"]
         queuePositionSpan.parentElement.style.display = ""
         if (data["position"] == "0" && data["isScanning"] == false && data['checkingIfUserIsDisconnected'] == false){
+          alert("Warning: This is a static website that doesn't have a backend. If you would like to demo the real product, please visit the Web App VIP Booth at Toronto Tech Expo on March 19th.")
           window.location.href = '../../public/html/scanPage.html';
         }
       }
